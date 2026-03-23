@@ -1,0 +1,1850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terravault — Own the World. One Token at a Time.</title>
+    <meta name="description" content="Institutional-grade LATAM real estate, tokenized. Fractional ownership starting at $100.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --emerald-deep: #064e3b;
+            --emerald: #065f46;
+            --emerald-light: #0d7353;
+            --gold: #d4a574;
+            --gold-light: #e8c9a0;
+            --gold-bright: #c9915a;
+            --cream: #faf6f1;
+            --cream-dark: #f0e9df;
+            --white: #ffffff;
+            --black: #0a0a0a;
+            --gray-900: #111111;
+            --gray-800: #1a1a1a;
+            --gray-700: #2d2d2d;
+            --gray-600: #444444;
+            --gray-400: #999999;
+            --gray-300: #bbbbbb;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--cream);
+            color: var(--gray-900);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ===== UTILITY ===== */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+        .reveal-delay-4 { transition-delay: 0.4s; }
+
+        /* ===== NAV ===== */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 20px 0;
+            transition: all 0.4s ease;
+        }
+
+        nav.scrolled {
+            background: rgba(6, 78, 59, 0.97);
+            backdrop-filter: blur(20px);
+            padding: 14px 0;
+            box-shadow: 0 1px 40px rgba(0,0,0,0.15);
+        }
+
+        nav .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .nav-logo-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--gold);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: var(--emerald-deep);
+            font-size: 18px;
+        }
+
+        .nav-logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--white);
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 36px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--gold);
+        }
+
+        .nav-cta {
+            background: var(--gold) !important;
+            color: var(--emerald-deep) !important;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-weight: 600 !important;
+            transition: transform 0.3s, box-shadow 0.3s !important;
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 20px rgba(212, 165, 116, 0.4);
+            color: var(--emerald-deep) !important;
+        }
+
+        .nav-mobile-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 4px;
+        }
+
+        .nav-mobile-toggle span {
+            width: 24px;
+            height: 2px;
+            background: var(--white);
+            border-radius: 2px;
+            transition: all 0.3s;
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            min-height: 100vh;
+            background: var(--emerald-deep);
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-bg-pattern {
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 80% 60% at 70% 40%, rgba(212,165,116,0.07) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 50% at 20% 80%, rgba(13,115,83,0.3) 0%, transparent 50%);
+        }
+
+        .hero-grid-overlay {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 60px 60px;
+        }
+
+        /* Globe */
+        .globe-container {
+            position: absolute;
+            right: -5%;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 650px;
+            height: 650px;
+            opacity: 0.15;
+        }
+
+        .globe {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 1px solid rgba(212,165,116,0.3);
+            position: relative;
+            animation: globeRotate 30s linear infinite;
+        }
+
+        .globe::before,
+        .globe::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            border: 1px solid rgba(212,165,116,0.2);
+        }
+
+        .globe::before {
+            inset: 10%;
+            transform: rotateX(60deg);
+        }
+
+        .globe::after {
+            inset: 5%;
+            transform: rotateY(30deg);
+        }
+
+        .globe-ring {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 1px solid rgba(212,165,116,0.15);
+        }
+
+        .globe-ring:nth-child(1) { transform: rotateX(20deg) rotateY(40deg); }
+        .globe-ring:nth-child(2) { transform: rotateX(50deg) rotateY(-20deg); }
+        .globe-ring:nth-child(3) { transform: rotateX(80deg) rotateY(10deg); }
+        .globe-ring:nth-child(4) { transform: rotateX(30deg) rotateY(70deg); }
+
+        .globe-dot {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: var(--gold);
+            border-radius: 50%;
+            box-shadow: 0 0 12px rgba(212,165,116,0.6);
+        }
+
+        .globe-dot:nth-child(5) { top: 35%; left: 30%; animation: pulse 3s ease-in-out infinite; }
+        .globe-dot:nth-child(6) { top: 45%; left: 35%; animation: pulse 3s ease-in-out 0.5s infinite; }
+        .globe-dot:nth-child(7) { top: 55%; left: 28%; animation: pulse 3s ease-in-out 1s infinite; }
+        .globe-dot:nth-child(8) { top: 40%; left: 40%; animation: pulse 3s ease-in-out 1.5s infinite; }
+
+        @keyframes globeRotate {
+            from { transform: rotateY(0deg); }
+            to { transform: rotateY(360deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.8); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 720px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(212,165,116,0.12);
+            border: 1px solid rgba(212,165,116,0.25);
+            padding: 8px 18px;
+            border-radius: 100px;
+            margin-bottom: 32px;
+            color: var(--gold);
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .hero-badge-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--gold);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .hero h1 {
+            font-size: clamp(42px, 6vw, 76px);
+            font-weight: 800;
+            color: var(--white);
+            line-height: 1.05;
+            letter-spacing: -2px;
+            margin-bottom: 28px;
+        }
+
+        .hero h1 .gold {
+            color: var(--gold);
+        }
+
+        .hero-sub {
+            font-size: clamp(17px, 2vw, 20px);
+            color: rgba(255,255,255,0.65);
+            line-height: 1.7;
+            max-width: 540px;
+            margin-bottom: 48px;
+            font-weight: 400;
+        }
+
+        .hero-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--gold);
+            color: var(--emerald-deep);
+            padding: 16px 36px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            border: none;
+            cursor: pointer;
+            letter-spacing: -0.2px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(212,165,116,0.35);
+            background: var(--gold-light);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: transparent;
+            color: var(--white);
+            padding: 16px 36px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .btn-secondary:hover {
+            border-color: rgba(255,255,255,0.5);
+            background: rgba(255,255,255,0.05);
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 48px;
+            margin-top: 72px;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .hero-stat-value {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--gold);
+            letter-spacing: -1px;
+        }
+
+        .hero-stat-label {
+            font-size: 13px;
+            color: rgba(255,255,255,0.45);
+            margin-top: 4px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        /* ===== PROBLEM ===== */
+        .problem {
+            padding: 140px 0;
+            background: var(--cream);
+        }
+
+        .section-label {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gold-bright);
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: clamp(32px, 4vw, 52px);
+            font-weight: 800;
+            color: var(--emerald-deep);
+            line-height: 1.1;
+            letter-spacing: -1.5px;
+            margin-bottom: 24px;
+        }
+
+        .section-desc {
+            font-size: 18px;
+            color: var(--gray-600);
+            line-height: 1.7;
+            max-width: 600px;
+        }
+
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-top: 64px;
+        }
+
+        .problem-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid rgba(0,0,0,0.04);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .problem-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--gold), var(--gold-light));
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .problem-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.06);
+        }
+
+        .problem-card:hover::before {
+            opacity: 1;
+        }
+
+        .problem-icon {
+            width: 52px;
+            height: 52px;
+            background: linear-gradient(135deg, var(--emerald-deep), var(--emerald-light));
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            font-size: 24px;
+        }
+
+        .problem-card h3 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--emerald-deep);
+            margin-bottom: 12px;
+            letter-spacing: -0.3px;
+        }
+
+        .problem-card p {
+            font-size: 15px;
+            color: var(--gray-600);
+            line-height: 1.7;
+        }
+
+        .problem-stat {
+            display: inline-block;
+            margin-top: 16px;
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--gold-bright);
+            letter-spacing: -1px;
+        }
+
+        /* ===== SOLUTION ===== */
+        .solution {
+            padding: 140px 0;
+            background: var(--emerald-deep);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .solution::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse 50% 50% at 80% 20%, rgba(212,165,116,0.06) 0%, transparent 60%);
+        }
+
+        .solution .section-label {
+            color: var(--gold);
+        }
+
+        .solution .section-title {
+            color: var(--white);
+        }
+
+        .solution .section-desc {
+            color: rgba(255,255,255,0.55);
+        }
+
+        .solution-features {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            margin-top: 72px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .solution-feature {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 20px;
+            padding: 40px 32px;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .solution-feature:hover {
+            background: rgba(255,255,255,0.08);
+            transform: translateY(-4px);
+            border-color: rgba(212,165,116,0.2);
+        }
+
+        .solution-feature-icon {
+            font-size: 32px;
+            margin-bottom: 24px;
+            display: block;
+        }
+
+        .solution-feature h3 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 12px;
+            letter-spacing: -0.3px;
+        }
+
+        .solution-feature p {
+            font-size: 15px;
+            color: rgba(255,255,255,0.5);
+            line-height: 1.7;
+        }
+
+        /* ===== HOW IT WORKS ===== */
+        .how {
+            padding: 140px 0;
+            background: var(--cream);
+        }
+
+        .how-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .how-header .section-desc {
+            margin: 0 auto;
+        }
+
+        .how-steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0;
+            position: relative;
+        }
+
+        .how-steps::before {
+            content: '';
+            position: absolute;
+            top: 52px;
+            left: 16.66%;
+            right: 16.66%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
+        }
+
+        .how-step {
+            text-align: center;
+            padding: 0 32px;
+            position: relative;
+        }
+
+        .how-step-number {
+            width: 56px;
+            height: 56px;
+            background: var(--emerald-deep);
+            color: var(--gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 800;
+            margin: 0 auto 32px;
+            position: relative;
+            z-index: 1;
+            border: 4px solid var(--cream);
+            box-shadow: 0 0 0 2px var(--gold);
+        }
+
+        .how-step h3 {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--emerald-deep);
+            margin-bottom: 16px;
+            letter-spacing: -0.3px;
+        }
+
+        .how-step p {
+            font-size: 15px;
+            color: var(--gray-600);
+            line-height: 1.7;
+        }
+
+        .how-step-detail {
+            margin-top: 24px;
+            background: var(--white);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid rgba(0,0,0,0.04);
+        }
+
+        .how-step-detail-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: var(--gray-600);
+            padding: 6px 0;
+        }
+
+        .how-step-detail-check {
+            width: 18px;
+            height: 18px;
+            background: rgba(6,78,59,0.08);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: var(--emerald-deep);
+            flex-shrink: 0;
+        }
+
+        /* ===== ASSETS ===== */
+        .assets {
+            padding: 140px 0;
+            background: var(--white);
+        }
+
+        .assets-header {
+            text-align: center;
+            margin-bottom: 72px;
+        }
+
+        .assets-header .section-desc {
+            margin: 0 auto;
+        }
+
+        .asset-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 28px;
+        }
+
+        .asset-card {
+            border-radius: 20px;
+            overflow: hidden;
+            background: var(--cream);
+            border: 1px solid rgba(0,0,0,0.04);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: pointer;
+        }
+
+        .asset-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 24px 64px rgba(0,0,0,0.08);
+        }
+
+        .asset-card-img {
+            height: 220px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .asset-card-img-bg {
+            position: absolute;
+            inset: 0;
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .asset-card:hover .asset-card-img-bg {
+            transform: scale(1.08);
+        }
+
+        .asset-card:nth-child(1) .asset-card-img-bg {
+            background: linear-gradient(135deg, #1a3a2a 0%, #2d5a3f 50%, #0d4530 100%);
+        }
+
+        .asset-card:nth-child(2) .asset-card-img-bg {
+            background: linear-gradient(135deg, #2a1a3a 0%, #4a3060 50%, #301a45 100%);
+        }
+
+        .asset-card:nth-child(3) .asset-card-img-bg {
+            background: linear-gradient(135deg, #3a2a1a 0%, #5a4020 50%, #453010 100%);
+        }
+
+        .asset-card-tag {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .asset-card-yield {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            background: var(--gold);
+            color: var(--emerald-deep);
+            padding: 6px 14px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .asset-card-icon-wrapper {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 48px;
+            opacity: 0.4;
+        }
+
+        .asset-card-body {
+            padding: 28px;
+        }
+
+        .asset-card-location {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--gold-bright);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .asset-card h3 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--emerald-deep);
+            margin-bottom: 16px;
+            letter-spacing: -0.3px;
+        }
+
+        .asset-card-meta {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 16px;
+            border-top: 1px solid rgba(0,0,0,0.06);
+        }
+
+        .asset-card-meta-item {
+            text-align: center;
+        }
+
+        .asset-card-meta-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--emerald-deep);
+        }
+
+        .asset-card-meta-label {
+            font-size: 11px;
+            color: var(--gray-400);
+            margin-top: 2px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* ===== SECURITY ===== */
+        .security {
+            padding: 140px 0;
+            background: var(--gray-900);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .security::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 40% 40% at 10% 80%, rgba(6,78,59,0.2) 0%, transparent 60%),
+                radial-gradient(ellipse 40% 40% at 90% 20%, rgba(212,165,116,0.05) 0%, transparent 60%);
+        }
+
+        .security-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .security .section-label {
+            color: var(--gold);
+        }
+
+        .security .section-title {
+            color: var(--white);
+        }
+
+        .security .section-desc {
+            color: rgba(255,255,255,0.5);
+        }
+
+        .security-list {
+            margin-top: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .security-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .security-item-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(212,165,116,0.1);
+            border: 1px solid rgba(212,165,116,0.2);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .security-item h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 4px;
+        }
+
+        .security-item p {
+            font-size: 14px;
+            color: rgba(255,255,255,0.4);
+            line-height: 1.6;
+        }
+
+        .security-visual {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .security-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 20px;
+            padding: 32px;
+            transition: all 0.4s;
+        }
+
+        .security-card:hover {
+            background: rgba(255,255,255,0.06);
+            border-color: rgba(212,165,116,0.15);
+        }
+
+        .security-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .security-card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gold);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .security-card-badge {
+            background: rgba(34,197,94,0.15);
+            color: #4ade80;
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .security-bar {
+            height: 4px;
+            background: rgba(255,255,255,0.06);
+            border-radius: 4px;
+            margin-bottom: 12px;
+            overflow: hidden;
+        }
+
+        .security-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            background: linear-gradient(90deg, var(--gold), var(--gold-light));
+            transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+            width: 0;
+        }
+
+        .security-bar-fill.animated {
+            width: var(--target-width);
+        }
+
+        .security-bar-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: rgba(255,255,255,0.3);
+        }
+
+        .security-tech-stack {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .security-tech-item {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .security-tech-item span:first-child {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 4px;
+        }
+
+        .security-tech-item span:last-child {
+            font-size: 11px;
+            color: rgba(255,255,255,0.3);
+        }
+
+        /* ===== CTA ===== */
+        .cta {
+            padding: 140px 0;
+            background: var(--emerald-deep);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 60% 50% at 50% 100%, rgba(212,165,116,0.08) 0%, transparent 60%);
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta .section-label {
+            color: var(--gold);
+        }
+
+        .cta h2 {
+            font-size: clamp(36px, 5vw, 60px);
+            font-weight: 800;
+            color: var(--white);
+            line-height: 1.1;
+            letter-spacing: -2px;
+            margin-bottom: 24px;
+        }
+
+        .cta h2 .gold {
+            color: var(--gold);
+        }
+
+        .cta p {
+            font-size: 18px;
+            color: rgba(255,255,255,0.5);
+            max-width: 500px;
+            margin: 0 auto 48px;
+            line-height: 1.7;
+        }
+
+        .cta-actions {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .cta-note {
+            margin-top: 32px;
+            font-size: 13px;
+            color: rgba(255,255,255,0.3);
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: var(--black);
+            padding: 60px 0 40px;
+        }
+
+        .footer-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding-bottom: 40px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .footer-brand p {
+            color: rgba(255,255,255,0.35);
+            font-size: 14px;
+            margin-top: 12px;
+            max-width: 300px;
+            line-height: 1.6;
+        }
+
+        .footer-links-group h4 {
+            color: rgba(255,255,255,0.5);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+
+        .footer-links-group a {
+            display: block;
+            color: rgba(255,255,255,0.35);
+            text-decoration: none;
+            font-size: 14px;
+            padding: 4px 0;
+            transition: color 0.3s;
+        }
+
+        .footer-links-group a:hover {
+            color: var(--gold);
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 32px;
+            font-size: 13px;
+            color: rgba(255,255,255,0.2);
+        }
+
+        .footer-socials {
+            display: flex;
+            gap: 16px;
+        }
+
+        .footer-socials a {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.06);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255,255,255,0.4);
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .footer-socials a:hover {
+            background: rgba(212,165,116,0.1);
+            border-color: rgba(212,165,116,0.3);
+            color: var(--gold);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .solution-features {
+                grid-template-columns: 1fr;
+            }
+
+            .security-layout {
+                grid-template-columns: 1fr;
+                gap: 48px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: var(--emerald-deep);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 24px;
+                z-index: 999;
+            }
+
+            .nav-links.open {
+                display: flex;
+            }
+
+            .nav-links a {
+                font-size: 20px;
+            }
+
+            .nav-mobile-toggle {
+                display: flex;
+                z-index: 1001;
+            }
+
+            .hero h1 {
+                letter-spacing: -1px;
+            }
+
+            .hero-stats {
+                gap: 24px;
+                flex-wrap: wrap;
+            }
+
+            .hero-stat-value {
+                font-size: 24px;
+            }
+
+            .problem-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .how-steps {
+                grid-template-columns: 1fr;
+                gap: 48px;
+            }
+
+            .how-steps::before {
+                display: none;
+            }
+
+            .asset-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-top {
+                flex-direction: column;
+                gap: 32px;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .globe-container {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .btn-primary, .btn-secondary {
+                justify-content: center;
+            }
+
+            .cta-actions {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 0 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAV -->
+    <nav>
+        <div class="container">
+            <a href="#" class="nav-logo">
+                <div class="nav-logo-icon">T</div>
+                <span class="nav-logo-text">Terravault</span>
+            </a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#problem">Problem</a></li>
+                <li><a href="#solution">Solution</a></li>
+                <li><a href="#how">How it Works</a></li>
+                <li><a href="#assets">Assets</a></li>
+                <li><a href="#security">Security</a></li>
+                <li><a href="#cta" class="nav-cta">Get Early Access</a></li>
+            </ul>
+            <button class="nav-mobile-toggle" id="navToggle" aria-label="Toggle navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-bg-pattern"></div>
+        <div class="hero-grid-overlay"></div>
+
+        <div class="globe-container">
+            <div class="globe">
+                <div class="globe-ring"></div>
+                <div class="globe-ring"></div>
+                <div class="globe-ring"></div>
+                <div class="globe-ring"></div>
+                <div class="globe-dot"></div>
+                <div class="globe-dot"></div>
+                <div class="globe-dot"></div>
+                <div class="globe-dot"></div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge reveal">
+                    <span class="hero-badge-dot"></span>
+                    RWA Demo Day &middot; Hong Kong Web3 Festival
+                </div>
+                <h1 class="reveal reveal-delay-1">Own the World.<br><span class="gold">One Token</span> at a Time.</h1>
+                <p class="hero-sub reveal reveal-delay-2">Institutional-grade LATAM real estate, tokenized on Ethereum. Fractional ownership, automated yield, full compliance &mdash; starting at $100.</p>
+                <div class="hero-actions reveal reveal-delay-3">
+                    <a href="#cta" class="btn-primary">Start Investing &rarr;</a>
+                    <a href="#how" class="btn-secondary">See How it Works</a>
+                </div>
+                <div class="hero-stats reveal reveal-delay-4">
+                    <div>
+                        <div class="hero-stat-value">$3.2T</div>
+                        <div class="hero-stat-label">LATAM Real Estate Market</div>
+                    </div>
+                    <div>
+                        <div class="hero-stat-value">$100</div>
+                        <div class="hero-stat-label">Minimum Investment</div>
+                    </div>
+                    <div>
+                        <div class="hero-stat-value">8-14%</div>
+                        <div class="hero-stat-label">Target Annual Yield</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROBLEM -->
+    <section class="problem" id="problem">
+        <div class="container">
+            <div class="reveal">
+                <div class="section-label">The Problem</div>
+                <h2 class="section-title">$3.2 Trillion in Value.<br>Locked Behind Borders.</h2>
+                <p class="section-desc">Latin America's real estate market is one of the largest and fastest-growing on Earth, yet nearly inaccessible to most investors.</p>
+            </div>
+
+            <div class="problem-grid">
+                <div class="problem-card reveal reveal-delay-1">
+                    <div class="problem-icon">
+                        <svg width="24" height="24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                    </div>
+                    <h3>Cross-Border Barriers</h3>
+                    <p>Foreign ownership laws, fragmented registries, and layers of intermediaries make international investment nearly impossible for individuals.</p>
+                    <span class="problem-stat">92%</span>
+                    <p style="font-size:13px;color:var(--gray-400);margin-top:4px;">of properties inaccessible to retail investors</p>
+                </div>
+
+                <div class="problem-card reveal reveal-delay-2">
+                    <div class="problem-icon">
+                        <svg width="24" height="24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                    </div>
+                    <h3>Prohibitive Minimums</h3>
+                    <p>Institutional-grade properties require minimum investments of $500K+, locking out the vast majority of the world's growing investor class.</p>
+                    <span class="problem-stat">$500K+</span>
+                    <p style="font-size:13px;color:var(--gray-400);margin-top:4px;">typical minimum investment</p>
+                </div>
+
+                <div class="problem-card reveal reveal-delay-3">
+                    <div class="problem-icon">
+                        <svg width="24" height="24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    </div>
+                    <h3>Glacial Settlement</h3>
+                    <p>Traditional real estate transactions take 60-120 days to settle, with legal fees, notarization, and bureaucratic overhead eating into returns.</p>
+                    <span class="problem-stat">60-120 days</span>
+                    <p style="font-size:13px;color:var(--gray-400);margin-top:4px;">average settlement time</p>
+                </div>
+
+                <div class="problem-card reveal reveal-delay-4">
+                    <div class="problem-icon">
+                        <svg width="24" height="24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    </div>
+                    <h3>Zero Liquidity</h3>
+                    <p>Once invested, your capital is trapped. There is no secondary market for fractional real estate in LATAM — until now.</p>
+                    <span class="problem-stat">0</span>
+                    <p style="font-size:13px;color:var(--gray-400);margin-top:4px;">liquid secondary markets available</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SOLUTION -->
+    <section class="solution" id="solution">
+        <div class="container">
+            <div class="reveal">
+                <div class="section-label">The Solution</div>
+                <h2 class="section-title">Real Estate, Reimagined<br>for the Digital Age.</h2>
+                <p class="section-desc">Terravault transforms physical properties into compliant digital securities. Invest globally. Earn locally. Trade freely.</p>
+            </div>
+
+            <div class="solution-features">
+                <div class="solution-feature reveal reveal-delay-1">
+                    <span class="solution-feature-icon">
+                        <svg width="36" height="36" fill="none" stroke="#d4a574" stroke-width="1.5" stroke-linecap="round"><rect x="4" y="4" width="28" height="28" rx="6"/><line x1="4" y1="14" x2="32" y2="14"/><line x1="14" y1="4" x2="14" y2="14"/></svg>
+                    </span>
+                    <h3>Fractional Ownership</h3>
+                    <p>Own a piece of a luxury Bogota penthouse or a Mexico City commercial tower from just $100. ERC-3643 tokens represent verified legal ownership.</p>
+                </div>
+
+                <div class="solution-feature reveal reveal-delay-2">
+                    <span class="solution-feature-icon">
+                        <svg width="36" height="36" fill="none" stroke="#d4a574" stroke-width="1.5" stroke-linecap="round"><path d="M18 4v28M4 18h28"/><circle cx="18" cy="18" r="14"/><circle cx="18" cy="18" r="6"/></svg>
+                    </span>
+                    <h3>Automated Yield</h3>
+                    <p>Smart contracts distribute rental income directly to your wallet. No intermediaries, no delays. Yield flows as reliably as the blockchain itself.</p>
+                </div>
+
+                <div class="solution-feature reveal reveal-delay-3">
+                    <span class="solution-feature-icon">
+                        <svg width="36" height="36" fill="none" stroke="#d4a574" stroke-width="1.5" stroke-linecap="round"><path d="M18 4l14 8v12l-14 8L4 24V12z"/><line x1="18" y1="4" x2="18" y2="32"/><line x1="4" y1="12" x2="32" y2="12"/></svg>
+                    </span>
+                    <h3>Built-In Compliance</h3>
+                    <p>ERC-3643 enforces KYC/AML at the protocol level. Every transfer is permissioned. Every holder is verified. Regulators can trust it. So can you.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="how" id="how">
+        <div class="container">
+            <div class="how-header reveal">
+                <div class="section-label">How It Works</div>
+                <h2 class="section-title">Three Steps to Global<br>Real Estate Ownership.</h2>
+                <p class="section-desc">From identity verification to yield collection, we've compressed months of complexity into minutes of clarity.</p>
+            </div>
+
+            <div class="how-steps">
+                <div class="how-step reveal reveal-delay-1">
+                    <div class="how-step-number">1</div>
+                    <h3>Verify Your Identity</h3>
+                    <p>Complete our streamlined KYC/AML process. Your on-chain identity is issued via ERC-735, unlocking access to compliant investments.</p>
+                    <div class="how-step-detail">
+                        <div class="how-step-detail-item">
+                            <span class="how-step-detail-check">&#10003;</span>
+                            <span>KYC via integrated identity oracle</span>
+                        </div>
+                        <div class="how-step-detail-item">
+                            <span class="how-step-detail-check">&#10003;</span>
+                            <span>On-chain identity (ONCHAINID)</span>
+                        </div>
+                        <div class="how-step-detail-item">
+                            <span class="how-step-detail-check">&#10003;</span>
+                            <span>Takes less than 5 minutes</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="how-step reveal reveal-delay-2">
+                    <div class="how-step-number">2</div>
+                    <h3>Choose & Invest</h3>
+                    <p>Browse curated properties across LATAM. Review appraisals, legal structures, and projected yields. Invest from $100 with one transaction.</p>
+                    <div class="how-step-detail">
+                        <div class="how-step-detail-item">
+                            <span class="how-step-detail-check">&#10003;</span>
+                            <span>Institutional-grade properties</span>
+                        </div>
+                        <div class="how-step-detail-item">
+                            <span class="how-step-detail-check">&#10003;</span>
+                            <span>Chainlink-verified valuations</span>
+                        </div>
+                        <div class="how-step-detail-item">
+                            <span class="how-step-detail-check">&#10003;</span>
+                            <span>Transparent fee structure</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="how-step reveal reveal-delay-3">
+                    <div class="how-step-number">3</div>
+                    <h3>Earn & Trade</h3>
+                    <p>Receive automated rental distributions. Trade tokens on compliant secondary markets. Full liquidity, full control, always.</p>
+                    <div class="how-step-detail">
+                        <div class="how-step-detail-item">
+                            <span class="how-step-detail-check">&#10003;</span>
+                            <span>Auto-distributed yield to wallet</span>
+                        </div>
+                        <div class="how-step-detail-item">
+                            <span class="how-step-detail-check">&#10003;</span>
+                            <span>Secondary market liquidity</span>
+                        </div>
+                        <div class="how-step-detail-item">
+                            <span class="how-step-detail-check">&#10003;</span>
+                            <span>Real-time portfolio dashboard</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ASSETS -->
+    <section class="assets" id="assets">
+        <div class="container">
+            <div class="assets-header reveal">
+                <div class="section-label">Asset Types</div>
+                <h2 class="section-title">Premium Properties.<br>Curated for Performance.</h2>
+                <p class="section-desc">Every asset on Terravault is independently appraised, legally structured, and selected for sustainable yield and appreciation.</p>
+            </div>
+
+            <div class="asset-cards">
+                <div class="asset-card reveal reveal-delay-1">
+                    <div class="asset-card-img">
+                        <div class="asset-card-img-bg"></div>
+                        <div class="asset-card-icon-wrapper">
+                            <svg width="48" height="48" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" stroke-linecap="round"><rect x="8" y="16" width="32" height="24" rx="2"/><path d="M16 16V8h16v8"/><line x1="24" y1="28" x2="24" y2="34"/><line x1="20" y1="34" x2="28" y2="34"/></svg>
+                        </div>
+                        <span class="asset-card-tag">Commercial</span>
+                        <span class="asset-card-yield">12.4% APY</span>
+                    </div>
+                    <div class="asset-card-body">
+                        <div class="asset-card-location">Bogota, Colombia</div>
+                        <h3>Torre Platino Office Complex</h3>
+                        <div class="asset-card-meta">
+                            <div class="asset-card-meta-item">
+                                <div class="asset-card-meta-value">$2.4M</div>
+                                <div class="asset-card-meta-label">Valuation</div>
+                            </div>
+                            <div class="asset-card-meta-item">
+                                <div class="asset-card-meta-value">24,000</div>
+                                <div class="asset-card-meta-label">Tokens</div>
+                            </div>
+                            <div class="asset-card-meta-item">
+                                <div class="asset-card-meta-value">$100</div>
+                                <div class="asset-card-meta-label">Per Token</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="asset-card reveal reveal-delay-2">
+                    <div class="asset-card-img">
+                        <div class="asset-card-img-bg"></div>
+                        <div class="asset-card-icon-wrapper">
+                            <svg width="48" height="48" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" stroke-linecap="round"><path d="M4 40h40"/><path d="M8 40V20l16-12 16 12v20"/><rect x="18" y="28" width="12" height="12"/></svg>
+                        </div>
+                        <span class="asset-card-tag">Luxury Residential</span>
+                        <span class="asset-card-yield">9.8% APY</span>
+                    </div>
+                    <div class="asset-card-body">
+                        <div class="asset-card-location">Mexico City, Mexico</div>
+                        <h3>Polanco Luxury Residences</h3>
+                        <div class="asset-card-meta">
+                            <div class="asset-card-meta-item">
+                                <div class="asset-card-meta-value">$5.1M</div>
+                                <div class="asset-card-meta-label">Valuation</div>
+                            </div>
+                            <div class="asset-card-meta-item">
+                                <div class="asset-card-meta-value">51,000</div>
+                                <div class="asset-card-meta-label">Tokens</div>
+                            </div>
+                            <div class="asset-card-meta-item">
+                                <div class="asset-card-meta-value">$100</div>
+                                <div class="asset-card-meta-label">Per Token</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="asset-card reveal reveal-delay-3">
+                    <div class="asset-card-img">
+                        <div class="asset-card-img-bg"></div>
+                        <div class="asset-card-icon-wrapper">
+                            <svg width="48" height="48" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" stroke-linecap="round"><rect x="6" y="14" width="14" height="26" rx="2"/><rect x="28" y="6" width="14" height="34" rx="2"/><line x1="6" y1="22" x2="20" y2="22"/><line x1="6" y1="30" x2="20" y2="30"/><line x1="28" y1="14" x2="42" y2="14"/><line x1="28" y1="22" x2="42" y2="22"/><line x1="28" y1="30" x2="42" y2="30"/></svg>
+                        </div>
+                        <span class="asset-card-tag">Mixed-Use</span>
+                        <span class="asset-card-yield">11.2% APY</span>
+                    </div>
+                    <div class="asset-card-body">
+                        <div class="asset-card-location">Sao Paulo, Brazil</div>
+                        <h3>Vila Madalena Innovation Hub</h3>
+                        <div class="asset-card-meta">
+                            <div class="asset-card-meta-item">
+                                <div class="asset-card-meta-value">$3.8M</div>
+                                <div class="asset-card-meta-label">Valuation</div>
+                            </div>
+                            <div class="asset-card-meta-item">
+                                <div class="asset-card-meta-value">38,000</div>
+                                <div class="asset-card-meta-label">Tokens</div>
+                            </div>
+                            <div class="asset-card-meta-item">
+                                <div class="asset-card-meta-value">$100</div>
+                                <div class="asset-card-meta-label">Per Token</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECURITY -->
+    <section class="security" id="security">
+        <div class="container">
+            <div class="security-layout">
+                <div>
+                    <div class="reveal">
+                        <div class="section-label">Security & Compliance</div>
+                        <h2 class="section-title">Institutional Security.<br>On-Chain Transparency.</h2>
+                        <p class="section-desc">Built on ERC-3643, the only token standard designed for regulated securities. Every transfer is permissioned. Every holder is verified.</p>
+                    </div>
+
+                    <div class="security-list">
+                        <div class="security-item reveal reveal-delay-1">
+                            <div class="security-item-icon">
+                                <svg width="18" height="18" fill="none" stroke="#d4a574" stroke-width="2" stroke-linecap="round"><path d="M9 1l8 4v6c0 5.5-3.5 8.5-8 10C4.5 19.5 1 16.5 1 11V5z"/></svg>
+                            </div>
+                            <div>
+                                <h4>ERC-3643 (T-REX) Standard</h4>
+                                <p>Purpose-built for regulated security tokens with identity verification and transfer restrictions at the protocol level.</p>
+                            </div>
+                        </div>
+
+                        <div class="security-item reveal reveal-delay-2">
+                            <div class="security-item-icon">
+                                <svg width="18" height="18" fill="none" stroke="#d4a574" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="6" r="4"/><path d="M1 18c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
+                            </div>
+                            <div>
+                                <h4>On-Chain Identity (ONCHAINID)</h4>
+                                <p>KYC/AML verification stored on-chain via ERC-735/ERC-725 claims, enabling compliant peer-to-peer transfers.</p>
+                            </div>
+                        </div>
+
+                        <div class="security-item reveal reveal-delay-3">
+                            <div class="security-item-icon">
+                                <svg width="18" height="18" fill="none" stroke="#d4a574" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="9" r="8"/><path d="M9 5v4l3 2"/></svg>
+                            </div>
+                            <div>
+                                <h4>Chainlink Oracle Integration</h4>
+                                <p>Real-time property valuations and price feeds powered by decentralized oracles for transparent, tamper-proof data.</p>
+                            </div>
+                        </div>
+
+                        <div class="security-item reveal reveal-delay-4">
+                            <div class="security-item-icon">
+                                <svg width="18" height="18" fill="none" stroke="#d4a574" stroke-width="2" stroke-linecap="round"><rect x="1" y="5" width="16" height="12" rx="2"/><path d="M5 5V3a4 4 0 0 1 8 0v2"/></svg>
+                            </div>
+                            <div>
+                                <h4>Audited Smart Contracts</h4>
+                                <p>All contracts are built on OpenZeppelin libraries and undergo rigorous third-party security audits before deployment.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="security-visual">
+                    <div class="security-card reveal">
+                        <div class="security-card-header">
+                            <span class="security-card-title">Compliance Score</span>
+                            <span class="security-card-badge">Verified</span>
+                        </div>
+                        <div class="security-bar">
+                            <div class="security-bar-fill" style="--target-width: 98%"></div>
+                        </div>
+                        <div class="security-bar-labels">
+                            <span>KYC/AML Compliance</span>
+                            <span>98%</span>
+                        </div>
+                        <div style="height:16px"></div>
+                        <div class="security-bar">
+                            <div class="security-bar-fill" style="--target-width: 100%"></div>
+                        </div>
+                        <div class="security-bar-labels">
+                            <span>Transfer Restriction Enforcement</span>
+                            <span>100%</span>
+                        </div>
+                        <div style="height:16px"></div>
+                        <div class="security-bar">
+                            <div class="security-bar-fill" style="--target-width: 95%"></div>
+                        </div>
+                        <div class="security-bar-labels">
+                            <span>Oracle Data Freshness</span>
+                            <span>95%</span>
+                        </div>
+                    </div>
+
+                    <div class="security-card reveal reveal-delay-2">
+                        <div class="security-card-header">
+                            <span class="security-card-title">Tech Stack</span>
+                        </div>
+                        <div class="security-tech-stack">
+                            <div class="security-tech-item">
+                                <span>Polygon PoS</span>
+                                <span>Network</span>
+                            </div>
+                            <div class="security-tech-item">
+                                <span>ERC-3643</span>
+                                <span>Token Standard</span>
+                            </div>
+                            <div class="security-tech-item">
+                                <span>Chainlink</span>
+                                <span>Oracle</span>
+                            </div>
+                            <div class="security-tech-item">
+                                <span>OpenZeppelin</span>
+                                <span>Security</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta" id="cta">
+        <div class="container">
+            <div class="cta-content">
+                <div class="section-label reveal">Join the Waitlist</div>
+                <h2 class="reveal reveal-delay-1">The Future of Real Estate<br>Is <span class="gold">Borderless</span>.</h2>
+                <p class="reveal reveal-delay-2">Be among the first to invest in tokenized LATAM real estate. Early access members receive priority allocation and reduced fees.</p>
+                <div class="cta-actions reveal reveal-delay-3">
+                    <a href="#" class="btn-primary">Get Early Access &rarr;</a>
+                    <a href="#" class="btn-secondary">Read the Whitepaper</a>
+                </div>
+                <p class="cta-note reveal reveal-delay-4">No commitment required. We'll notify you when we launch.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <a href="#" class="nav-logo">
+                        <div class="nav-logo-icon">T</div>
+                        <span class="nav-logo-text">Terravault</span>
+                    </a>
+                    <p>Institutional-grade LATAM real estate, tokenized. Own the world, one token at a time.</p>
+                </div>
+
+                <div class="footer-links-group">
+                    <h4>Product</h4>
+                    <a href="#how">How it Works</a>
+                    <a href="#assets">Asset Types</a>
+                    <a href="#security">Security</a>
+                    <a href="#">Documentation</a>
+                </div>
+
+                <div class="footer-links-group">
+                    <h4>Company</h4>
+                    <a href="#">About</a>
+                    <a href="#">Careers</a>
+                    <a href="#">Blog</a>
+                    <a href="#">Contact</a>
+                </div>
+
+                <div class="footer-links-group">
+                    <h4>Legal</h4>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Compliance</a>
+                    <a href="#">Risk Disclosure</a>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <span>&copy; 2026 Terravault. All rights reserved.</span>
+                <div class="footer-socials">
+                    <a href="#" aria-label="Twitter">X</a>
+                    <a href="#" aria-label="Discord">D</a>
+                    <a href="#" aria-label="GitHub">G</a>
+                    <a href="#" aria-label="LinkedIn">in</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ===== Scroll Reveal =====
+        const revealEls = document.querySelectorAll('.reveal');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+        revealEls.forEach(el => revealObserver.observe(el));
+
+        // ===== Nav Scroll =====
+        const nav = document.querySelector('nav');
+        window.addEventListener('scroll', () => {
+            nav.classList.toggle('scrolled', window.scrollY > 60);
+        });
+
+        // ===== Mobile Nav =====
+        const navToggle = document.getElementById('navToggle');
+        const navLinks = document.getElementById('navLinks');
+
+        navToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('open');
+        });
+
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('open');
+            });
+        });
+
+        // ===== Security Bars Animation =====
+        const barFills = document.querySelectorAll('.security-bar-fill');
+        const barObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animated');
+                }
+            });
+        }, { threshold: 0.5 });
+
+        barFills.forEach(bar => barObserver.observe(bar));
+
+        // ===== Smooth Scroll =====
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // ===== Counter Animation =====
+        function animateCounter(el, target, suffix = '') {
+            const duration = 2000;
+            const start = performance.now();
+            const initial = 0;
+
+            function update(now) {
+                const elapsed = now - start;
+                const progress = Math.min(elapsed / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 3);
+                const current = Math.floor(initial + (target - initial) * eased);
+
+                if (target >= 1000000) {
+                    el.textContent = (current / 1000000).toFixed(1) + 'M' + suffix;
+                } else if (target >= 1000) {
+                    el.textContent = (current / 1000).toFixed(1) + 'K' + suffix;
+                } else {
+                    el.textContent = current + suffix;
+                }
+
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                }
+            }
+
+            requestAnimationFrame(update);
+        }
+
+        // ===== Parallax Globe =====
+        const globe = document.querySelector('.globe-container');
+        if (globe) {
+            window.addEventListener('scroll', () => {
+                const scrolled = window.scrollY;
+                globe.style.transform = `translateY(calc(-50% + ${scrolled * 0.15}px))`;
+            }, { passive: true });
+        }
+    </script>
+</body>
+</html>

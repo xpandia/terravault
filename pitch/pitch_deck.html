@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terravault — Own the World. One Token at a Time.</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --emerald: #064e3b;
+  --emerald-deep: #022c22;
+  --emerald-light: #0a7d5f;
+  --gold: #d4a574;
+  --gold-light: #e8c9a0;
+  --gold-dark: #b8864e;
+  --cream: #faf6f0;
+  --cream-dark: #f0e8dc;
+  --black: #0a0a0a;
+  --white: #ffffff;
+  --glass: rgba(6, 78, 59, 0.08);
+}
+
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  font-family: 'Inter', -apple-system, sans-serif;
+  background: var(--black);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Progress Bar */
+#progress-bar {
+  position: fixed; top: 0; left: 0;
+  height: 3px; background: linear-gradient(90deg, var(--gold), var(--gold-light));
+  z-index: 1000; transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 0 12px rgba(212, 165, 116, 0.5);
+}
+
+/* Slide Container */
+#deck {
+  width: 100%; height: 100%;
+  position: relative;
+}
+
+.slide {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 6vh 8vw;
+  opacity: 0; visibility: hidden;
+  transform: translateX(60px);
+  transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  overflow-y: auto;
+}
+
+.slide.active {
+  opacity: 1; visibility: visible;
+  transform: translateX(0);
+}
+
+.slide.exit-left {
+  opacity: 0; visibility: hidden;
+  transform: translateX(-60px);
+}
+
+/* Backgrounds */
+.bg-black { background: var(--black); color: var(--cream); }
+.bg-emerald { background: linear-gradient(145deg, var(--emerald-deep), var(--emerald)); color: var(--cream); }
+.bg-cream { background: var(--cream); color: var(--emerald-deep); }
+.bg-dark-gradient { background: linear-gradient(160deg, #0a0a0a 0%, var(--emerald-deep) 100%); color: var(--cream); }
+.bg-gold-gradient { background: linear-gradient(145deg, var(--emerald-deep) 0%, #1a3a2a 50%, var(--emerald-deep) 100%); color: var(--cream); }
+
+/* Typography */
+.quote {
+  font-size: clamp(1.4rem, 3vw, 2.6rem);
+  font-weight: 300; font-style: italic;
+  line-height: 1.5; text-align: center;
+  max-width: 800px; opacity: 0.9;
+  letter-spacing: -0.02em;
+  color: var(--gold-light);
+}
+
+.title-huge {
+  font-size: clamp(3rem, 7vw, 6rem);
+  font-weight: 900; letter-spacing: -0.04em;
+  line-height: 1.05; text-align: center;
+  background: linear-gradient(135deg, var(--cream) 0%, var(--gold) 50%, var(--gold-light) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.title-large {
+  font-size: clamp(2rem, 4.5vw, 3.8rem);
+  font-weight: 800; letter-spacing: -0.03em;
+  line-height: 1.1; text-align: center;
+}
+
+.title-medium {
+  font-size: clamp(1.5rem, 3vw, 2.4rem);
+  font-weight: 700; letter-spacing: -0.02em;
+  text-align: center;
+}
+
+.subtitle {
+  font-size: clamp(0.9rem, 1.5vw, 1.2rem);
+  font-weight: 400; letter-spacing: 0.15em;
+  text-transform: uppercase; opacity: 0.6;
+  text-align: center; margin-top: 1rem;
+}
+
+.tagline {
+  font-size: clamp(1rem, 1.8vw, 1.4rem);
+  font-weight: 300; opacity: 0.7;
+  text-align: center; margin-top: 0.8rem;
+}
+
+.label {
+  font-size: 0.7rem; font-weight: 600;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 1.5rem;
+}
+
+/* Stat Cards */
+.stat-row {
+  display: flex; gap: 2rem; flex-wrap: wrap;
+  justify-content: center; margin-top: 3rem;
+  width: 100%; max-width: 1100px;
+}
+
+.stat-card {
+  flex: 1; min-width: 200px; max-width: 280px;
+  text-align: center; padding: 2rem 1.5rem;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(212,165,116,0.15);
+  backdrop-filter: blur(10px);
+  transition: transform 0.3s, border-color 0.3s;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(212,165,116,0.4);
+}
+
+.stat-number {
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 800; letter-spacing: -0.03em;
+  color: var(--gold);
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  font-size: 0.85rem; font-weight: 400;
+  opacity: 0.7; line-height: 1.4;
+}
+
+/* Bullet Lists */
+.bullet-list {
+  list-style: none; max-width: 700px;
+  margin-top: 2rem; text-align: left;
+}
+
+.bullet-list li {
+  font-size: clamp(0.95rem, 1.4vw, 1.15rem);
+  line-height: 1.6; padding: 0.7rem 0;
+  border-bottom: 1px solid rgba(212,165,116,0.1);
+  display: flex; align-items: flex-start; gap: 1rem;
+}
+
+.bullet-list li::before {
+  content: '';
+  width: 8px; height: 8px; min-width: 8px;
+  border-radius: 50%; margin-top: 0.5rem;
+  background: var(--gold);
+}
+
+/* Three-column forces */
+.forces-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem; max-width: 1000px; margin-top: 2.5rem;
+  width: 100%;
+}
+
+.force-card {
+  padding: 2rem 1.5rem; border-radius: 16px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(212,165,116,0.12);
+  text-align: left;
+}
+
+.force-card h3 {
+  font-size: 1rem; font-weight: 700;
+  color: var(--gold); margin-bottom: 0.8rem;
+  letter-spacing: -0.01em;
+}
+
+.force-card p {
+  font-size: 0.88rem; line-height: 1.6; opacity: 0.75;
+}
+
+/* Solution Pillars */
+.pillars {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem; max-width: 1000px; margin-top: 2.5rem;
+  width: 100%;
+}
+
+.pillar {
+  padding: 2rem; border-radius: 16px;
+  background: rgba(6,78,59,0.3);
+  border: 1px solid rgba(212,165,116,0.15);
+  text-align: center;
+  transition: transform 0.3s;
+}
+
+.pillar:hover { transform: translateY(-4px); }
+
+.pillar-icon {
+  font-size: 2.2rem; margin-bottom: 1rem;
+  display: block;
+}
+
+.pillar h3 {
+  font-size: 1.1rem; font-weight: 700;
+  margin-bottom: 0.6rem; color: var(--gold-light);
+}
+
+.pillar p {
+  font-size: 0.82rem; line-height: 1.5; opacity: 0.7;
+}
+
+/* How It Works Steps */
+.steps {
+  display: flex; gap: 0.8rem; max-width: 1000px;
+  margin-top: 2.5rem; align-items: stretch; width: 100%;
+}
+
+.step {
+  flex: 1; padding: 1.8rem 1.2rem; text-align: center;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(212,165,116,0.1);
+  position: relative;
+}
+
+.step-num {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--gold); color: var(--emerald-deep);
+  font-weight: 800; font-size: 0.9rem;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 1rem;
+}
+
+.step h4 {
+  font-size: 0.95rem; font-weight: 700;
+  margin-bottom: 0.5rem; color: var(--cream);
+}
+
+.step p {
+  font-size: 0.78rem; opacity: 0.65; line-height: 1.5;
+}
+
+.step-arrow {
+  position: absolute; right: -18px; top: 50%;
+  transform: translateY(-50%);
+  color: var(--gold); font-size: 1.2rem; opacity: 0.4;
+  z-index: 2;
+}
+
+/* TAM SAM SOM */
+.tam-visual {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 0.6rem;
+  margin-top: 2rem;
+}
+
+.tam-ring {
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%; text-align: center;
+  border: 2px solid rgba(212,165,116,0.3);
+  transition: transform 0.3s, border-color 0.3s;
+}
+
+.tam-ring:hover {
+  transform: scale(1.05);
+  border-color: var(--gold);
+}
+
+.tam-ring.tam { width: 320px; height: 320px; background: rgba(212,165,116,0.06); }
+.tam-ring.sam { width: 220px; height: 220px; background: rgba(212,165,116,0.1); }
+.tam-ring.som { width: 140px; height: 140px; background: rgba(212,165,116,0.18); }
+
+.tam-ring .ring-label {
+  font-size: 0.65rem; font-weight: 600;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--gold); opacity: 0.7;
+}
+
+.tam-ring .ring-value {
+  font-size: 1.6rem; font-weight: 800; color: var(--gold-light);
+}
+
+.tam-ring.sam .ring-value { font-size: 1.3rem; }
+.tam-ring.som .ring-value { font-size: 1.1rem; }
+
+.tam-labels {
+  display: flex; gap: 3rem; margin-top: 2rem;
+  flex-wrap: wrap; justify-content: center;
+}
+
+.tam-label-item {
+  text-align: center;
+}
+
+.tam-label-item .ring-label {
+  font-size: 0.65rem; font-weight: 600;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--gold); display: block; margin-bottom: 0.3rem;
+}
+
+.tam-label-item .ring-value {
+  font-size: 1.8rem; font-weight: 800; color: var(--gold-light);
+}
+
+.tam-label-item .ring-desc {
+  font-size: 0.75rem; opacity: 0.5; margin-top: 0.2rem;
+}
+
+/* Property Cards */
+.property-cards {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1.2rem; max-width: 900px; margin-top: 2rem; width: 100%;
+}
+
+.property-card {
+  border-radius: 16px; overflow: hidden;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(212,165,116,0.12);
+  transition: transform 0.3s, border-color 0.3s;
+}
+
+.property-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--gold);
+}
+
+.property-img {
+  height: 100px; width: 100%;
+  position: relative; overflow: hidden;
+}
+
+.property-img-bg {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; letter-spacing: 0.1em;
+  text-transform: uppercase; color: rgba(255,255,255,0.5);
+}
+
+.property-card:nth-child(1) .property-img { background: linear-gradient(135deg, #1a5c3a 0%, #0d3321 100%); }
+.property-card:nth-child(2) .property-img { background: linear-gradient(135deg, #2a4a3a 0%, #0d2921 100%); }
+.property-card:nth-child(3) .property-img { background: linear-gradient(135deg, #1a4c4a 0%, #0d2321 100%); }
+
+.property-card .property-body {
+  padding: 1rem;
+}
+
+.property-card .property-name {
+  font-size: 0.85rem; font-weight: 700; margin-bottom: 0.3rem;
+}
+
+.property-card .property-loc {
+  font-size: 0.7rem; opacity: 0.5; margin-bottom: 0.8rem;
+}
+
+.property-meta {
+  display: flex; justify-content: space-between;
+}
+
+.property-meta span {
+  font-size: 0.7rem;
+}
+
+.property-meta .meta-label { opacity: 0.5; }
+.property-meta .meta-value { font-weight: 700; color: var(--gold); }
+
+.property-badge {
+  display: inline-block; padding: 0.2rem 0.6rem;
+  border-radius: 20px; font-size: 0.6rem; font-weight: 600;
+  background: rgba(212,165,116,0.15); color: var(--gold);
+  margin-top: 0.6rem;
+}
+
+/* Revenue Table */
+.revenue-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1.2rem; max-width: 850px; margin-top: 2rem; width: 100%;
+}
+
+.revenue-card {
+  padding: 1.8rem; border-radius: 16px; text-align: center;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(212,165,116,0.12);
+}
+
+.revenue-card .rev-fee {
+  font-size: 2rem; font-weight: 800; color: var(--gold);
+  margin-bottom: 0.4rem;
+}
+
+.revenue-card .rev-name {
+  font-size: 0.9rem; font-weight: 600; margin-bottom: 0.4rem;
+}
+
+.revenue-card .rev-desc {
+  font-size: 0.75rem; opacity: 0.55; line-height: 1.4;
+}
+
+/* Traction */
+.traction-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1.2rem; max-width: 900px; margin-top: 2rem; width: 100%;
+}
+
+.traction-card {
+  padding: 1.5rem; border-radius: 16px; text-align: center;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(212,165,116,0.12);
+}
+
+.traction-card .traction-value {
+  font-size: 1.8rem; font-weight: 800; color: var(--gold);
+  margin-bottom: 0.3rem;
+}
+
+.traction-card .traction-label {
+  font-size: 0.8rem; opacity: 0.6;
+}
+
+/* Competitive Table */
+.comp-table {
+  max-width: 900px; margin-top: 2rem; width: 100%;
+  border-collapse: separate; border-spacing: 0;
+  border-radius: 12px; overflow: hidden;
+}
+
+.comp-table th, .comp-table td {
+  padding: 0.8rem 1rem; text-align: center;
+  font-size: 0.78rem; border-bottom: 1px solid rgba(212,165,116,0.08);
+}
+
+.comp-table th {
+  background: rgba(212,165,116,0.1);
+  font-weight: 700; font-size: 0.72rem;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--gold);
+}
+
+.comp-table td { opacity: 0.8; }
+
+.comp-table tr td:first-child { font-weight: 600; text-align: left; }
+
+.comp-table .tv-col {
+  background: rgba(212,165,116,0.06);
+  font-weight: 600; color: var(--gold-light);
+}
+
+.comp-check { color: var(--gold); font-weight: 700; }
+
+/* Team Grid */
+.team-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 1.2rem; max-width: 900px; margin-top: 2rem; width: 100%;
+}
+
+.team-card {
+  padding: 1.8rem 1.2rem; border-radius: 16px; text-align: center;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(212,165,116,0.1);
+}
+
+.team-avatar {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+  margin: 0 auto 1rem; display: flex;
+  align-items: center; justify-content: center;
+  font-size: 1.2rem; font-weight: 800; color: var(--emerald-deep);
+}
+
+.team-card .team-role {
+  font-size: 0.72rem; font-weight: 600; color: var(--gold);
+  letter-spacing: 0.1em; text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.team-card .team-desc {
+  font-size: 0.75rem; opacity: 0.6; line-height: 1.5;
+}
+
+/* Ask / Fund Allocation */
+.ask-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 2rem; max-width: 900px; margin-top: 2rem; width: 100%;
+}
+
+.fund-bars { display: flex; flex-direction: column; gap: 1rem; }
+
+.fund-bar-item label {
+  font-size: 0.78rem; font-weight: 500; opacity: 0.7;
+  display: flex; justify-content: space-between; margin-bottom: 0.4rem;
+}
+
+.fund-bar-track {
+  height: 8px; border-radius: 4px;
+  background: rgba(255,255,255,0.06);
+  overflow: hidden;
+}
+
+.fund-bar-fill {
+  height: 100%; border-radius: 4px;
+  background: linear-gradient(90deg, var(--gold-dark), var(--gold));
+  width: 0; transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.milestones-list {
+  list-style: none; display: flex; flex-direction: column; gap: 0.8rem;
+}
+
+.milestones-list li {
+  font-size: 0.88rem; line-height: 1.5;
+  padding-left: 1.5rem; position: relative;
+}
+
+.milestones-list li::before {
+  content: ''; position: absolute; left: 0; top: 0.5rem;
+  width: 8px; height: 8px; border-radius: 50%;
+  border: 2px solid var(--gold);
+}
+
+/* Slide counter */
+#slide-counter {
+  position: fixed; bottom: 2rem; right: 2rem;
+  font-size: 0.75rem; font-weight: 500; opacity: 0.3;
+  color: var(--cream); z-index: 100;
+  letter-spacing: 0.1em;
+}
+
+/* Speaker Notes Overlay */
+#notes-overlay {
+  display: none; position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: rgba(0,0,0,0.92);
+  color: var(--cream); padding: 1.5rem 2rem;
+  font-size: 0.85rem; line-height: 1.6;
+  z-index: 999; border-top: 1px solid rgba(212,165,116,0.2);
+  max-height: 30vh; overflow-y: auto;
+}
+
+#notes-overlay.visible { display: block; }
+
+#notes-overlay .notes-title {
+  font-size: 0.65rem; font-weight: 600;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 0.6rem;
+}
+
+/* Decorative Elements */
+.glow-orb {
+  position: absolute; border-radius: 50%;
+  filter: blur(80px); pointer-events: none;
+  opacity: 0.15;
+}
+
+.gold-line {
+  width: 60px; height: 2px;
+  background: var(--gold); margin: 1.5rem auto;
+  opacity: 0.5;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes counterUp {
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 0.25; }
+}
+
+.animate-in {
+  animation: fadeInUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  opacity: 0;
+}
+
+.delay-1 { animation-delay: 0.15s; }
+.delay-2 { animation-delay: 0.3s; }
+.delay-3 { animation-delay: 0.45s; }
+.delay-4 { animation-delay: 0.6s; }
+.delay-5 { animation-delay: 0.75s; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .slide { padding: 4vh 5vw; }
+  .forces-grid, .pillars, .property-cards, .revenue-grid,
+  .traction-grid, .team-grid { grid-template-columns: 1fr; }
+  .steps { flex-direction: column; }
+  .step-arrow { display: none; }
+  .ask-grid { grid-template-columns: 1fr; }
+  .stat-row { flex-direction: column; align-items: center; }
+  .tam-ring.tam { width: 240px; height: 240px; }
+  .tam-ring.sam { width: 170px; height: 170px; }
+  .tam-ring.som { width: 110px; height: 110px; }
+  .comp-table { font-size: 0.65rem; }
+  .comp-table th, .comp-table td { padding: 0.5rem; }
+}
+
+/* Keyboard hint */
+#controls-hint {
+  position: fixed; bottom: 2rem; left: 2rem;
+  font-size: 0.65rem; opacity: 0.2; color: var(--cream);
+  z-index: 100; letter-spacing: 0.05em;
+}
+
+/* Comparison highlight */
+.highlight-gold { color: var(--gold); font-weight: 700; }
+.highlight-cream { color: var(--cream); }
+
+/* Ask big number */
+.ask-amount {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 900; color: var(--gold);
+  letter-spacing: -0.03em;
+}
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+<div id="slide-counter">01 / 12</div>
+<div id="controls-hint">Arrow keys to navigate &middot; F fullscreen &middot; N notes</div>
+
+<div id="notes-overlay">
+  <div class="notes-title">Speaker Notes</div>
+  <div id="notes-content"></div>
+</div>
+
+<div id="deck">
+
+  <!-- SLIDE 1: Title -->
+  <div class="slide bg-black active" data-notes="Open with silence. Let the quote sit for 3 full seconds before speaking. This is your Steve Jobs moment -- one thought, maximum impact.">
+    <div class="glow-orb" style="width:400px;height:400px;background:var(--emerald);top:-100px;right:-100px;animation:pulse-glow 6s infinite;"></div>
+    <div class="glow-orb" style="width:300px;height:300px;background:var(--gold);bottom:-80px;left:-80px;animation:pulse-glow 8s infinite 2s;"></div>
+    <p class="quote animate-in" style="margin-bottom:3rem;">"The most valuable asset class on Earth...<br>is the one 2 billion people can't touch."</p>
+    <h1 class="title-huge animate-in delay-2">TERRAVAULT</h1>
+    <p class="tagline animate-in delay-3">Own the World. One Token at a Time.</p>
+    <div class="gold-line animate-in delay-4"></div>
+    <p class="subtitle animate-in delay-4">RWA Demo Day &middot; Hong Kong Web3 Festival</p>
+  </div>
+
+  <!-- SLIDE 2: The Problem -->
+  <div class="slide bg-dark-gradient" data-notes="Pause after '$3.2 Trillion.' Let the number sink in. 96% of LATAM real estate has zero liquidity. 70% of Latin Americans are locked out. This is not a market inefficiency -- this is a wall.">
+    <span class="label animate-in">The Problem</span>
+    <h2 class="title-large animate-in delay-1"><span class="highlight-gold">$3.2 Trillion.</span> Locked.</h2>
+    <p class="tagline animate-in delay-2" style="max-width:600px;">Latin America holds massive real estate value.<br>Almost none of it is accessible to the average investor.</p>
+    <div class="stat-row animate-in delay-3">
+      <div class="stat-card">
+        <div class="stat-number counter" data-target="96" data-suffix="%">0%</div>
+        <div class="stat-label">Zero liquidity on secondary markets</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">$50K+</div>
+        <div class="stat-label">Minimum entry in most markets</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number counter" data-target="70" data-suffix="%">0%</div>
+        <div class="stat-label">Latin Americans locked out of property wealth</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">60-120d</div>
+        <div class="stat-label">Average settlement time</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: Why Now -->
+  <div class="slide bg-emerald" data-notes="Three forces are colliding RIGHT NOW. Regulatory clarity in Brazil, Colombia, Mexico, Argentina. LATAM is #1 for stablecoin adoption per capita. Institutions are starving for yield in real assets. The window is open -- it won't stay open forever.">
+    <span class="label animate-in">Why Now</span>
+    <h2 class="title-large animate-in delay-1">Three forces colliding.</h2>
+    <div class="forces-grid animate-in delay-2">
+      <div class="force-card">
+        <h3>Regulatory Clarity</h3>
+        <p>Brazil, Colombia, Mexico, and Argentina have all introduced digital asset frameworks. The door is open.</p>
+      </div>
+      <div class="force-card">
+        <h3>Stablecoin Adoption</h3>
+        <p>LATAM is #1 for stablecoin usage per capita. The rails are built. People already live on-chain.</p>
+      </div>
+      <div class="force-card">
+        <h3>Institutional Hunger</h3>
+        <p>Global institutions are starving for yield in real assets. LATAM delivers 8-14% annual returns.</p>
+      </div>
+    </div>
+    <p class="tagline animate-in delay-3" style="margin-top:2rem;opacity:0.5;">The window is open. It won't stay open forever.</p>
+  </div>
+
+  <!-- SLIDE 4: The Solution -->
+  <div class="slide bg-dark-gradient" data-notes="We don't just 'tokenize property.' We built the full stack. Legal Wrapper -- SPV-based, compliant with local securities law. Smart Contracts -- ERC-3643 with built-in KYC/AML. Marketplace -- 24/7 secondary market. One property. Thousands of owners. Zero borders.">
+    <span class="label animate-in">The Solution</span>
+    <h2 class="title-medium animate-in delay-1">Real estate. Programmable. Tradeable. Compliant.</h2>
+    <div class="pillars animate-in delay-2">
+      <div class="pillar">
+        <span class="pillar-icon" style="color:var(--gold);">&#9878;</span>
+        <h3>Legal Wrapper</h3>
+        <p>SPV-based structure compliant with local securities law in Brazil, Colombia, and Mexico. Real ownership claims.</p>
+      </div>
+      <div class="pillar">
+        <span class="pillar-icon" style="color:var(--gold);">&#10697;</span>
+        <h3>Smart Contracts</h3>
+        <p>ERC-3643 security tokens with built-in KYC/AML, transfer restrictions, and dividend distribution.</p>
+      </div>
+      <div class="pillar">
+        <span class="pillar-icon" style="color:var(--gold);">&#8644;</span>
+        <h3>Marketplace</h3>
+        <p>Secondary market where tokens trade 24/7. Liquidity that never existed before.</p>
+      </div>
+    </div>
+    <p class="tagline animate-in delay-3" style="margin-top:2rem;font-weight:500;">One property. Thousands of owners. Zero borders.</p>
+  </div>
+
+  <!-- SLIDE 5: How It Works -->
+  <div class="slide bg-gold-gradient" data-notes="Four steps. That's it. Property owner submits. Terravault does due diligence + legal SPV. Tokens minted on-chain. Investors buy in from $50 -- yield distributed automatically. Show this is SIMPLE.">
+    <span class="label animate-in">How It Works</span>
+    <h2 class="title-medium animate-in delay-1">Four steps. That's it.</h2>
+    <div class="steps animate-in delay-2">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h4>Submit</h4>
+        <p>Property owner submits commercial, residential, or mixed-use asset</p>
+        <span class="step-arrow">&#8594;</span>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h4>Verify</h4>
+        <p>Due diligence, appraisal, legal structuring via local SPV</p>
+        <span class="step-arrow">&#8594;</span>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h4>Tokenize</h4>
+        <p>ERC-3643 tokens minted on-chain, each representing fractional ownership</p>
+        <span class="step-arrow">&#8594;</span>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <h4>Invest</h4>
+        <p>Global investors buy in from <strong style="color:var(--gold)">$50</strong>. Yield distributed automatically.</p>
+      </div>
+    </div>
+    <div class="stat-row animate-in delay-3" style="margin-top:2rem;">
+      <div class="stat-card">
+        <div class="stat-number">$100</div>
+        <div class="stat-label">Minimum investment</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">&lt;30s</div>
+        <div class="stat-label">Settlement time</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">&lt;1%</div>
+        <div class="stat-label">Transaction cost</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: Demo / Property Cards -->
+  <div class="slide bg-black" data-notes="LIVE DEMO MOMENT. Show the platform. Show a real property in Bogota. Show someone in Hong Kong buying a fraction in 40 seconds. Show the yield flowing. Show the secondary market. No slides -- just the product. This is the 90-second walkthrough you've practiced.">
+    <span class="label animate-in">Live Demo</span>
+    <h2 class="title-medium animate-in delay-1" style="margin-bottom:0.5rem;">"Let me show you something."</h2>
+    <p class="tagline animate-in delay-2" style="max-width:500px;">Real properties. Real tokens. Real yield. Right now.</p>
+    <div class="property-cards animate-in delay-3">
+      <div class="property-card">
+        <div class="property-img"><div class="property-img-bg" style="font-size:2rem;color:rgba(212,165,116,0.3);">&#9962;</div></div>
+        <div class="property-body">
+          <div class="property-name">Torre Chapinero 42</div>
+          <div class="property-loc">Bogota, Colombia</div>
+          <div class="property-meta">
+            <span><span class="meta-label">Value </span><span class="meta-value">$2.4M</span></span>
+            <span><span class="meta-label">Yield </span><span class="meta-value">9.2%</span></span>
+          </div>
+          <div class="property-badge">1,200 tokens &middot; $100 min</div>
+        </div>
+      </div>
+      <div class="property-card">
+        <div class="property-img"><div class="property-img-bg" style="font-size:2rem;color:rgba(212,165,116,0.3);">&#127970;</div></div>
+        <div class="property-body">
+          <div class="property-name">Edif. Paulista Prime</div>
+          <div class="property-loc">Sao Paulo, Brazil</div>
+          <div class="property-meta">
+            <span><span class="meta-label">Value </span><span class="meta-value">$5.1M</span></span>
+            <span><span class="meta-label">Yield </span><span class="meta-value">11.4%</span></span>
+          </div>
+          <div class="property-badge">2,550 tokens &middot; $100 min</div>
+        </div>
+      </div>
+      <div class="property-card">
+        <div class="property-img"><div class="property-img-bg" style="font-size:2rem;color:rgba(212,165,116,0.3);">&#127961;</div></div>
+        <div class="property-body">
+          <div class="property-name">Plaza Reforma 200</div>
+          <div class="property-loc">Mexico City, Mexico</div>
+          <div class="property-meta">
+            <span><span class="meta-label">Value </span><span class="meta-value">$3.8M</span></span>
+            <span><span class="meta-label">Yield </span><span class="meta-value">8.7%</span></span>
+          </div>
+          <div class="property-badge">1,900 tokens &middot; $100 min</div>
+        </div>
+      </div>
+    </div>
+    <p class="tagline animate-in delay-4" style="opacity:0.35;margin-top:1.5rem;font-size:0.8rem;">40 seconds from Hong Kong to Bogota &middot; No lawyers &middot; No paperwork</p>
+  </div>
+
+  <!-- SLIDE 7: Market Size -->
+  <div class="slide bg-emerald" data-notes="The opportunity is not big. It's inevitable. Global RE: $326T. LATAM RE: $3.2T. Tokenized RWA by 2030: $16T. Our SAM Year 3: $320B in institutional LATAM. SOM: $640M across ~200 properties. We're starting where we have legal frameworks, pipelines, and boots on the ground.">
+    <span class="label animate-in">Market Size</span>
+    <h2 class="title-medium animate-in delay-1">Not big. <span class="highlight-gold">Inevitable.</span></h2>
+    <div class="tam-labels animate-in delay-2">
+      <div class="tam-label-item">
+        <span class="ring-label">TAM</span>
+        <span class="ring-value counter" data-target="16" data-prefix="$" data-suffix="T" style="display:block;">$0T</span>
+        <span class="ring-desc">LATAM Real Estate</span>
+      </div>
+      <div class="tam-label-item">
+        <span class="ring-label">SAM</span>
+        <span class="ring-value counter" data-target="320" data-prefix="$" data-suffix="B" style="display:block;">$0B</span>
+        <span class="ring-desc">Institutional-grade, tokenizable</span>
+      </div>
+      <div class="tam-label-item">
+        <span class="ring-label">SOM</span>
+        <span class="ring-value counter" data-target="640" data-prefix="$" data-suffix="M" style="display:block;">$0M</span>
+        <span class="ring-desc">~200 properties, 5 years</span>
+      </div>
+    </div>
+    <div class="stat-row animate-in delay-3" style="margin-top:2.5rem;">
+      <div class="stat-card">
+        <div class="stat-number">$326T</div>
+        <div class="stat-label">Global Real Estate</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">$16T</div>
+        <div class="stat-label">Tokenized RWA by 2030</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">8-14%</div>
+        <div class="stat-label">Annual returns, LATAM RE</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: Business Model -->
+  <div class="slide bg-dark-gradient" data-notes="We make money three ways. All recurring. 2-3% tokenization fee. 0.5-1% marketplace fee. 0.75% AUM management fee. At 200 properties, $400M AUM: $12.3M annual revenue. Capital-light. Software margins. 82% gross margin. LTV:CAC of 8:1.">
+    <span class="label animate-in">Business Model</span>
+    <h2 class="title-medium animate-in delay-1">Three revenue streams. <span class="highlight-gold">All recurring.</span></h2>
+    <div class="revenue-grid animate-in delay-2">
+      <div class="revenue-card">
+        <div class="rev-fee">2-3%</div>
+        <div class="rev-name">Tokenization Fee</div>
+        <div class="rev-desc">One-time fee when property is onboarded and tokenized</div>
+      </div>
+      <div class="revenue-card">
+        <div class="rev-fee">0.5%</div>
+        <div class="rev-name">Trading Fee</div>
+        <div class="rev-desc">Every secondary market transaction on the exchange</div>
+      </div>
+      <div class="revenue-card">
+        <div class="rev-fee">0.75%</div>
+        <div class="rev-name">Management Fee</div>
+        <div class="rev-desc">Annual AUM fee for compliance, property mgmt, yield distribution</div>
+      </div>
+    </div>
+    <div class="stat-row animate-in delay-3" style="margin-top:1.5rem;">
+      <div class="stat-card">
+        <div class="stat-number">82%</div>
+        <div class="stat-label">Gross margin</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">8:1</div>
+        <div class="stat-label">LTV : CAC</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">4mo</div>
+        <div class="stat-label">CAC payback period</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: Traction -->
+  <div class="slide bg-emerald" data-notes="We didn't just build a deck. We built the thing. Platform MVP is LIVE. Legal framework validated in 3 countries. $14M property pipeline. 3 LOIs signed with developers in Bogota and Sao Paulo. Partners: Chainlink, Fireblocks. 2,400+ waitlist signups. This is not a concept. This is a company.">
+    <span class="label animate-in">Traction</span>
+    <h2 class="title-medium animate-in delay-1">We didn't build a deck.<br><span class="highlight-gold">We built the thing.</span></h2>
+    <div class="traction-grid animate-in delay-2">
+      <div class="traction-card">
+        <div class="traction-value" style="font-size:1.2rem;">LIVE</div>
+        <div class="traction-label">Platform MVP</div>
+      </div>
+      <div class="traction-card">
+        <div class="traction-value counter" data-target="14" data-prefix="$" data-suffix="M">$0M</div>
+        <div class="traction-label">Property Pipeline</div>
+      </div>
+      <div class="traction-card">
+        <div class="traction-value counter" data-target="3">0</div>
+        <div class="traction-label">LOIs Signed (Bogota + SP)</div>
+      </div>
+      <div class="traction-card">
+        <div class="traction-value counter" data-target="2400" data-suffix="+">0+</div>
+        <div class="traction-label">Waitlist Signups</div>
+      </div>
+      <div class="traction-card">
+        <div class="traction-value counter" data-target="3">0</div>
+        <div class="traction-label">Jurisdictions Validated</div>
+      </div>
+      <div class="traction-card">
+        <div class="traction-value" style="font-size:0.9rem;">Chainlink &middot; Fireblocks</div>
+        <div class="traction-label">Key Partners</div>
+      </div>
+    </div>
+    <p class="tagline animate-in delay-3" style="margin-top:2rem;font-weight:600;">This is not a concept. This is a company.</p>
+  </div>
+
+  <!-- SLIDE 10: Competitive Landscape -->
+  <div class="slide bg-dark-gradient" data-notes="Why not RealT, Lofty, Propy? None of them operate in LATAM. Our moat: regulatory depth + local operations + institutional infrastructure in the most underserved real estate market on the planet. 18-24 month regulatory head start.">
+    <span class="label animate-in">Competitive Landscape</span>
+    <h2 class="title-medium animate-in delay-1">Nobody else is doing this in LATAM.</h2>
+    <table class="comp-table animate-in delay-2">
+      <thead>
+        <tr>
+          <th></th>
+          <th class="tv-col">Terravault</th>
+          <th>RealT</th>
+          <th>Lofty</th>
+          <th>Securitize</th>
+          <th>La Haus</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>LATAM Focus</td>
+          <td class="tv-col comp-check">Core</td>
+          <td>None</td>
+          <td>None</td>
+          <td>None</td>
+          <td>Residential</td>
+        </tr>
+        <tr>
+          <td>Compliance</td>
+          <td class="tv-col comp-check">ERC-3643 Native</td>
+          <td>Reg D</td>
+          <td>Reg D</td>
+          <td>Proprietary</td>
+          <td>Traditional</td>
+        </tr>
+        <tr>
+          <td>Secondary Market</td>
+          <td class="tv-col comp-check">Built-in</td>
+          <td>Limited</td>
+          <td>Limited</td>
+          <td>DS Protocol</td>
+          <td>None</td>
+        </tr>
+        <tr>
+          <td>Institutional Grade</td>
+          <td class="tv-col comp-check">Yes</td>
+          <td>Retail</td>
+          <td>Retail</td>
+          <td>Yes</td>
+          <td>No</td>
+        </tr>
+        <tr>
+          <td>Yield Automation</td>
+          <td class="tv-col comp-check">On-chain, real-time</td>
+          <td>Monthly</td>
+          <td>Monthly</td>
+          <td>Varies</td>
+          <td>None</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="tagline animate-in delay-3" style="margin-top:1.5rem;max-width:600px;">Our moat: regulatory depth + local operations + institutional infrastructure<br>in the most underserved RE market on the planet.</p>
+  </div>
+
+  <!-- SLIDE 11: Team -->
+  <div class="slide bg-emerald" data-notes="We've been here before. CEO: Former PropTech founder, 10+ years in LATAM RE. CTO: ERC-3643 contributor, security-first. Head of Legal: Former securities attorney, 3 LATAM jurisdictions. Head of Partnerships: 15 years LATAM commercial RE, 40+ developer relationships. We're not tourists. We live here.">
+    <span class="label animate-in">The Team</span>
+    <h2 class="title-medium animate-in delay-1">We've been here before.</h2>
+    <div class="team-grid animate-in delay-2">
+      <div class="team-card">
+        <div class="team-avatar">CEO</div>
+        <div class="team-role">CEO / Product</div>
+        <div class="team-desc">Former PropTech founder. 10+ years LATAM real estate. Built and exited.</div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">CTO</div>
+        <div class="team-role">CTO / Protocol</div>
+        <div class="team-desc">ERC-3643 contributor. Built tokenization infrastructure at scale. Security-first.</div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">CLO</div>
+        <div class="team-role">Head of Legal</div>
+        <div class="team-desc">Former securities attorney. Compliant token offerings across 3 LATAM jurisdictions.</div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">BD</div>
+        <div class="team-role">Partnerships</div>
+        <div class="team-desc">15 years LATAM commercial RE. Direct relationships with 40+ developers.</div>
+      </div>
+    </div>
+    <p class="tagline animate-in delay-3" style="margin-top:2rem;">We're not tourists in this market. <span class="highlight-gold">We live here.</span></p>
+  </div>
+
+  <!-- SLIDE 12: The Ask + Close -->
+  <div class="slide bg-black" data-notes="We're raising $3.5M seed. 40% engineering, 20% legal, 15% BD, 15% ops, 10% marketing. Milestones: first 8 properties, $25M AUM, 2000 investors, regulatory approvals. Close with eye contact: 'There are 650 million people in Latin America. Most will never own property. We're going to change that.' Terravault. Own the World. One Token at a Time.">
+    <div class="glow-orb" style="width:500px;height:500px;background:var(--emerald);top:-150px;left:-150px;animation:pulse-glow 6s infinite;"></div>
+    <div class="glow-orb" style="width:350px;height:350px;background:var(--gold);bottom:-100px;right:-100px;animation:pulse-glow 8s infinite 2s;"></div>
+    <span class="label animate-in">The Ask</span>
+    <div class="ask-amount animate-in delay-1">$3.5M Seed</div>
+    <p class="tagline animate-in delay-1" style="margin-bottom:2rem;">$14-18M pre-money valuation</p>
+    <div class="ask-grid animate-in delay-2">
+      <div class="fund-bars">
+        <div class="fund-bar-item">
+          <label><span>Engineering</span><span class="highlight-gold">40% &middot; $1.4M</span></label>
+          <div class="fund-bar-track"><div class="fund-bar-fill" data-width="40"></div></div>
+        </div>
+        <div class="fund-bar-item">
+          <label><span>Legal & Compliance</span><span class="highlight-gold">20% &middot; $700K</span></label>
+          <div class="fund-bar-track"><div class="fund-bar-fill" data-width="20"></div></div>
+        </div>
+        <div class="fund-bar-item">
+          <label><span>BD & Property Pipeline</span><span class="highlight-gold">15% &middot; $525K</span></label>
+          <div class="fund-bar-track"><div class="fund-bar-fill" data-width="15"></div></div>
+        </div>
+        <div class="fund-bar-item">
+          <label><span>Operations & Team</span><span class="highlight-gold">15% &middot; $525K</span></label>
+          <div class="fund-bar-track"><div class="fund-bar-fill" data-width="15"></div></div>
+        </div>
+        <div class="fund-bar-item">
+          <label><span>Marketing & Community</span><span class="highlight-gold">10% &middot; $350K</span></label>
+          <div class="fund-bar-track"><div class="fund-bar-fill" data-width="10"></div></div>
+        </div>
+      </div>
+      <div>
+        <p style="font-size:0.7rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;">Milestones This Round Unlocks</p>
+        <ul class="milestones-list">
+          <li>First 8 properties tokenized on Polygon</li>
+          <li>$25M AUM within 12 months</li>
+          <li>2,000 verified investors</li>
+          <li>Regulatory approval in Colombia + Mexico</li>
+          <li>Secondary market beta launch</li>
+          <li>Series A readiness at $60-80M valuation</li>
+        </ul>
+      </div>
+    </div>
+    <div class="gold-line animate-in delay-3" style="margin-top:2.5rem;"></div>
+    <p class="quote animate-in delay-4" style="font-size:clamp(1rem,2vw,1.5rem);max-width:700px;margin-top:0.5rem;">"650 million people in Latin America. Most will never own property.<br>We're going to change that — and let the world invest alongside them."</p>
+    <p class="tagline animate-in delay-5" style="font-weight:700;font-size:1.1rem;color:var(--gold-light);margin-top:1rem;">Terravault. Own the World. One Token at a Time.</p>
+    <p class="subtitle animate-in delay-5" style="opacity:0.3;margin-top:0.5rem;">contact@terravault.io &middot; terravault.io</p>
+  </div>
+
+</div>
+
+<script>
+(function() {
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let current = 0;
+  let notesVisible = false;
+
+  const progressBar = document.getElementById('progress-bar');
+  const slideCounter = document.getElementById('slide-counter');
+  const notesOverlay = document.getElementById('notes-overlay');
+  const notesContent = document.getElementById('notes-content');
+
+  function updateProgress() {
+    const pct = ((current + 1) / total) * 100;
+    progressBar.style.width = pct + '%';
+    slideCounter.textContent = String(current + 1).padStart(2, '0') + ' / ' + String(total).padStart(2, '0');
+  }
+
+  function showNotes() {
+    const note = slides[current].getAttribute('data-notes') || 'No notes for this slide.';
+    notesContent.textContent = note;
+  }
+
+  function animateCounters(slide) {
+    const counters = slide.querySelectorAll('.counter');
+    counters.forEach(el => {
+      const target = parseInt(el.getAttribute('data-target'));
+      const prefix = el.getAttribute('data-prefix') || '';
+      const suffix = el.getAttribute('data-suffix') || '';
+      let start = 0;
+      const duration = 1200;
+      const startTime = performance.now();
+
+      function tick(now) {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const val = Math.round(eased * target);
+        el.textContent = prefix + val.toLocaleString() + suffix;
+        if (progress < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    });
+  }
+
+  function animateFundBars(slide) {
+    const fills = slide.querySelectorAll('.fund-bar-fill');
+    setTimeout(() => {
+      fills.forEach(fill => {
+        const w = fill.getAttribute('data-width');
+        fill.style.width = (w * 2.5) + '%'; // scale for visual
+      });
+    }, 400);
+  }
+
+  function goTo(index) {
+    if (index < 0 || index >= total || index === current) return;
+
+    slides[current].classList.remove('active');
+    slides[current].classList.add('exit-left');
+
+    setTimeout(() => {
+      slides[current].classList.remove('exit-left');
+    }, 600);
+
+    current = index;
+    slides[current].classList.add('active');
+
+    // Re-trigger animations
+    const anims = slides[current].querySelectorAll('.animate-in');
+    anims.forEach(el => {
+      el.style.animation = 'none';
+      el.offsetHeight; // reflow
+      el.style.animation = '';
+    });
+
+    animateCounters(slides[current]);
+    animateFundBars(slides[current]);
+    updateProgress();
+    showNotes();
+  }
+
+  function next() { goTo(current + 1); }
+  function prev() { goTo(current - 1); }
+
+  // Keyboard
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+      e.preventDefault(); next();
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault(); prev();
+    } else if (e.key === 'f' || e.key === 'F') {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen();
+      }
+    } else if (e.key === 'n' || e.key === 'N') {
+      notesVisible = !notesVisible;
+      notesOverlay.classList.toggle('visible', notesVisible);
+    } else if (e.key === 'Escape') {
+      notesVisible = false;
+      notesOverlay.classList.remove('visible');
+    }
+  });
+
+  // Click nav
+  document.addEventListener('click', e => {
+    if (e.target.closest('#notes-overlay') || e.target.closest('#controls-hint')) return;
+    const x = e.clientX / window.innerWidth;
+    if (x > 0.3) next(); else prev();
+  });
+
+  // Touch
+  let touchStartX = 0;
+  document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+  document.addEventListener('touchend', e => {
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) { diff > 0 ? next() : prev(); }
+  });
+
+  // Init
+  updateProgress();
+  showNotes();
+  animateCounters(slides[0]);
+
+  // Hide hint after 5s
+  setTimeout(() => {
+    document.getElementById('controls-hint').style.transition = 'opacity 1s';
+    document.getElementById('controls-hint').style.opacity = '0';
+  }, 5000);
+})();
+</script>
+</body>
+</html>
