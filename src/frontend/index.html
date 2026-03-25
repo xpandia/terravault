@@ -1,1990 +1,1154 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terravault — Own the World. One Token at a Time.</title>
-    <meta name="description" content="Institutional-grade LATAM real estate, tokenized. Fractional ownership starting at $100.">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <style>
-        *, *::before, *::after {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --emerald-deep: #064e3b;
-            --emerald: #065f46;
-            --emerald-light: #0d7353;
-            --gold: #d4a574;
-            --gold-light: #e8c9a0;
-            --gold-bright: #c9915a;
-            --cream: #faf6f1;
-            --cream-dark: #f0e9df;
-            --white: #ffffff;
-            --black: #0a0a0a;
-            --gray-900: #111111;
-            --gray-800: #1a1a1a;
-            --gray-700: #2d2d2d;
-            --gray-600: #444444;
-            --gray-400: #999999;
-            --gray-300: #bbbbbb;
-        }
-
-        html {
-            scroll-behavior: smooth;
-            font-size: 16px;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--cream);
-            color: var(--gray-900);
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        /* ===== UTILITY ===== */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 24px;
-        }
-
-        .reveal {
-            opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .reveal.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .reveal-delay-1 { transition-delay: 0.1s; }
-        .reveal-delay-2 { transition-delay: 0.2s; }
-        .reveal-delay-3 { transition-delay: 0.3s; }
-        .reveal-delay-4 { transition-delay: 0.4s; }
-
-        /* ===== NAV ===== */
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            padding: 20px 0;
-            transition: all 0.4s ease;
-        }
-
-        nav.scrolled {
-            background: rgba(6, 78, 59, 0.97);
-            backdrop-filter: blur(20px);
-            padding: 14px 0;
-            box-shadow: 0 1px 40px rgba(0,0,0,0.15);
-        }
-
-        nav .container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .nav-logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-        }
-
-        .nav-logo-icon {
-            width: 36px;
-            height: 36px;
-            background: var(--gold);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            color: var(--emerald-deep);
-            font-size: 18px;
-        }
-
-        .nav-logo-text {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--white);
-            letter-spacing: -0.5px;
-        }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 36px;
-            list-style: none;
-        }
-
-        .nav-links a {
-            color: rgba(255,255,255,0.8);
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            letter-spacing: 0.3px;
-            transition: color 0.3s;
-        }
-
-        .nav-links a:hover {
-            color: var(--gold);
-        }
-
-        .nav-cta {
-            background: var(--gold) !important;
-            color: var(--emerald-deep) !important;
-            padding: 10px 24px;
-            border-radius: 8px;
-            font-weight: 600 !important;
-            transition: transform 0.3s, box-shadow 0.3s !important;
-        }
-
-        .nav-cta:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 20px rgba(212, 165, 116, 0.4);
-            color: var(--emerald-deep) !important;
-        }
-
-        .nav-mobile-toggle {
-            display: none;
-            flex-direction: column;
-            gap: 5px;
-            cursor: pointer;
-            background: none;
-            border: none;
-            padding: 4px;
-        }
-
-        .nav-mobile-toggle span {
-            width: 24px;
-            height: 2px;
-            background: var(--white);
-            border-radius: 2px;
-            transition: all 0.3s;
-        }
-
-        /* ===== HERO ===== */
-        .hero {
-            min-height: 100vh;
-            background: var(--emerald-deep);
-            display: flex;
-            align-items: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-bg-pattern {
-            position: absolute;
-            inset: 0;
-            background:
-                radial-gradient(ellipse 80% 60% at 70% 40%, rgba(212,165,116,0.07) 0%, transparent 60%),
-                radial-gradient(ellipse 60% 50% at 20% 80%, rgba(13,115,83,0.3) 0%, transparent 50%);
-        }
-
-        .hero-grid-overlay {
-            position: absolute;
-            inset: 0;
-            background-image:
-                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-            background-size: 60px 60px;
-        }
-
-        /* Globe */
-        .globe-container {
-            position: absolute;
-            right: -5%;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 650px;
-            height: 650px;
-            opacity: 0.15;
-        }
-
-        .globe {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 1px solid rgba(212,165,116,0.3);
-            position: relative;
-            animation: globeRotate 30s linear infinite;
-        }
-
-        .globe::before,
-        .globe::after {
-            content: '';
-            position: absolute;
-            border-radius: 50%;
-            border: 1px solid rgba(212,165,116,0.2);
-        }
-
-        .globe::before {
-            inset: 10%;
-            transform: rotateX(60deg);
-        }
-
-        .globe::after {
-            inset: 5%;
-            transform: rotateY(30deg);
-        }
-
-        .globe-ring {
-            position: absolute;
-            inset: 0;
-            border-radius: 50%;
-            border: 1px solid rgba(212,165,116,0.15);
-        }
-
-        .globe-ring:nth-child(1) { transform: rotateX(20deg) rotateY(40deg); }
-        .globe-ring:nth-child(2) { transform: rotateX(50deg) rotateY(-20deg); }
-        .globe-ring:nth-child(3) { transform: rotateX(80deg) rotateY(10deg); }
-        .globe-ring:nth-child(4) { transform: rotateX(30deg) rotateY(70deg); }
-
-        .globe-dot {
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            background: var(--gold);
-            border-radius: 50%;
-            box-shadow: 0 0 12px rgba(212,165,116,0.6);
-        }
-
-        .globe-dot:nth-child(5) { top: 35%; left: 30%; animation: pulse 3s ease-in-out infinite; }
-        .globe-dot:nth-child(6) { top: 45%; left: 35%; animation: pulse 3s ease-in-out 0.5s infinite; }
-        .globe-dot:nth-child(7) { top: 55%; left: 28%; animation: pulse 3s ease-in-out 1s infinite; }
-        .globe-dot:nth-child(8) { top: 40%; left: 40%; animation: pulse 3s ease-in-out 1.5s infinite; }
-
-        @keyframes globeRotate {
-            from { transform: rotateY(0deg); }
-            to { transform: rotateY(360deg); }
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 0.4; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.8); }
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            max-width: 720px;
-        }
-
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(212,165,116,0.12);
-            border: 1px solid rgba(212,165,116,0.25);
-            padding: 8px 18px;
-            border-radius: 100px;
-            margin-bottom: 32px;
-            color: var(--gold);
-            font-size: 13px;
-            font-weight: 600;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-        }
-
-        .hero-badge-dot {
-            width: 6px;
-            height: 6px;
-            background: var(--gold);
-            border-radius: 50%;
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        .hero h1 {
-            font-size: clamp(42px, 6vw, 76px);
-            font-weight: 800;
-            color: var(--white);
-            line-height: 1.05;
-            letter-spacing: -2px;
-            margin-bottom: 28px;
-        }
-
-        .hero h1 .gold {
-            color: var(--gold);
-        }
-
-        .hero-sub {
-            font-size: clamp(17px, 2vw, 20px);
-            color: rgba(255,255,255,0.65);
-            line-height: 1.7;
-            max-width: 540px;
-            margin-bottom: 48px;
-            font-weight: 400;
-        }
-
-        .hero-actions {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
-        .btn-primary {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background: var(--gold);
-            color: var(--emerald-deep);
-            padding: 16px 36px;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 700;
-            text-decoration: none;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            border: none;
-            cursor: pointer;
-            letter-spacing: -0.2px;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 32px rgba(212,165,116,0.35);
-            background: var(--gold-light);
-        }
-
-        .btn-secondary {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background: transparent;
-            color: var(--white);
-            padding: 16px 36px;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            text-decoration: none;
-            border: 1px solid rgba(255,255,255,0.2);
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-
-        .btn-secondary:hover {
-            border-color: rgba(255,255,255,0.5);
-            background: rgba(255,255,255,0.05);
-        }
-
-        .hero-stats {
-            display: flex;
-            gap: 48px;
-            margin-top: 72px;
-            padding-top: 40px;
-            border-top: 1px solid rgba(255,255,255,0.08);
-        }
-
-        .hero-stat-value {
-            font-size: 32px;
-            font-weight: 800;
-            color: var(--gold);
-            letter-spacing: -1px;
-        }
-
-        .hero-stat-label {
-            font-size: 13px;
-            color: rgba(255,255,255,0.45);
-            margin-top: 4px;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-        }
-
-        /* ===== PROBLEM ===== */
-        .problem {
-            padding: 140px 0;
-            background: var(--cream);
-        }
-
-        .section-label {
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: var(--gold-bright);
-            margin-bottom: 20px;
-        }
-
-        .section-title {
-            font-size: clamp(32px, 4vw, 52px);
-            font-weight: 800;
-            color: var(--emerald-deep);
-            line-height: 1.1;
-            letter-spacing: -1.5px;
-            margin-bottom: 24px;
-        }
-
-        .section-desc {
-            font-size: 18px;
-            color: var(--gray-600);
-            line-height: 1.7;
-            max-width: 600px;
-        }
-
-        .problem-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 24px;
-            margin-top: 64px;
-        }
-
-        .problem-card {
-            background: var(--white);
-            border-radius: 20px;
-            padding: 40px;
-            border: 1px solid rgba(0,0,0,0.04);
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .problem-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--gold), var(--gold-light));
-            opacity: 0;
-            transition: opacity 0.4s;
-        }
-
-        .problem-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.06);
-        }
-
-        .problem-card:hover::before {
-            opacity: 1;
-        }
-
-        .problem-icon {
-            width: 52px;
-            height: 52px;
-            background: linear-gradient(135deg, var(--emerald-deep), var(--emerald-light));
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 24px;
-            font-size: 24px;
-        }
-
-        .problem-card h3 {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--emerald-deep);
-            margin-bottom: 12px;
-            letter-spacing: -0.3px;
-        }
-
-        .problem-card p {
-            font-size: 15px;
-            color: var(--gray-600);
-            line-height: 1.7;
-        }
-
-        .problem-stat {
-            display: inline-block;
-            margin-top: 16px;
-            font-size: 28px;
-            font-weight: 800;
-            color: var(--gold-bright);
-            letter-spacing: -1px;
-        }
-
-        /* ===== SOLUTION ===== */
-        .solution {
-            padding: 140px 0;
-            background: var(--emerald-deep);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .solution::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(ellipse 50% 50% at 80% 20%, rgba(212,165,116,0.06) 0%, transparent 60%);
-        }
-
-        .solution .section-label {
-            color: var(--gold);
-        }
-
-        .solution .section-title {
-            color: var(--white);
-        }
-
-        .solution .section-desc {
-            color: rgba(255,255,255,0.55);
-        }
-
-        .solution-features {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 32px;
-            margin-top: 72px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .solution-feature {
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 20px;
-            padding: 40px 32px;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .solution-feature:hover {
-            background: rgba(255,255,255,0.08);
-            transform: translateY(-4px);
-            border-color: rgba(212,165,116,0.2);
-        }
-
-        .solution-feature-icon {
-            font-size: 32px;
-            margin-bottom: 24px;
-            display: block;
-        }
-
-        .solution-feature h3 {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--white);
-            margin-bottom: 12px;
-            letter-spacing: -0.3px;
-        }
-
-        .solution-feature p {
-            font-size: 15px;
-            color: rgba(255,255,255,0.5);
-            line-height: 1.7;
-        }
-
-        /* ===== HOW IT WORKS ===== */
-        .how {
-            padding: 140px 0;
-            background: var(--cream);
-        }
-
-        .how-header {
-            text-align: center;
-            margin-bottom: 80px;
-        }
-
-        .how-header .section-desc {
-            margin: 0 auto;
-        }
-
-        .how-steps {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0;
-            position: relative;
-        }
-
-        .how-steps::before {
-            content: '';
-            position: absolute;
-            top: 52px;
-            left: 16.66%;
-            right: 16.66%;
-            height: 2px;
-            background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
-        }
-
-        .how-step {
-            text-align: center;
-            padding: 0 32px;
-            position: relative;
-        }
-
-        .how-step-number {
-            width: 56px;
-            height: 56px;
-            background: var(--emerald-deep);
-            color: var(--gold);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            font-weight: 800;
-            margin: 0 auto 32px;
-            position: relative;
-            z-index: 1;
-            border: 4px solid var(--cream);
-            box-shadow: 0 0 0 2px var(--gold);
-        }
-
-        .how-step h3 {
-            font-size: 22px;
-            font-weight: 700;
-            color: var(--emerald-deep);
-            margin-bottom: 16px;
-            letter-spacing: -0.3px;
-        }
-
-        .how-step p {
-            font-size: 15px;
-            color: var(--gray-600);
-            line-height: 1.7;
-        }
-
-        .how-step-detail {
-            margin-top: 24px;
-            background: var(--white);
-            border-radius: 16px;
-            padding: 24px;
-            border: 1px solid rgba(0,0,0,0.04);
-        }
-
-        .how-step-detail-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 14px;
-            color: var(--gray-600);
-            padding: 6px 0;
-        }
-
-        .how-step-detail-check {
-            width: 18px;
-            height: 18px;
-            background: rgba(6,78,59,0.08);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 10px;
-            color: var(--emerald-deep);
-            flex-shrink: 0;
-        }
-
-        /* ===== ASSETS ===== */
-        .assets {
-            padding: 140px 0;
-            background: var(--white);
-        }
-
-        .assets-header {
-            text-align: center;
-            margin-bottom: 72px;
-        }
-
-        .assets-header .section-desc {
-            margin: 0 auto;
-        }
-
-        .asset-cards {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 28px;
-        }
-
-        .asset-card {
-            border-radius: 20px;
-            overflow: hidden;
-            background: var(--cream);
-            border: 1px solid rgba(0,0,0,0.04);
-            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-            cursor: pointer;
-        }
-
-        .asset-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 24px 64px rgba(0,0,0,0.08);
-        }
-
-        .asset-card-img {
-            height: 220px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .asset-card-img-bg {
-            position: absolute;
-            inset: 0;
-            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .asset-card:hover .asset-card-img-bg {
-            transform: scale(1.08);
-        }
-
-        .asset-card:nth-child(1) .asset-card-img-bg {
-            background: linear-gradient(135deg, #1a3a2a 0%, #2d5a3f 50%, #0d4530 100%);
-        }
-
-        .asset-card:nth-child(2) .asset-card-img-bg {
-            background: linear-gradient(135deg, #2a1a3a 0%, #4a3060 50%, #301a45 100%);
-        }
-
-        .asset-card:nth-child(3) .asset-card-img-bg {
-            background: linear-gradient(135deg, #3a2a1a 0%, #5a4020 50%, #453010 100%);
-        }
-
-        .asset-card-tag {
-            position: absolute;
-            top: 16px;
-            left: 16px;
-            background: rgba(0,0,0,0.5);
-            backdrop-filter: blur(10px);
-            color: white;
-            padding: 6px 14px;
-            border-radius: 100px;
-            font-size: 12px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-
-        .asset-card-yield {
-            position: absolute;
-            bottom: 16px;
-            right: 16px;
-            background: var(--gold);
-            color: var(--emerald-deep);
-            padding: 6px 14px;
-            border-radius: 100px;
-            font-size: 13px;
-            font-weight: 700;
-        }
-
-        .asset-card-icon-wrapper {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 48px;
-            opacity: 0.4;
-        }
-
-        .asset-card-body {
-            padding: 28px;
-        }
-
-        .asset-card-location {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--gold-bright);
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            margin-bottom: 8px;
-        }
-
-        .asset-card h3 {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--emerald-deep);
-            margin-bottom: 16px;
-            letter-spacing: -0.3px;
-        }
-
-        .asset-card-meta {
-            display: flex;
-            justify-content: space-between;
-            padding-top: 16px;
-            border-top: 1px solid rgba(0,0,0,0.06);
-        }
-
-        .asset-card-meta-item {
-            text-align: center;
-        }
-
-        .asset-card-meta-value {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--emerald-deep);
-        }
-
-        .asset-card-meta-label {
-            font-size: 11px;
-            color: var(--gray-400);
-            margin-top: 2px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        /* ===== SECURITY ===== */
-        .security {
-            padding: 140px 0;
-            background: var(--gray-900);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .security::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background:
-                radial-gradient(ellipse 40% 40% at 10% 80%, rgba(6,78,59,0.2) 0%, transparent 60%),
-                radial-gradient(ellipse 40% 40% at 90% 20%, rgba(212,165,116,0.05) 0%, transparent 60%);
-        }
-
-        .security-layout {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 80px;
-            align-items: center;
-            position: relative;
-            z-index: 1;
-        }
-
-        .security .section-label {
-            color: var(--gold);
-        }
-
-        .security .section-title {
-            color: var(--white);
-        }
-
-        .security .section-desc {
-            color: rgba(255,255,255,0.5);
-        }
-
-        .security-list {
-            margin-top: 40px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .security-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 16px;
-        }
-
-        .security-item-icon {
-            width: 40px;
-            height: 40px;
-            background: rgba(212,165,116,0.1);
-            border: 1px solid rgba(212,165,116,0.2);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            flex-shrink: 0;
-        }
-
-        .security-item h4 {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--white);
-            margin-bottom: 4px;
-        }
-
-        .security-item p {
-            font-size: 14px;
-            color: rgba(255,255,255,0.4);
-            line-height: 1.6;
-        }
-
-        .security-visual {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .security-card {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 20px;
-            padding: 32px;
-            transition: all 0.4s;
-        }
-
-        .security-card:hover {
-            background: rgba(255,255,255,0.06);
-            border-color: rgba(212,165,116,0.15);
-        }
-
-        .security-card-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-
-        .security-card-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--gold);
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        .security-card-badge {
-            background: rgba(34,197,94,0.15);
-            color: #4ade80;
-            padding: 4px 12px;
-            border-radius: 100px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .security-bar {
-            height: 4px;
-            background: rgba(255,255,255,0.06);
-            border-radius: 4px;
-            margin-bottom: 12px;
-            overflow: hidden;
-        }
-
-        .security-bar-fill {
-            height: 100%;
-            border-radius: 4px;
-            background: linear-gradient(90deg, var(--gold), var(--gold-light));
-            transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1);
-            width: 0;
-        }
-
-        .security-bar-fill.animated {
-            width: var(--target-width);
-        }
-
-        .security-bar-labels {
-            display: flex;
-            justify-content: space-between;
-            font-size: 12px;
-            color: rgba(255,255,255,0.3);
-        }
-
-        .security-tech-stack {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-top: 8px;
-        }
-
-        .security-tech-item {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 12px;
-            padding: 16px;
-            text-align: center;
-        }
-
-        .security-tech-item span:first-child {
-            display: block;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--white);
-            margin-bottom: 4px;
-        }
-
-        .security-tech-item span:last-child {
-            font-size: 11px;
-            color: rgba(255,255,255,0.3);
-        }
-
-        /* ===== CTA ===== */
-        .cta {
-            padding: 140px 0;
-            background: var(--emerald-deep);
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .cta::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background:
-                radial-gradient(ellipse 60% 50% at 50% 100%, rgba(212,165,116,0.08) 0%, transparent 60%);
-        }
-
-        .cta-content {
-            position: relative;
-            z-index: 1;
-        }
-
-        .cta .section-label {
-            color: var(--gold);
-        }
-
-        .cta h2 {
-            font-size: clamp(36px, 5vw, 60px);
-            font-weight: 800;
-            color: var(--white);
-            line-height: 1.1;
-            letter-spacing: -2px;
-            margin-bottom: 24px;
-        }
-
-        .cta h2 .gold {
-            color: var(--gold);
-        }
-
-        .cta p {
-            font-size: 18px;
-            color: rgba(255,255,255,0.5);
-            max-width: 500px;
-            margin: 0 auto 48px;
-            line-height: 1.7;
-        }
-
-        .cta-actions {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
-        .cta-note {
-            margin-top: 32px;
-            font-size: 13px;
-            color: rgba(255,255,255,0.3);
-        }
-
-        /* ===== FOOTER ===== */
-        footer {
-            background: var(--black);
-            padding: 60px 0 40px;
-        }
-
-        .footer-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            padding-bottom: 40px;
-            border-bottom: 1px solid rgba(255,255,255,0.06);
-        }
-
-        .footer-brand p {
-            color: rgba(255,255,255,0.35);
-            font-size: 14px;
-            margin-top: 12px;
-            max-width: 300px;
-            line-height: 1.6;
-        }
-
-        .footer-links-group h4 {
-            color: rgba(255,255,255,0.5);
-            font-size: 12px;
-            font-weight: 600;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            margin-bottom: 16px;
-        }
-
-        .footer-links-group a {
-            display: block;
-            color: rgba(255,255,255,0.35);
-            text-decoration: none;
-            font-size: 14px;
-            padding: 4px 0;
-            transition: color 0.3s;
-        }
-
-        .footer-links-group a:hover {
-            color: var(--gold);
-        }
-
-        .footer-bottom {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-top: 32px;
-            font-size: 13px;
-            color: rgba(255,255,255,0.2);
-        }
-
-        .footer-socials {
-            display: flex;
-            gap: 16px;
-        }
-
-        .footer-socials a {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.06);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: rgba(255,255,255,0.4);
-            text-decoration: none;
-            font-size: 14px;
-            transition: all 0.3s;
-        }
-
-        .footer-socials a:hover {
-            background: rgba(212,165,116,0.1);
-            border-color: rgba(212,165,116,0.3);
-            color: var(--gold);
-        }
-
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 1024px) {
-            .solution-features {
-                grid-template-columns: 1fr;
-            }
-
-            .security-layout {
-                grid-template-columns: 1fr;
-                gap: 48px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background: var(--emerald-deep);
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                gap: 24px;
-                z-index: 999;
-            }
-
-            .nav-links.open {
-                display: flex;
-            }
-
-            .nav-links a {
-                font-size: 20px;
-            }
-
-            .nav-mobile-toggle {
-                display: flex;
-                z-index: 1001;
-            }
-
-            .hero h1 {
-                letter-spacing: -1px;
-            }
-
-            .hero-stats {
-                gap: 24px;
-                flex-wrap: wrap;
-            }
-
-            .hero-stat-value {
-                font-size: 24px;
-            }
-
-            .problem-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .how-steps {
-                grid-template-columns: 1fr;
-                gap: 48px;
-            }
-
-            .how-steps::before {
-                display: none;
-            }
-
-            .asset-cards {
-                grid-template-columns: 1fr;
-            }
-
-            .footer-top {
-                flex-direction: column;
-                gap: 32px;
-            }
-
-            .footer-bottom {
-                flex-direction: column;
-                gap: 16px;
-            }
-
-            .globe-container {
-                display: none;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .hero-actions {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .btn-primary, .btn-secondary {
-                justify-content: center;
-            }
-
-            .cta-actions {
-                flex-direction: column;
-                align-items: stretch;
-                padding: 0 20px;
-            }
-        }
-
-        /* Language Selector */
-        .lang-selector{position:fixed;top:20px;right:100px;z-index:1001}
-        @media(max-width:768px){.lang-selector{right:60px;top:16px}}
-        .lang-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:7px 14px;font-size:.8rem;cursor:pointer;display:flex;align-items:center;gap:6px;color:rgba(255,255,255,.8);font-weight:500;backdrop-filter:blur(8px);transition:all .2s}
-        .lang-btn:hover{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.35)}
-        .lang-dropdown{position:absolute;top:calc(100% + 6px);right:0;background:var(--white);border:1px solid rgba(0,0,0,.08);border-radius:10px;box-shadow:0 10px 40px rgba(0,0,0,.15);min-width:160px;opacity:0;pointer-events:none;transform:translateY(-4px);transition:all .2s}
-        .lang-dropdown.open{opacity:1;pointer-events:auto;transform:translateY(0)}
-        .lang-option{display:flex;align-items:center;gap:8px;padding:10px 16px;font-size:.82rem;color:var(--gray-700);cursor:pointer;transition:background .15s}
-        .lang-option:first-child{border-radius:10px 10px 0 0}
-        .lang-option:last-child{border-radius:0 0 10px 10px}
-        .lang-option:hover{background:var(--cream)}
-        .lang-option.active{background:rgba(6,78,59,.06);color:var(--emerald-deep);font-weight:600}
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terravault — Real World Asset Tokenization for LATAM Real Estate</title>
+<meta name="description" content="Terravault: Fractional real estate investment in Latin America. Own premium properties from $100. ERC-3643 compliant. 8-14% annual yield.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --dark:#0a0f0d;--dark2:#060b08;--dark3:#0d1210;
+  --surface:#111a16;--surface2:#162019;
+  --emerald:#064e3b;--emerald-light:#0d9668;--gold:#d4a574;--gold-light:#e8c9a0;--cream:#faf5eb;
+  --text1:#e8ede9;--text2:#94a89b;--text3:#5e7265;--white:#ffffff;
+  --head:'Space Grotesk',sans-serif;
+  --body:'Inter',sans-serif;
+  --spring:cubic-bezier(0.34,1.56,0.64,1);
+  --smooth:cubic-bezier(0.22,1,0.36,1);
+  --ease-out:cubic-bezier(0.16,1,0.3,1);
+}
+html{font-size:16px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;scroll-behavior:smooth}
+body{font-family:var(--body);background:var(--dark);color:var(--text1);overflow-x:hidden;line-height:1.6;cursor:none}
+a{color:inherit;text-decoration:none}
+button{font-family:var(--body);cursor:none;border:none;background:none;color:inherit}
+img{display:block;max-width:100%}
+
+/* ═══ TYPOGRAPHY ═══ */
+.display{font-family:var(--head);font-size:clamp(3rem,8vw,6rem);font-weight:700;letter-spacing:-0.04em;line-height:0.95;color:var(--white)}
+.h2-title{font-family:var(--head);font-size:clamp(2rem,4vw,3.5rem);font-weight:600;letter-spacing:-0.03em;line-height:1.1;color:var(--white)}
+.h3-title{font-family:var(--head);font-size:clamp(1.2rem,2vw,1.5rem);font-weight:600;color:var(--white)}
+.body-text{font-size:1.05rem;font-weight:400;line-height:1.7;color:var(--text2)}
+.caption{font-size:0.75rem;font-weight:500;text-transform:uppercase;letter-spacing:0.15em;color:var(--text3)}
+.gradient-text{background:linear-gradient(135deg,var(--gold),var(--gold-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.gradient-text-emerald{background:linear-gradient(135deg,var(--emerald-light),#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* ═══ BREATHING ═══ */
+@keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.005)}}
+.breathe{animation:breathe 4s ease-in-out infinite}
+
+/* ═══ CURSOR ═══ */
+.cursor-dot{position:fixed;top:0;left:0;width:8px;height:8px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;mix-blend-mode:screen;transition:width .25s var(--spring),height .25s var(--spring),background .25s}
+.cursor-ring{position:fixed;top:0;left:0;width:36px;height:36px;border:1.5px solid rgba(212,165,116,.45);border-radius:50%;pointer-events:none;z-index:9998;transition:width .35s var(--spring),height .35s var(--spring),border-color .3s}
+.cursor-dot.active{width:48px;height:48px;background:rgba(212,165,116,.18)}
+.cursor-ring.active{width:56px;height:56px;border-color:var(--emerald-light)}
+@media(pointer:coarse){.cursor-dot,.cursor-ring{display:none}body{cursor:auto}}
+
+/* ═══ SCROLL PROGRESS ═══ */
+.scroll-progress{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--emerald),var(--gold),var(--emerald-light));z-index:10001;width:0;transform-origin:left;will-change:width}
+
+/* ═══ NOISE ═══ */
+.noise{position:fixed;top:-50%;left:-50%;width:200%;height:200%;pointer-events:none;z-index:9000;opacity:.035;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* ═══ BRAND PATTERN ═══ */
+.brand-pattern{position:absolute;inset:0;pointer-events:none;opacity:.015;background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5 L15 30 L45 30 Z' fill='none' stroke='%23d4a574' stroke-width='.5'/%3E%3Cpath d='M10 50 L50 50 L50 35 L10 35 Z' fill='none' stroke='%23064e3b' stroke-width='.5'/%3E%3C/svg%3E");background-size:60px 60px}
+
+/* ═══ MESH BG ═══ */
+.mesh-bg{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.mesh-orb{position:absolute;border-radius:50%;filter:blur(120px);will-change:transform;mix-blend-mode:screen}
+.mesh-orb.a{width:55vw;height:55vw;top:-15%;left:-10%;background:radial-gradient(circle,rgba(6,78,59,.18),transparent 70%)}
+.mesh-orb.b{width:45vw;height:45vw;bottom:-10%;right:-10%;background:radial-gradient(circle,rgba(212,165,116,.1),transparent 70%)}
+.mesh-orb.c{width:35vw;height:35vw;top:40%;left:50%;background:radial-gradient(circle,rgba(13,150,104,.06),transparent 70%)}
+
+/* ═══ NAV ═══ */
+.nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:20px 0;transition:all .4s var(--smooth)}
+.nav.shrink{padding:12px 0;background:rgba(10,15,13,.92);backdrop-filter:blur(24px) saturate(1.4);border-bottom:1px solid rgba(212,165,116,.06)}
+.nav-inner{max-width:1280px;margin:0 auto;padding:0 clamp(20px,3vw,48px);display:flex;align-items:center;justify-content:space-between}
+.nav-logo{font-family:var(--head);font-weight:700;font-size:1.6rem;letter-spacing:-.03em;display:flex;align-items:center;gap:0}
+.nav-logo svg{height:30px;width:auto}
+.nav-links{display:flex;gap:32px;align-items:center}
+.nav-links a{font-size:.85rem;font-weight:500;color:var(--text2);transition:color .3s;position:relative}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1.5px;background:var(--gold);transition:width .3s var(--spring)}
+.nav-links a:hover{color:var(--white)}
+.nav-links a:hover::after{width:100%}
+.nav-cta{font-size:.85rem;font-weight:600;padding:10px 24px;border-radius:80px;background:linear-gradient(135deg,var(--emerald),#0d7a55);color:var(--white);transition:all .3s var(--spring);position:relative;overflow:hidden}
+.nav-cta::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(212,165,116,.2),transparent);transform:translateX(-100%);transition:none}
+.nav-cta:hover::before{transform:translateX(100%);transition:transform .6s}
+.nav-cta:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(6,78,59,.5)}
+.nav-mobile-btn{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer}
+.nav-mobile-btn span{width:22px;height:2px;background:var(--text1);border-radius:2px;transition:all .3s}
+@media(max-width:768px){
+  .nav-links{display:none}
+  .nav-mobile-btn{display:flex}
+  .nav-links.open{display:flex;flex-direction:column;position:absolute;top:100%;left:0;right:0;background:rgba(10,15,13,.96);backdrop-filter:blur(24px);padding:24px;gap:20px;border-bottom:1px solid rgba(212,165,116,.08)}
+}
+
+/* ═══ HERO ═══ */
+.hero{position:relative;min-height:100vh;display:flex;align-items:center;z-index:1;overflow:hidden;padding:120px 0 80px;background:var(--dark)}
+.hero .brand-pattern{z-index:0}
+.hero-inner{max-width:1280px;margin:0 auto;padding:0 clamp(20px,3vw,48px);display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(32px,4vw,60px);align-items:center;position:relative;z-index:2}
+.hero-content{position:relative;z-index:2}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;padding:6px 16px 6px 8px;border-radius:80px;border:1px solid rgba(212,165,116,.25);background:rgba(212,165,116,.06);font-size:.75rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);width:fit-content;margin-bottom:24px;opacity:0;transform:translateY(20px)}
+.hero-tag .pulse{width:8px;height:8px;background:var(--gold);border-radius:50%;animation:pulse 2s ease infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.4)}}
+.hero-headline{margin-bottom:24px}
+.hero-headline .char{display:inline-block;opacity:0;transform:translateY(60px) rotate(8deg);will-change:transform,opacity}
+.hero-headline .word{display:inline-block;white-space:pre}
+.hero-sub{font-size:clamp(1rem,1.6vw,1.15rem);color:var(--text2);max-width:480px;line-height:1.7;margin-bottom:40px;opacity:0;transform:translateY(30px)}
+.hero-ctas{display:flex;gap:16px;flex-wrap:wrap;opacity:0;transform:translateY(30px)}
+.btn-primary{position:relative;display:inline-flex;align-items:center;gap:10px;padding:16px 36px;border-radius:80px;background:linear-gradient(135deg,var(--emerald),#0d7a55);color:var(--white);font-weight:600;font-size:1rem;overflow:hidden;transition:all .35s var(--spring)}
+.btn-primary::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(212,165,116,.25),transparent);transform:translateX(-100%)}
+.btn-primary:hover::before{transform:translateX(100%);transition:transform .7s}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(6,78,59,.5)}
+.btn-primary .arrow{transition:transform .3s}.btn-primary:hover .arrow{transform:translateX(4px)}
+.btn-ghost{display:inline-flex;align-items:center;gap:8px;padding:16px 32px;border-radius:80px;border:1px solid rgba(212,165,116,.2);color:var(--text1);font-weight:500;font-size:1rem;transition:all .3s var(--spring);backdrop-filter:blur(8px)}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-2px);box-shadow:0 8px 20px rgba(212,165,116,.15)}
+
+/* ═══ PROPERTY CARDS FLOAT ═══ */
+.hero-cards-wrap{position:relative;display:flex;justify-content:center;align-items:center;min-height:480px}
+.hero-glow{position:absolute;width:80%;height:80%;border-radius:50%;background:radial-gradient(circle,rgba(6,78,59,.25),rgba(212,165,116,.08),transparent 70%);filter:blur(60px);z-index:0}
+.float-card{position:absolute;z-index:1;border-radius:20px;background:var(--surface);border:1px solid rgba(212,165,116,.1);overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.03) inset;will-change:transform;transition:box-shadow .4s}
+.float-card:hover{box-shadow:0 32px 80px rgba(0,0,0,.6),0 0 40px rgba(212,165,116,.08)}
+.float-card.c1{width:240px;top:10%;left:5%;transform:rotate(-4deg)}
+.float-card.c2{width:260px;top:5%;right:0;transform:rotate(3deg);z-index:3}
+.float-card.c3{width:230px;bottom:5%;left:15%;transform:rotate(2deg)}
+.fc-skyline{height:120px;position:relative;overflow:hidden}
+.fc-skyline-bogota{background:linear-gradient(180deg,#1a3a2a 0%,#0d2018 40%,var(--emerald) 100%)}
+.fc-skyline-cdmx{background:linear-gradient(180deg,#2a1a1a 0%,#1a1210 40%,#8b4513 100%)}
+.fc-skyline-sp{background:linear-gradient(180deg,#1a1a2a 0%,#101218 40%,#2d4a3a 100%)}
+.fc-buildings{position:absolute;bottom:0;left:0;right:0;height:80%;display:flex;align-items:flex-end;justify-content:center;gap:4px;padding:0 8px;z-index:2}
+.fc-building{background:rgba(255,255,255,.06);border-radius:2px 2px 0 0;position:relative}
+.fc-building::after{content:'';position:absolute;top:15%;left:20%;right:20%;height:2px;background:rgba(212,165,116,.15);box-shadow:0 8px 0 rgba(212,165,116,.1),0 16px 0 rgba(212,165,116,.08)}
+.fc-body{padding:16px}
+.fc-location{font-size:.65rem;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;display:flex;align-items:center;gap:4px}
+.fc-name{font-family:var(--head);font-size:.95rem;font-weight:600;color:var(--white);margin-bottom:10px}
+.fc-stats{display:flex;gap:12px;margin-bottom:10px}
+.fc-stat{display:flex;flex-direction:column}
+.fc-stat-label{font-size:.55rem;color:var(--text3);text-transform:uppercase;letter-spacing:.08em}
+.fc-stat-val{font-family:var(--head);font-size:.85rem;font-weight:600;color:var(--gold)}
+.fc-progress{height:4px;background:rgba(6,78,59,.2);border-radius:2px;overflow:hidden}
+.fc-progress-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--emerald),var(--emerald-light));transition:width 2s var(--smooth)}
+.fc-progress-label{display:flex;justify-content:space-between;font-size:.55rem;color:var(--text3);margin-top:4px}
+
+@media(max-width:768px){
+  .hero-inner{grid-template-columns:1fr;text-align:center}
+  .hero-sub{margin-left:auto;margin-right:auto}
+  .hero-ctas{justify-content:center}
+  .hero-cards-wrap{order:-1;margin-bottom:20px;min-height:320px}
+  .float-card{position:relative;width:100%!important;max-width:280px;margin:8px auto;transform:none!important;top:auto!important;left:auto!important;right:auto!important;bottom:auto!important}
+  .hero-cards-wrap{flex-direction:column;align-items:center}
+  .float-card.c1,.float-card.c3{display:none}
+}
+
+/* ═══ MARQUEE ═══ */
+.marquee-section{position:relative;z-index:1;padding:24px 0;border-top:1px solid rgba(212,165,116,.08);border-bottom:1px solid rgba(212,165,116,.08);overflow:hidden;background:rgba(17,26,22,.6)}
+.marquee-track{display:flex;gap:48px;animation:marquee 40s linear infinite;width:max-content}
+.marquee-item{white-space:nowrap;font-size:.85rem;color:var(--text2);display:flex;align-items:center;gap:12px;font-weight:500}
+.marquee-item .sep{width:6px;height:6px;background:var(--gold);border-radius:50%;opacity:.5}
+@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ═══ REVEAL ANIMATIONS ═══ */
+.reveal{opacity:0;transform:translateY(48px) scale(.97);transition:all .9s var(--spring)}.reveal.visible{opacity:1;transform:translateY(-4px) scale(1.003);animation:settleBack .4s .9s var(--smooth) forwards}
+@keyframes settleBack{to{transform:translateY(0) scale(1)}}
+.reveal-left{opacity:0;transform:translateX(-60px) rotate(-3deg);transition:all .9s var(--spring)}.reveal-left.visible{opacity:1;transform:translateX(0) rotate(0)}
+.reveal-right{opacity:0;transform:translateX(60px) rotate(3deg);transition:all .9s var(--spring)}.reveal-right.visible{opacity:1;transform:translateX(0) rotate(0)}
+.stagger-child{opacity:0;transform:translateY(40px) scale(.96);transition:all .8s var(--spring)}.stagger-child.visible{opacity:1;transform:none}
+
+/* ═══ PROBLEM ═══ */
+.problem{position:relative;z-index:1;padding:clamp(80px,12vw,160px) 0;background:var(--dark2);overflow:hidden}
+.problem .brand-pattern{z-index:0}
+.problem-inner{max-width:1280px;margin:0 auto;padding:0 clamp(20px,3vw,48px);position:relative}
+.problem-big-number{font-family:var(--head);font-size:clamp(12rem,20vw,22rem);font-weight:700;letter-spacing:-.06em;line-height:.85;color:rgba(255,255,255,.025);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;user-select:none;white-space:nowrap}
+.problem-content{position:relative;z-index:1;text-align:center;max-width:800px;margin:0 auto}
+.problem-stat{font-family:var(--head);font-size:clamp(5rem,12vw,10rem);font-weight:700;letter-spacing:-.04em;line-height:1;margin-bottom:24px}
+.problem-stat span{background:linear-gradient(135deg,#ef4444,#dc2626);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* ═══ SOLUTION ═══ */
+.solution{position:relative;z-index:1;padding:clamp(80px,12vw,160px) 0;background:var(--dark3);overflow:hidden}
+.solution-inner{max-width:1280px;margin:0 auto;padding:0 clamp(20px,3vw,48px)}
+.solution-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:clamp(40px,6vw,72px)}
+.solution-card{background:var(--surface);border:1px solid rgba(212,165,116,.06);border-radius:24px;padding:clamp(28px,3vw,44px);position:relative;overflow:hidden;transition:all .45s var(--spring)}
+.solution-card::before{content:'';position:absolute;inset:-1px;border-radius:25px;padding:1px;background:linear-gradient(135deg,transparent,rgba(212,165,116,.2),transparent,rgba(6,78,59,.2),transparent);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity .4s}
+.solution-card:hover::before{opacity:1}
+.solution-card:hover{transform:translateY(-6px);box-shadow:0 24px 48px rgba(0,0,0,.3)}
+.solution-card .step-num{position:absolute;top:20px;right:20px;font-family:var(--head);font-size:clamp(4rem,8vw,6rem);font-weight:700;letter-spacing:-.04em;opacity:.04;color:var(--white);line-height:1}
+.solution-card .card-icon{width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+.solution-card h3{font-family:var(--head);font-size:clamp(1.3rem,2vw,1.7rem);font-weight:700;color:var(--white);margin-bottom:10px;letter-spacing:-.02em}
+.solution-card p{font-size:.92rem;color:var(--text2);line-height:1.7}
+.ic-emerald{background:rgba(6,78,59,.2);color:var(--emerald-light)}
+.ic-gold{background:rgba(212,165,116,.12);color:var(--gold)}
+.ic-cream{background:rgba(250,245,235,.08);color:var(--cream)}
+@media(max-width:768px){.solution-grid{grid-template-columns:1fr}}
+
+/* ═══ PROPERTIES ═══ */
+.properties{position:relative;z-index:1;padding:clamp(80px,12vw,160px) 0;background:var(--dark)}
+.properties-inner{max-width:1280px;margin:0 auto;padding:0 clamp(20px,3vw,48px)}
+.properties-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:clamp(40px,6vw,72px)}
+.prop-card{background:var(--surface);border:1px solid rgba(212,165,116,.08);border-radius:24px;overflow:hidden;transition:all .5s var(--spring);position:relative}
+.prop-card:hover{transform:translateY(-8px);box-shadow:0 32px 64px rgba(0,0,0,.4);border-color:rgba(212,165,116,.2)}
+.prop-skyline{height:180px;position:relative;overflow:hidden}
+.prop-badge{position:absolute;top:12px;right:12px;font-size:.6rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;padding:4px 10px;border-radius:80px;backdrop-filter:blur(12px);z-index:2}
+.prop-badge.live{background:rgba(6,78,59,.8);color:var(--emerald-light);border:1px solid rgba(13,150,104,.3)}
+.prop-badge.upcoming{background:rgba(212,165,116,.15);color:var(--gold);border:1px solid rgba(212,165,116,.2)}
+.prop-body{padding:24px}
+.prop-location{font-size:.7rem;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.prop-name{font-family:var(--head);font-size:1.15rem;font-weight:600;color:var(--white);margin-bottom:16px}
+.prop-metrics{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.prop-metric{background:rgba(6,78,59,.06);border-radius:12px;padding:12px}
+.prop-metric-label{font-size:.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
+.prop-metric-val{font-family:var(--head);font-size:1rem;font-weight:600;color:var(--white)}
+.prop-metric-val.yield{color:var(--emerald-light)}
+.prop-progress{margin-top:4px}
+.prop-progress-bar{height:6px;background:rgba(6,78,59,.15);border-radius:3px;overflow:hidden}
+.prop-progress-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--emerald),var(--gold));transition:width 2s var(--smooth)}
+.prop-progress-info{display:flex;justify-content:space-between;font-size:.65rem;color:var(--text3);margin-top:6px}
+@media(max-width:768px){.properties-grid{grid-template-columns:1fr}}
+
+/* ═══ HOW IT WORKS ═══ */
+.how-it-works{position:relative;z-index:1;padding:clamp(80px,12vw,160px) 0;background:var(--dark2);overflow:hidden}
+.hiw-inner{max-width:1100px;margin:0 auto;padding:0 clamp(20px,3vw,48px)}
+.hiw-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:clamp(40px,6vw,72px);position:relative}
+.hiw-steps::before{content:'';position:absolute;top:44px;left:15%;right:15%;height:2px;background:linear-gradient(90deg,var(--emerald),var(--gold),var(--emerald-light));opacity:.2}
+.hiw-step{text-align:center;position:relative;padding:0 20px}
+.hiw-num{width:88px;height:88px;border-radius:50%;background:var(--surface);border:2px solid rgba(212,165,116,.15);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;position:relative;z-index:1;transition:all .4s var(--spring)}
+.hiw-step:hover .hiw-num{border-color:var(--gold);box-shadow:0 0 40px rgba(212,165,116,.15);transform:scale(1.08)}
+.hiw-num span{font-family:var(--head);font-size:1.8rem;font-weight:700;color:var(--gold)}
+.hiw-step h3{font-family:var(--head);font-size:1.2rem;font-weight:600;color:var(--white);margin-bottom:10px}
+.hiw-step p{font-size:.88rem;color:var(--text2);line-height:1.65}
+@media(max-width:768px){.hiw-steps{grid-template-columns:1fr;gap:48px}.hiw-steps::before{display:none}}
+
+/* ═══ BENTO FEATURES ═══ */
+.bento{position:relative;z-index:1;padding:clamp(80px,12vw,160px) 0;background:var(--dark3)}
+.bento-inner{max-width:1280px;margin:0 auto;padding:0 clamp(20px,3vw,48px)}
+.bento-header{margin-bottom:clamp(40px,6vw,72px)}
+.bento-grid{display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:minmax(240px,auto);gap:20px}
+.bento-grid .card:nth-child(1){grid-column:span 2}
+.bento-grid .card:nth-child(4){grid-column:span 2}
+.bento-card{background:var(--surface);border:1px solid rgba(212,165,116,.06);border-radius:20px;padding:clamp(24px,3vw,32px);position:relative;overflow:hidden;transition:all .45s var(--spring);display:flex;flex-direction:column}
+.bento-card::before{content:'';position:absolute;inset:-1px;border-radius:21px;padding:1px;background:linear-gradient(135deg,transparent,rgba(212,165,116,.2),transparent,rgba(6,78,59,.2),transparent);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity .4s}
+.bento-card:hover::before{opacity:1}
+.bento-card:hover{transform:translateY(-4px);box-shadow:0 24px 48px rgba(0,0,0,.3)}
+.bento-card .card-icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;flex-shrink:0}
+.bento-card h3{font-family:var(--head);font-size:1.1rem;font-weight:600;color:var(--white);margin-bottom:8px;letter-spacing:-.01em}
+.bento-card p{font-size:.85rem;color:var(--text2);line-height:1.65}
+.mini-preview{margin-top:auto;border-radius:12px;padding:12px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);overflow:hidden}
+@media(max-width:768px){.bento-grid{grid-template-columns:1fr;grid-auto-rows:auto}.bento-grid .card:nth-child(1),.bento-grid .card:nth-child(4){grid-column:span 1}}
+
+/* ═══ SECURITY ═══ */
+.security{position:relative;z-index:1;padding:clamp(80px,12vw,140px) 0;background:var(--dark);overflow:hidden}
+.security-inner{max-width:1100px;margin:0 auto;padding:0 clamp(20px,3vw,48px);text-align:center}
+.security-badges{display:flex;gap:24px;justify-content:center;flex-wrap:wrap;margin-top:clamp(40px,6vw,64px)}
+.sec-badge{background:var(--surface);border:1px solid rgba(6,78,59,.15);border-radius:20px;padding:32px 28px;min-width:200px;flex:1;max-width:280px;transition:all .4s var(--spring);position:relative;overflow:hidden}
+.sec-badge::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 60%,rgba(6,78,59,.05));pointer-events:none}
+.sec-badge:hover{transform:translateY(-4px);border-color:rgba(6,78,59,.3);box-shadow:0 16px 40px rgba(0,0,0,.3)}
+.sec-badge .sec-icon{width:56px;height:56px;border-radius:16px;background:rgba(6,78,59,.15);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;color:var(--emerald-light)}
+.sec-badge h4{font-family:var(--head);font-size:.95rem;font-weight:600;color:var(--white);margin-bottom:6px}
+.sec-badge p{font-size:.78rem;color:var(--text3);line-height:1.5}
+
+/* ═══ GLASSMORPHISM ═══ */
+.glass{background:rgba(17,26,22,.6);backdrop-filter:blur(20px) saturate(1.3);border:1px solid rgba(212,165,116,.08)}
+
+/* ═══ STATS ═══ */
+.stats{position:relative;z-index:1;padding:clamp(80px,12vw,140px) 0;background:var(--dark2);border-top:1px solid rgba(212,165,116,.06);border-bottom:1px solid rgba(212,165,116,.06)}
+.stats-inner{max-width:1280px;margin:0 auto;padding:0 clamp(20px,3vw,48px);display:grid;grid-template-columns:repeat(4,1fr);gap:24px;text-align:center}
+.stat-item .stat-num{font-family:var(--head);font-size:clamp(3rem,8vw,5rem);font-weight:700;letter-spacing:-.04em;color:var(--white);margin-bottom:8px;line-height:1}
+.stat-item .stat-label{font-size:.75rem;color:var(--text3);font-weight:500;text-transform:uppercase;letter-spacing:.1em}
+@media(max-width:768px){.stats-inner{grid-template-columns:repeat(2,1fr);gap:32px}}
+
+/* ═══ VISION ═══ */
+.vision{position:relative;z-index:1;padding:clamp(100px,15vw,200px) 0;text-align:center;overflow:hidden;background:var(--dark3)}
+.vision-inner{max-width:900px;margin:0 auto;padding:0 clamp(20px,3vw,48px)}
+.vision q{font-family:var(--head);font-size:clamp(1.6rem,3.5vw,2.8rem);font-weight:600;letter-spacing:-.02em;line-height:1.35;color:var(--white);display:block;quotes:none}
+
+/* ═══ CTA ═══ */
+.cta-section{position:relative;z-index:1;padding:clamp(80px,12vw,140px) 0;overflow:hidden;background:var(--dark)}
+.cta-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(6,78,59,.1),transparent 70%)}
+.cta-inner{max-width:680px;margin:0 auto;padding:0 clamp(20px,3vw,48px);text-align:center;position:relative;z-index:1}
+.cta-inner h2{font-family:var(--head);font-size:clamp(1.8rem,4vw,3rem);font-weight:700;letter-spacing:-.03em;color:var(--white);margin-bottom:16px;line-height:1.15}
+.cta-inner p{font-size:1.05rem;color:var(--text2);margin-bottom:36px;line-height:1.7}
+
+/* ═══ FOOTER ═══ */
+.footer{position:relative;z-index:1;padding:48px 0;border-top:1px solid rgba(212,165,116,.06);background:var(--dark)}
+.footer-inner{max-width:1280px;margin:0 auto;padding:0 clamp(20px,3vw,48px);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px}
+.footer-left{display:flex;align-items:center;gap:24px}
+.footer-logo{font-family:var(--head);font-weight:700;font-size:1.2rem;display:flex;align-items:center;gap:0}
+.footer-logo svg{height:22px;width:auto}
+.footer-links{display:flex;gap:20px;font-size:.82rem;color:var(--text3)}
+.footer-links a:hover{color:var(--text1)}
+.footer-badge{display:flex;align-items:center;gap:8px;font-size:.75rem;color:var(--text3);padding:6px 14px;border-radius:80px;border:1px solid rgba(6,78,59,.15);background:rgba(6,78,59,.06);font-weight:500;letter-spacing:.03em}
+.footer-badge .chain-dot{width:6px;height:6px;background:var(--emerald-light);border-radius:50%;animation:pulse 2s ease infinite}
+@media(max-width:600px){.footer-inner{flex-direction:column;text-align:center}.footer-left{flex-direction:column}}
+
+/* ═══ LANGUAGE SELECTOR ═══ */
+.lang-selector{position:fixed;top:20px;right:clamp(20px,3vw,48px);z-index:10001}
+.lang-btn{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:80px;
+  background:rgba(10,15,13,.85);border:1px solid rgba(212,165,116,.15);font-size:.8rem;color:var(--text2);
+  cursor:none;transition:all .2s;backdrop-filter:blur(12px);font-family:var(--body)}
+.lang-btn:hover{border-color:var(--gold);color:var(--white)}
+.lang-dropdown{display:none;position:absolute;top:calc(100% + 6px);right:0;background:rgba(10,15,13,.95);
+  border:1px solid rgba(212,165,116,.15);border-radius:12px;overflow:hidden;min-width:160px;
+  box-shadow:0 12px 40px rgba(0,0,0,.5);backdrop-filter:blur(20px)}
+.lang-dropdown.open{display:block}
+.lang-option{display:flex;align-items:center;gap:8px;padding:10px 16px;font-size:.8rem;
+  color:var(--text2);cursor:pointer;transition:all .15s;border:none;background:none;width:100%;text-align:left;font-family:var(--body)}
+.lang-option:hover{background:rgba(212,165,116,.08);color:var(--white)}
+.lang-option.active{color:var(--gold);font-weight:600}
+@media(pointer:coarse){.lang-btn,.lang-option{cursor:auto}}
+</style>
 </head>
 <body>
+<!-- Language Selector -->
+<div class="lang-selector" id="lang-selector">
+  <button class="lang-btn" onclick="toggleLangDropdown()">&#127760; <span id="lang-current">English</span> &#9662;</button>
+  <div class="lang-dropdown" id="lang-dropdown">
+    <button class="lang-option active" data-lang="en" onclick="setLang('en')">&#127468;&#127463; English</button>
+    <button class="lang-option" data-lang="es" onclick="setLang('es')">&#127466;&#127480; Espa&ntilde;ol</button>
+    <button class="lang-option" data-lang="zh" onclick="setLang('zh')">&#127469;&#127472; &#32321;&#39636;&#20013;&#25991;</button>
+  </div>
+</div>
 
-    <!-- Language Selector -->
-    <div class="lang-selector">
-      <button class="lang-btn" onclick="toggleLangDropdown()">&#127760; <span id="currentLangLabel">English</span> &#9662;</button>
-      <div class="lang-dropdown" id="langDropdown">
-        <div class="lang-option active" data-lang="en" onclick="setLanguage('en')">&#127468;&#127463; English</div>
-        <div class="lang-option" data-lang="zh" onclick="setLanguage('zh')">&#127469;&#127472; &#20013;&#25991;</div>
-        <div class="lang-option" data-lang="es" onclick="setLanguage('es')">&#127466;&#127480; Espa&#241;ol</div>
+<div class="noise"></div>
+<div class="mesh-bg"><div class="mesh-orb a"></div><div class="mesh-orb b"></div><div class="mesh-orb c"></div></div>
+<div class="cursor-dot"></div><div class="cursor-ring"></div>
+<div class="scroll-progress"></div>
+
+<!-- ═══ NAV ═══ -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">
+      <svg viewBox="0 0 220 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- T -->
+        <text x="0" y="24" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="22" fill="#fff" letter-spacing="-0.5">T</text>
+        <!-- E -->
+        <text x="16" y="24" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="22" fill="#fff" letter-spacing="-0.5">E</text>
+        <!-- R -->
+        <text x="32" y="24" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="22" fill="#fff" letter-spacing="-0.5">R</text>
+        <!-- R -->
+        <text x="48" y="24" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="22" fill="#fff" letter-spacing="-0.5">R</text>
+        <!-- A as building/pyramid -->
+        <path d="M72 24 L64 24 L72 4 L80 24 Z" fill="none" stroke="#d4a574" stroke-width="2.5" stroke-linejoin="round"/>
+        <line x1="67" y1="18" x2="77" y2="18" stroke="#d4a574" stroke-width="1.5"/>
+        <line x1="69" y1="13" x2="75" y2="13" stroke="#d4a574" stroke-width="1" opacity=".5"/>
+        <!-- V as vault door -->
+        <path d="M88 4 L96 24 L104 4" stroke="#064e3b" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="96" cy="16" r="3.5" stroke="#064e3b" stroke-width="1.5" fill="none"/>
+        <circle cx="96" cy="16" r="1" fill="#064e3b"/>
+        <!-- AULT -->
+        <text x="108" y="24" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="22" fill="#fff" letter-spacing="-0.5">AULT</text>
+        <!-- glow on A -->
+        <path d="M72 24 L64 24 L72 4 L80 24 Z" fill="none" stroke="#d4a574" stroke-width="2.5" opacity=".3" filter="url(#tvglow)"/>
+        <defs><filter id="tvglow"><feGaussianBlur stdDeviation="3"/></filter></defs>
+      </svg>
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a href="#properties" data-i18n="nav_properties">Properties</a>
+      <a href="#how-it-works" data-i18n="nav_how">How It Works</a>
+      <a href="#features" data-i18n="nav_features">Features</a>
+      <a href="#security" data-i18n="nav_security">Security</a>
+      <a href="app.html" data-i18n="nav_invest">Invest</a>
+    </div>
+    <a href="app.html" class="nav-cta magnetic" data-i18n="start_investing">Start Investing</a>
+    <button class="nav-mobile-btn" id="menuBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero" id="hero">
+  <div class="brand-pattern"></div>
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-tag"><span class="pulse"></span><span data-i18n="hero_tag">Real World Asset Tokenization</span></div>
+      <h1 class="hero-headline display" id="heroHeadline">
+        <span class="word" data-i18n-word="hero_w1">Own the </span><span class="word gradient-text" data-i18n-word="hero_w2">World.</span><br>
+        <span class="word" data-i18n-word="hero_w3">One Token </span><span class="word gradient-text-emerald" data-i18n-word="hero_w4">at a Time.</span>
+      </h1>
+      <p class="hero-sub body-text" id="heroSub" data-i18n="hero_sub">Fractional ownership of premium Latin American real estate. Institutional-grade compliance. Automated yield distribution. Starting at $100.</p>
+      <div class="hero-ctas" id="heroCtas">
+        <a href="app.html" class="btn-primary magnetic" data-i18n="start_investing_btn">Start Investing <span class="arrow">&rarr;</span></a>
+        <a href="#properties" class="btn-ghost magnetic" data-i18n="view_properties">View Properties <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></a>
       </div>
     </div>
-
-    <!-- NAV -->
-    <nav>
-        <div class="container">
-            <a href="#" class="nav-logo">
-                <div class="nav-logo-icon">T</div>
-                <span class="nav-logo-text">Terravault</span>
-            </a>
-            <ul class="nav-links" id="navLinks">
-                <li><a href="#problem" data-i18n="nav_problem">Problem</a></li>
-                <li><a href="#solution" data-i18n="nav_solution">Solution</a></li>
-                <li><a href="#how" data-i18n="nav_how">How it Works</a></li>
-                <li><a href="#assets" data-i18n="nav_assets">Assets</a></li>
-                <li><a href="#security" data-i18n="nav_security">Security</a></li>
-                <li><a href="#cta" class="nav-cta" data-i18n="nav_cta">Get Early Access</a></li>
-            </ul>
-            <button class="nav-mobile-toggle" id="navToggle" aria-label="Toggle navigation">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
+    <!-- FLOATING PROPERTY CARDS -->
+    <div class="hero-cards-wrap" id="heroCards">
+      <div class="hero-glow"></div>
+      <div class="float-card c1" data-tilt>
+        <div class="fc-skyline fc-skyline-bogota">
+          <div class="fc-buildings">
+            <div class="fc-building" style="width:12px;height:50%"></div>
+            <div class="fc-building" style="width:16px;height:70%"></div>
+            <div class="fc-building" style="width:10px;height:40%"></div>
+            <div class="fc-building" style="width:14px;height:60%"></div>
+            <div class="fc-building" style="width:18px;height:80%"></div>
+            <div class="fc-building" style="width:12px;height:45%"></div>
+          </div>
         </div>
-    </nav>
-
-    <!-- HERO -->
-    <section class="hero">
-        <div class="hero-bg-pattern"></div>
-        <div class="hero-grid-overlay"></div>
-
-        <div class="globe-container">
-            <div class="globe">
-                <div class="globe-ring"></div>
-                <div class="globe-ring"></div>
-                <div class="globe-ring"></div>
-                <div class="globe-ring"></div>
-                <div class="globe-dot"></div>
-                <div class="globe-dot"></div>
-                <div class="globe-dot"></div>
-                <div class="globe-dot"></div>
-            </div>
+        <div class="fc-body">
+          <div class="fc-location"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg> Bogot&aacute;, Colombia</div>
+          <div class="fc-name">Torre Chapinero 42</div>
+          <div class="fc-stats">
+            <div class="fc-stat"><span class="fc-stat-label">Yield</span><span class="fc-stat-val">9.2%</span></div>
+            <div class="fc-stat"><span class="fc-stat-label">Min.</span><span class="fc-stat-val">$100</span></div>
+          </div>
+          <div class="fc-progress"><div class="fc-progress-fill" data-width="72"></div></div>
+          <div class="fc-progress-label"><span>72% funded</span><span>$1.8M / $2.5M</span></div>
         </div>
-
-        <div class="container">
-            <div class="hero-content">
-                <div class="hero-badge reveal">
-                    <span class="hero-badge-dot"></span>
-                    RWA Demo Day &middot; Hong Kong Web3 Festival
-                </div>
-                <h1 class="reveal reveal-delay-1" data-i18n-html="hero_title">Own the World.<br><span class="gold">One Token</span> at a Time.</h1>
-                <p class="hero-sub reveal reveal-delay-2" data-i18n="hero_sub">Institutional-grade LATAM real estate, tokenized on Ethereum. Fractional ownership, automated yield, full compliance — starting at $100.</p>
-                <div class="hero-actions reveal reveal-delay-3">
-                    <a href="#cta" class="btn-primary" data-i18n="hero_cta">Start Investing &rarr;</a>
-                    <a href="#how" class="btn-secondary" data-i18n="hero_cta2">See How it Works</a>
-                </div>
-                <div class="hero-stats reveal reveal-delay-4">
-                    <div>
-                        <div class="hero-stat-value">$3.2T</div>
-                        <div class="hero-stat-label" data-i18n="stat_latam">LATAM Real Estate Market</div>
-                    </div>
-                    <div>
-                        <div class="hero-stat-value">$100</div>
-                        <div class="hero-stat-label" data-i18n="stat_min_invest">Minimum Investment</div>
-                    </div>
-                    <div>
-                        <div class="hero-stat-value">8-14%</div>
-                        <div class="hero-stat-label" data-i18n="stat_annual_yield">Target Annual Yield</div>
-                    </div>
-                </div>
-            </div>
+      </div>
+      <div class="float-card c2" data-tilt>
+        <div class="fc-skyline fc-skyline-cdmx">
+          <div class="fc-buildings">
+            <div class="fc-building" style="width:14px;height:55%"></div>
+            <div class="fc-building" style="width:20px;height:85%"></div>
+            <div class="fc-building" style="width:12px;height:45%"></div>
+            <div class="fc-building" style="width:16px;height:65%"></div>
+            <div class="fc-building" style="width:10px;height:35%"></div>
+          </div>
         </div>
-    </section>
-
-    <!-- PROBLEM -->
-    <section class="problem" id="problem">
-        <div class="container">
-            <div class="reveal">
-                <div class="section-label" data-i18n="problem_label">The Problem</div>
-                <h2 class="section-title" data-i18n-html="problem_title">$3.2 Trillion in Value.<br>Locked Behind Borders.</h2>
-                <p class="section-desc" data-i18n="problem_desc">Latin America's real estate market is one of the largest and fastest-growing on Earth, yet nearly inaccessible to most investors.</p>
-            </div>
-
-            <div class="problem-grid">
-                <div class="problem-card reveal reveal-delay-1">
-                    <div class="problem-icon">
-                        <svg width="24" height="24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                    </div>
-                    <h3 data-i18n="prob_card1_title">Cross-Border Barriers</h3>
-                    <p data-i18n="prob_card1_desc">Foreign ownership laws, fragmented registries, and layers of intermediaries make international investment nearly impossible for individuals.</p>
-                    <span class="problem-stat">92%</span>
-                    <p style="font-size:13px;color:var(--gray-400);margin-top:4px;">of properties inaccessible to retail investors</p>
-                </div>
-
-                <div class="problem-card reveal reveal-delay-2">
-                    <div class="problem-icon">
-                        <svg width="24" height="24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-                    </div>
-                    <h3 data-i18n="prob_card2_title">Prohibitive Minimums</h3>
-                    <p data-i18n="prob_card2_desc">Institutional-grade properties require minimum investments of $500K+, locking out the vast majority of the world's growing investor class.</p>
-                    <span class="problem-stat">$500K+</span>
-                    <p style="font-size:13px;color:var(--gray-400);margin-top:4px;">typical minimum investment</p>
-                </div>
-
-                <div class="problem-card reveal reveal-delay-3">
-                    <div class="problem-icon">
-                        <svg width="24" height="24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                    </div>
-                    <h3 data-i18n="prob_card3_title">Glacial Settlement</h3>
-                    <p data-i18n="prob_card3_desc">Traditional real estate transactions take 60-120 days to settle, with legal fees, notarization, and bureaucratic overhead eating into returns.</p>
-                    <span class="problem-stat">60-120 days</span>
-                    <p style="font-size:13px;color:var(--gray-400);margin-top:4px;">average settlement time</p>
-                </div>
-
-                <div class="problem-card reveal reveal-delay-4">
-                    <div class="problem-icon">
-                        <svg width="24" height="24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                    </div>
-                    <h3 data-i18n="prob_card4_title">Zero Liquidity</h3>
-                    <p data-i18n="prob_card4_desc">Once invested, your capital is trapped. There is no secondary market for fractional real estate in LATAM — until now.</p>
-                    <span class="problem-stat">0</span>
-                    <p style="font-size:13px;color:var(--gray-400);margin-top:4px;">liquid secondary markets available</p>
-                </div>
-            </div>
+        <div class="fc-body">
+          <div class="fc-location"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg> CDMX, M&eacute;xico</div>
+          <div class="fc-name">Polanco Residences</div>
+          <div class="fc-stats">
+            <div class="fc-stat"><span class="fc-stat-label">Yield</span><span class="fc-stat-val">11.4%</span></div>
+            <div class="fc-stat"><span class="fc-stat-label">Min.</span><span class="fc-stat-val">$100</span></div>
+          </div>
+          <div class="fc-progress"><div class="fc-progress-fill" data-width="45"></div></div>
+          <div class="fc-progress-label"><span>45% funded</span><span>$2.7M / $6M</span></div>
         </div>
-    </section>
-
-    <!-- SOLUTION -->
-    <section class="solution" id="solution">
-        <div class="container">
-            <div class="reveal">
-                <div class="section-label" data-i18n="solution_label">The Solution</div>
-                <h2 class="section-title" data-i18n-html="solution_title">Real Estate, Reimagined<br>for the Digital Age.</h2>
-                <p class="section-desc" data-i18n="solution_desc">Terravault transforms physical properties into compliant digital securities. Invest globally. Earn locally. Trade freely.</p>
-            </div>
-
-            <div class="solution-features">
-                <div class="solution-feature reveal reveal-delay-1">
-                    <span class="solution-feature-icon">
-                        <svg width="36" height="36" fill="none" stroke="#d4a574" stroke-width="1.5" stroke-linecap="round"><rect x="4" y="4" width="28" height="28" rx="6"/><line x1="4" y1="14" x2="32" y2="14"/><line x1="14" y1="4" x2="14" y2="14"/></svg>
-                    </span>
-                    <h3 data-i18n="sol_feat1_title">Fractional Ownership</h3>
-                    <p data-i18n="sol_feat1_desc">Own a piece of a luxury Bogota penthouse or a Mexico City commercial tower from just $100. ERC-3643 tokens represent verified legal ownership.</p>
-                </div>
-
-                <div class="solution-feature reveal reveal-delay-2">
-                    <span class="solution-feature-icon">
-                        <svg width="36" height="36" fill="none" stroke="#d4a574" stroke-width="1.5" stroke-linecap="round"><path d="M18 4v28M4 18h28"/><circle cx="18" cy="18" r="14"/><circle cx="18" cy="18" r="6"/></svg>
-                    </span>
-                    <h3 data-i18n="sol_feat2_title">Automated Yield</h3>
-                    <p data-i18n="sol_feat2_desc">Smart contracts distribute rental income directly to your wallet. No intermediaries, no delays. Yield flows as reliably as the blockchain itself.</p>
-                </div>
-
-                <div class="solution-feature reveal reveal-delay-3">
-                    <span class="solution-feature-icon">
-                        <svg width="36" height="36" fill="none" stroke="#d4a574" stroke-width="1.5" stroke-linecap="round"><path d="M18 4l14 8v12l-14 8L4 24V12z"/><line x1="18" y1="4" x2="18" y2="32"/><line x1="4" y1="12" x2="32" y2="12"/></svg>
-                    </span>
-                    <h3 data-i18n="sol_feat3_title">Built-In Compliance</h3>
-                    <p data-i18n="sol_feat3_desc">ERC-3643 enforces KYC/AML at the protocol level. Every transfer is permissioned. Every holder is verified. Regulators can trust it. So can you.</p>
-                </div>
-            </div>
+      </div>
+      <div class="float-card c3" data-tilt>
+        <div class="fc-skyline fc-skyline-sp">
+          <div class="fc-buildings">
+            <div class="fc-building" style="width:16px;height:75%"></div>
+            <div class="fc-building" style="width:12px;height:50%"></div>
+            <div class="fc-building" style="width:20px;height:90%"></div>
+            <div class="fc-building" style="width:14px;height:60%"></div>
+            <div class="fc-building" style="width:10px;height:40%"></div>
+          </div>
         </div>
-    </section>
-
-    <!-- HOW IT WORKS -->
-    <section class="how" id="how">
-        <div class="container">
-            <div class="how-header reveal">
-                <div class="section-label" data-i18n="how_label">How It Works</div>
-                <h2 class="section-title" data-i18n-html="how_title">Three Steps to Global<br>Real Estate Ownership.</h2>
-                <p class="section-desc" data-i18n="how_desc">From identity verification to yield collection, we've compressed months of complexity into minutes of clarity.</p>
-            </div>
-
-            <div class="how-steps">
-                <div class="how-step reveal reveal-delay-1">
-                    <div class="how-step-number">1</div>
-                    <h3>Verify Your Identity</h3>
-                    <p>Complete our streamlined KYC/AML process. Your on-chain identity is issued via ERC-735, unlocking access to compliant investments.</p>
-                    <div class="how-step-detail">
-                        <div class="how-step-detail-item">
-                            <span class="how-step-detail-check">&#10003;</span>
-                            <span>KYC via integrated identity oracle</span>
-                        </div>
-                        <div class="how-step-detail-item">
-                            <span class="how-step-detail-check">&#10003;</span>
-                            <span>On-chain identity (ONCHAINID)</span>
-                        </div>
-                        <div class="how-step-detail-item">
-                            <span class="how-step-detail-check">&#10003;</span>
-                            <span>Takes less than 5 minutes</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="how-step reveal reveal-delay-2">
-                    <div class="how-step-number">2</div>
-                    <h3>Choose & Invest</h3>
-                    <p>Browse curated properties across LATAM. Review appraisals, legal structures, and projected yields. Invest from $100 with one transaction.</p>
-                    <div class="how-step-detail">
-                        <div class="how-step-detail-item">
-                            <span class="how-step-detail-check">&#10003;</span>
-                            <span>Institutional-grade properties</span>
-                        </div>
-                        <div class="how-step-detail-item">
-                            <span class="how-step-detail-check">&#10003;</span>
-                            <span>Chainlink-verified valuations</span>
-                        </div>
-                        <div class="how-step-detail-item">
-                            <span class="how-step-detail-check">&#10003;</span>
-                            <span>Transparent fee structure</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="how-step reveal reveal-delay-3">
-                    <div class="how-step-number">3</div>
-                    <h3>Earn & Trade</h3>
-                    <p>Receive automated rental distributions. Trade tokens on compliant secondary markets. Full liquidity, full control, always.</p>
-                    <div class="how-step-detail">
-                        <div class="how-step-detail-item">
-                            <span class="how-step-detail-check">&#10003;</span>
-                            <span>Auto-distributed yield to wallet</span>
-                        </div>
-                        <div class="how-step-detail-item">
-                            <span class="how-step-detail-check">&#10003;</span>
-                            <span>Secondary market liquidity</span>
-                        </div>
-                        <div class="how-step-detail-item">
-                            <span class="how-step-detail-check">&#10003;</span>
-                            <span>Real-time portfolio dashboard</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="fc-body">
+          <div class="fc-location"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg> S&atilde;o Paulo, Brasil</div>
+          <div class="fc-name">Vila Madalena Loft</div>
+          <div class="fc-stats">
+            <div class="fc-stat"><span class="fc-stat-label">Yield</span><span class="fc-stat-val">8.7%</span></div>
+            <div class="fc-stat"><span class="fc-stat-label">Min.</span><span class="fc-stat-val">$100</span></div>
+          </div>
+          <div class="fc-progress"><div class="fc-progress-fill" data-width="91"></div></div>
+          <div class="fc-progress-label"><span>91% funded</span><span>$3.6M / $4M</span></div>
         </div>
-    </section>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <!-- ASSETS -->
-    <section class="assets" id="assets">
-        <div class="container">
-            <div class="assets-header reveal">
-                <div class="section-label">Asset Types</div>
-                <h2 class="section-title">Premium Properties.<br>Curated for Performance.</h2>
-                <p class="section-desc">Every asset on Terravault is independently appraised, legally structured, and selected for sustainable yield and appreciation.</p>
-            </div>
+<!-- ═══ MARQUEE ═══ -->
+<section class="marquee-section">
+  <div class="marquee-track" id="marqueeTrack">
+    <span class="marquee-item"><span class="sep"></span><span data-i18n="mq1">$16T LATAM real estate market</span></span>
+    <span class="marquee-item"><span class="sep"></span><span data-i18n="mq2">$100 minimum investment</span></span>
+    <span class="marquee-item"><span class="sep"></span><span data-i18n="mq3">8-14% annual yield</span></span>
+    <span class="marquee-item"><span class="sep"></span><span data-i18n="mq4">ERC-3643 compliant</span></span>
+    <span class="marquee-item"><span class="sep"></span><span data-i18n="mq5">Automated yield distribution</span></span>
+    <span class="marquee-item"><span class="sep"></span><span data-i18n="mq1">$16T LATAM real estate market</span></span>
+    <span class="marquee-item"><span class="sep"></span><span data-i18n="mq2">$100 minimum investment</span></span>
+    <span class="marquee-item"><span class="sep"></span><span data-i18n="mq3">8-14% annual yield</span></span>
+    <span class="marquee-item"><span class="sep"></span><span data-i18n="mq4">ERC-3643 compliant</span></span>
+    <span class="marquee-item"><span class="sep"></span><span data-i18n="mq5">Automated yield distribution</span></span>
+  </div>
+</section>
 
-            <div class="asset-cards">
-                <div class="asset-card reveal reveal-delay-1">
-                    <div class="asset-card-img">
-                        <div class="asset-card-img-bg"></div>
-                        <div class="asset-card-icon-wrapper">
-                            <svg width="48" height="48" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" stroke-linecap="round"><rect x="8" y="16" width="32" height="24" rx="2"/><path d="M16 16V8h16v8"/><line x1="24" y1="28" x2="24" y2="34"/><line x1="20" y1="34" x2="28" y2="34"/></svg>
-                        </div>
-                        <span class="asset-card-tag">Commercial</span>
-                        <span class="asset-card-yield">12.4% APY</span>
-                    </div>
-                    <div class="asset-card-body">
-                        <div class="asset-card-location">Bogota, Colombia</div>
-                        <h3>Torre Platino Office Complex</h3>
-                        <div class="asset-card-meta">
-                            <div class="asset-card-meta-item">
-                                <div class="asset-card-meta-value">$2.4M</div>
-                                <div class="asset-card-meta-label">Valuation</div>
-                            </div>
-                            <div class="asset-card-meta-item">
-                                <div class="asset-card-meta-value">24,000</div>
-                                <div class="asset-card-meta-label">Tokens</div>
-                            </div>
-                            <div class="asset-card-meta-item">
-                                <div class="asset-card-meta-value">$100</div>
-                                <div class="asset-card-meta-label">Per Token</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+<!-- ═══ PROBLEM ═══ -->
+<section class="problem" id="problem">
+  <div class="brand-pattern"></div>
+  <div class="problem-inner">
+    <div class="problem-big-number" aria-hidden="true">96%</div>
+    <div class="problem-content reveal">
+      <span class="caption" style="color:var(--gold);display:block;margin-bottom:16px" data-i18n="the_problem">The Problem</span>
+      <div class="problem-stat"><span>96%</span></div>
+      <h2 class="h2-title" style="margin-bottom:20px" data-i18n="locked_out">of investors are <span class="gradient-text">locked out</span> of real estate.</h2>
+      <p class="body-text" style="max-width:600px;margin:0 auto" data-i18n="problem_desc">High minimums. Illiquid capital. Geographic barriers. Cross-border complexity. The $16 trillion LATAM real estate market remains the exclusive domain of institutions and the ultra-wealthy.</p>
+    </div>
+  </div>
+</section>
 
-                <div class="asset-card reveal reveal-delay-2">
-                    <div class="asset-card-img">
-                        <div class="asset-card-img-bg"></div>
-                        <div class="asset-card-icon-wrapper">
-                            <svg width="48" height="48" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" stroke-linecap="round"><path d="M4 40h40"/><path d="M8 40V20l16-12 16 12v20"/><rect x="18" y="28" width="12" height="12"/></svg>
-                        </div>
-                        <span class="asset-card-tag">Luxury Residential</span>
-                        <span class="asset-card-yield">9.8% APY</span>
-                    </div>
-                    <div class="asset-card-body">
-                        <div class="asset-card-location">Mexico City, Mexico</div>
-                        <h3>Polanco Luxury Residences</h3>
-                        <div class="asset-card-meta">
-                            <div class="asset-card-meta-item">
-                                <div class="asset-card-meta-value">$5.1M</div>
-                                <div class="asset-card-meta-label">Valuation</div>
-                            </div>
-                            <div class="asset-card-meta-item">
-                                <div class="asset-card-meta-value">51,000</div>
-                                <div class="asset-card-meta-label">Tokens</div>
-                            </div>
-                            <div class="asset-card-meta-item">
-                                <div class="asset-card-meta-value">$100</div>
-                                <div class="asset-card-meta-label">Per Token</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="asset-card reveal reveal-delay-3">
-                    <div class="asset-card-img">
-                        <div class="asset-card-img-bg"></div>
-                        <div class="asset-card-icon-wrapper">
-                            <svg width="48" height="48" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" stroke-linecap="round"><rect x="6" y="14" width="14" height="26" rx="2"/><rect x="28" y="6" width="14" height="34" rx="2"/><line x1="6" y1="22" x2="20" y2="22"/><line x1="6" y1="30" x2="20" y2="30"/><line x1="28" y1="14" x2="42" y2="14"/><line x1="28" y1="22" x2="42" y2="22"/><line x1="28" y1="30" x2="42" y2="30"/></svg>
-                        </div>
-                        <span class="asset-card-tag">Mixed-Use</span>
-                        <span class="asset-card-yield">11.2% APY</span>
-                    </div>
-                    <div class="asset-card-body">
-                        <div class="asset-card-location">Sao Paulo, Brazil</div>
-                        <h3>Vila Madalena Innovation Hub</h3>
-                        <div class="asset-card-meta">
-                            <div class="asset-card-meta-item">
-                                <div class="asset-card-meta-value">$3.8M</div>
-                                <div class="asset-card-meta-label">Valuation</div>
-                            </div>
-                            <div class="asset-card-meta-item">
-                                <div class="asset-card-meta-value">38,000</div>
-                                <div class="asset-card-meta-label">Tokens</div>
-                            </div>
-                            <div class="asset-card-meta-item">
-                                <div class="asset-card-meta-value">$100</div>
-                                <div class="asset-card-meta-label">Per Token</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<!-- ═══ SOLUTION ═══ -->
+<section class="solution" id="solution">
+  <div class="solution-inner">
+    <div class="reveal" style="text-align:center">
+      <span class="caption" style="color:var(--emerald-light);display:block;margin-bottom:12px" data-i18n="the_solution">The Solution</span>
+      <h2 class="h2-title" data-i18n="solution_title">Real estate, <span class="gradient-text">reimagined</span>.</h2>
+    </div>
+    <div class="solution-grid">
+      <div class="solution-card stagger-child" data-tilt style="border-left:3px solid var(--gold)">
+        <div class="step-num">01</div>
+        <div class="card-icon ic-gold">
+          <svg width="24" height="24" viewBox="0 0 32 32" fill="none"><rect x="4" y="14" width="24" height="14" rx="2" stroke="currentColor" stroke-width="2"/><path d="M8 14V10a8 8 0 0116 0v4" stroke="currentColor" stroke-width="2"/><circle cx="16" cy="21" r="2" fill="currentColor"/><path d="M16 23v3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
         </div>
-    </section>
-
-    <!-- SECURITY -->
-    <section class="security" id="security">
-        <div class="container">
-            <div class="security-layout">
-                <div>
-                    <div class="reveal">
-                        <div class="section-label">Security & Compliance</div>
-                        <h2 class="section-title">Institutional Security.<br>On-Chain Transparency.</h2>
-                        <p class="section-desc">Built on ERC-3643, the only token standard designed for regulated securities. Every transfer is permissioned. Every holder is verified.</p>
-                    </div>
-
-                    <div class="security-list">
-                        <div class="security-item reveal reveal-delay-1">
-                            <div class="security-item-icon">
-                                <svg width="18" height="18" fill="none" stroke="#d4a574" stroke-width="2" stroke-linecap="round"><path d="M9 1l8 4v6c0 5.5-3.5 8.5-8 10C4.5 19.5 1 16.5 1 11V5z"/></svg>
-                            </div>
-                            <div>
-                                <h4>ERC-3643 (T-REX) Standard</h4>
-                                <p>Purpose-built for regulated security tokens with identity verification and transfer restrictions at the protocol level.</p>
-                            </div>
-                        </div>
-
-                        <div class="security-item reveal reveal-delay-2">
-                            <div class="security-item-icon">
-                                <svg width="18" height="18" fill="none" stroke="#d4a574" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="6" r="4"/><path d="M1 18c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
-                            </div>
-                            <div>
-                                <h4>On-Chain Identity (ONCHAINID)</h4>
-                                <p>KYC/AML verification stored on-chain via ERC-735/ERC-725 claims, enabling compliant peer-to-peer transfers.</p>
-                            </div>
-                        </div>
-
-                        <div class="security-item reveal reveal-delay-3">
-                            <div class="security-item-icon">
-                                <svg width="18" height="18" fill="none" stroke="#d4a574" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="9" r="8"/><path d="M9 5v4l3 2"/></svg>
-                            </div>
-                            <div>
-                                <h4>Chainlink Oracle Integration</h4>
-                                <p>Real-time property valuations and price feeds powered by decentralized oracles for transparent, tamper-proof data.</p>
-                            </div>
-                        </div>
-
-                        <div class="security-item reveal reveal-delay-4">
-                            <div class="security-item-icon">
-                                <svg width="18" height="18" fill="none" stroke="#d4a574" stroke-width="2" stroke-linecap="round"><rect x="1" y="5" width="16" height="12" rx="2"/><path d="M5 5V3a4 4 0 0 1 8 0v2"/></svg>
-                            </div>
-                            <div>
-                                <h4>Audited Smart Contracts</h4>
-                                <p>All contracts are built on OpenZeppelin libraries and undergo rigorous third-party security audits before deployment.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="security-visual">
-                    <div class="security-card reveal">
-                        <div class="security-card-header">
-                            <span class="security-card-title">Compliance Score</span>
-                            <span class="security-card-badge">Verified</span>
-                        </div>
-                        <div class="security-bar">
-                            <div class="security-bar-fill" style="--target-width: 98%"></div>
-                        </div>
-                        <div class="security-bar-labels">
-                            <span>KYC/AML Compliance</span>
-                            <span>98%</span>
-                        </div>
-                        <div style="height:16px"></div>
-                        <div class="security-bar">
-                            <div class="security-bar-fill" style="--target-width: 100%"></div>
-                        </div>
-                        <div class="security-bar-labels">
-                            <span>Transfer Restriction Enforcement</span>
-                            <span>100%</span>
-                        </div>
-                        <div style="height:16px"></div>
-                        <div class="security-bar">
-                            <div class="security-bar-fill" style="--target-width: 95%"></div>
-                        </div>
-                        <div class="security-bar-labels">
-                            <span>Oracle Data Freshness</span>
-                            <span>95%</span>
-                        </div>
-                    </div>
-
-                    <div class="security-card reveal reveal-delay-2">
-                        <div class="security-card-header">
-                            <span class="security-card-title">Tech Stack</span>
-                        </div>
-                        <div class="security-tech-stack">
-                            <div class="security-tech-item">
-                                <span>Polygon PoS</span>
-                                <span>Network</span>
-                            </div>
-                            <div class="security-tech-item">
-                                <span>ERC-3643</span>
-                                <span>Token Standard</span>
-                            </div>
-                            <div class="security-tech-item">
-                                <span>Chainlink</span>
-                                <span>Oracle</span>
-                            </div>
-                            <div class="security-tech-item">
-                                <span>OpenZeppelin</span>
-                                <span>Security</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <h3 data-i18n="sol1_title">Fractional Ownership</h3>
+        <p data-i18n="sol1_desc">Own a piece of premium LATAM properties starting at $100. ERC-3643 security tokens represent real, legally-binding ownership stakes.</p>
+      </div>
+      <div class="solution-card stagger-child" data-tilt style="border-left:3px solid var(--emerald-light)">
+        <div class="step-num">02</div>
+        <div class="card-icon ic-emerald">
+          <svg width="24" height="24" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="12" stroke="currentColor" stroke-width="2"/><path d="M16 8v8l6 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M8 4l-2 4M24 4l2 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity=".4"/></svg>
         </div>
-    </section>
-
-    <!-- CTA -->
-    <section class="cta" id="cta">
-        <div class="container">
-            <div class="cta-content">
-                <div class="section-label reveal" data-i18n="cta_label">Join the Waitlist</div>
-                <h2 class="reveal reveal-delay-1" data-i18n-html="cta_title">The Future of Real Estate<br>Is <span class="gold">Borderless</span>.</h2>
-                <p class="reveal reveal-delay-2" data-i18n="cta_desc">Be among the first to invest in tokenized LATAM real estate. Early access members receive priority allocation and reduced fees.</p>
-                <div class="cta-actions reveal reveal-delay-3">
-                    <a href="#" class="btn-primary" data-i18n="cta_btn1">Get Early Access &rarr;</a>
-                    <a href="#" class="btn-secondary" data-i18n="cta_btn2">Read the Whitepaper</a>
-                </div>
-                <p class="cta-note reveal reveal-delay-4" data-i18n="cta_note">No commitment required. We'll notify you when we launch.</p>
-            </div>
+        <h3 data-i18n="sol2_title">Automated Yield</h3>
+        <p data-i18n="sol2_desc">Rental income flows directly to your wallet via smart contracts. No middlemen. No delays. Transparent, on-chain dividend distribution.</p>
+      </div>
+      <div class="solution-card stagger-child" data-tilt style="border-left:3px solid var(--cream)">
+        <div class="step-num">03</div>
+        <div class="card-icon ic-cream">
+          <svg width="24" height="24" viewBox="0 0 32 32" fill="none"><path d="M4 8h24v16H4z" stroke="currentColor" stroke-width="2" rx="2"/><path d="M4 12h24" stroke="currentColor" stroke-width="1.5" opacity=".5"/><circle cx="24" cy="20" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M23 20l1 1 2-2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
         </div>
-    </section>
+        <h3 data-i18n="sol3_title">Built-in Compliance</h3>
+        <p data-i18n="sol3_desc">ERC-3643 standard ensures regulatory compliance across jurisdictions. On-chain KYC, transfer restrictions, and investor eligibility built into every token.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <!-- FOOTER -->
-    <footer>
-        <div class="container">
-            <div class="footer-top">
-                <div class="footer-brand">
-                    <a href="#" class="nav-logo">
-                        <div class="nav-logo-icon">T</div>
-                        <span class="nav-logo-text">Terravault</span>
-                    </a>
-                    <p>Institutional-grade LATAM real estate, tokenized. Own the world, one token at a time.</p>
-                </div>
-
-                <div class="footer-links-group">
-                    <h4>Product</h4>
-                    <a href="#how">How it Works</a>
-                    <a href="#assets">Asset Types</a>
-                    <a href="#security">Security</a>
-                    <a href="#">Documentation</a>
-                </div>
-
-                <div class="footer-links-group">
-                    <h4>Company</h4>
-                    <a href="#">About</a>
-                    <a href="#">Careers</a>
-                    <a href="#">Blog</a>
-                    <a href="#">Contact</a>
-                </div>
-
-                <div class="footer-links-group">
-                    <h4>Legal</h4>
-                    <a href="#">Terms of Service</a>
-                    <a href="#">Privacy Policy</a>
-                    <a href="#">Compliance</a>
-                    <a href="#">Risk Disclosure</a>
-                </div>
-            </div>
-
-            <div class="footer-bottom">
-                <span>&copy; 2026 Terravault. All rights reserved.</span>
-                <div class="footer-socials">
-                    <a href="#" aria-label="Twitter">X</a>
-                    <a href="#" aria-label="Discord">D</a>
-                    <a href="#" aria-label="GitHub">G</a>
-                    <a href="#" aria-label="LinkedIn">in</a>
-                </div>
-            </div>
+<!-- ═══ PROPERTIES SHOWCASE ═══ -->
+<section class="properties" id="properties">
+  <div class="properties-inner">
+    <div class="reveal" style="text-align:center">
+      <span class="caption" style="color:var(--gold);display:block;margin-bottom:12px" data-i18n="featured_props">Featured Properties</span>
+      <h2 class="h2-title" data-i18n="curated_portfolio">A curated portfolio of<br><span class="gradient-text">LATAM's finest.</span></h2>
+    </div>
+    <div class="properties-grid">
+      <!-- Bogota -->
+      <div class="prop-card stagger-child" data-tilt>
+        <div class="prop-skyline fc-skyline-bogota">
+          <div class="prop-badge live" data-i18n="badge_live">LIVE</div>
+          <div class="fc-buildings">
+            <div class="fc-building" style="width:14px;height:50%"></div>
+            <div class="fc-building" style="width:18px;height:75%"></div>
+            <div class="fc-building" style="width:12px;height:40%"></div>
+            <div class="fc-building" style="width:16px;height:65%"></div>
+            <div class="fc-building" style="width:20px;height:85%"></div>
+            <div class="fc-building" style="width:14px;height:55%"></div>
+          </div>
         </div>
-    </footer>
+        <div class="prop-body">
+          <div class="prop-location"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg> Bogot&aacute;, Colombia</div>
+          <div class="prop-name">Torre Chapinero 42</div>
+          <div class="prop-metrics">
+            <div class="prop-metric"><div class="prop-metric-label" data-i18n="annual_yield">Annual Yield</div><div class="prop-metric-val yield">9.2%</div></div>
+            <div class="prop-metric"><div class="prop-metric-label" data-i18n="token_price">Token Price</div><div class="prop-metric-val">$100</div></div>
+            <div class="prop-metric"><div class="prop-metric-label" data-i18n="property_value">Property Value</div><div class="prop-metric-val">$2.5M</div></div>
+            <div class="prop-metric"><div class="prop-metric-label" data-i18n="prop_type">Type</div><div class="prop-metric-val" style="font-size:.85rem" data-i18n="commercial">Commercial</div></div>
+          </div>
+          <div class="prop-progress">
+            <div class="prop-progress-bar"><div class="prop-progress-fill" data-width="72"></div></div>
+            <div class="prop-progress-info"><span>72% <span data-i18n="funded">funded</span></span><span>$1.8M / $2.5M</span></div>
+          </div>
+        </div>
+      </div>
+      <!-- CDMX -->
+      <div class="prop-card stagger-child" data-tilt>
+        <div class="prop-skyline fc-skyline-cdmx">
+          <div class="prop-badge live" data-i18n="badge_live">LIVE</div>
+          <div class="fc-buildings">
+            <div class="fc-building" style="width:16px;height:60%"></div>
+            <div class="fc-building" style="width:22px;height:90%"></div>
+            <div class="fc-building" style="width:14px;height:50%"></div>
+            <div class="fc-building" style="width:18px;height:70%"></div>
+            <div class="fc-building" style="width:12px;height:40%"></div>
+          </div>
+        </div>
+        <div class="prop-body">
+          <div class="prop-location"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg> CDMX, M&eacute;xico</div>
+          <div class="prop-name">Polanco Residences</div>
+          <div class="prop-metrics">
+            <div class="prop-metric"><div class="prop-metric-label" data-i18n="annual_yield">Annual Yield</div><div class="prop-metric-val yield">11.4%</div></div>
+            <div class="prop-metric"><div class="prop-metric-label" data-i18n="token_price">Token Price</div><div class="prop-metric-val">$100</div></div>
+            <div class="prop-metric"><div class="prop-metric-label" data-i18n="property_value">Property Value</div><div class="prop-metric-val">$6M</div></div>
+            <div class="prop-metric"><div class="prop-metric-label" data-i18n="prop_type">Type</div><div class="prop-metric-val" style="font-size:.85rem" data-i18n="residential">Residential</div></div>
+          </div>
+          <div class="prop-progress">
+            <div class="prop-progress-bar"><div class="prop-progress-fill" data-width="45"></div></div>
+            <div class="prop-progress-info"><span>45% <span data-i18n="funded">funded</span></span><span>$2.7M / $6M</span></div>
+          </div>
+        </div>
+      </div>
+      <!-- Sao Paulo -->
+      <div class="prop-card stagger-child" data-tilt>
+        <div class="prop-skyline fc-skyline-sp">
+          <div class="prop-badge upcoming" data-i18n="badge_upcoming">UPCOMING</div>
+          <div class="fc-buildings">
+            <div class="fc-building" style="width:18px;height:80%"></div>
+            <div class="fc-building" style="width:14px;height:55%"></div>
+            <div class="fc-building" style="width:22px;height:95%"></div>
+            <div class="fc-building" style="width:16px;height:65%"></div>
+            <div class="fc-building" style="width:12px;height:45%"></div>
+          </div>
+        </div>
+        <div class="prop-body">
+          <div class="prop-location"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg> S&atilde;o Paulo, Brasil</div>
+          <div class="prop-name">Vila Madalena Loft</div>
+          <div class="prop-metrics">
+            <div class="prop-metric"><div class="prop-metric-label" data-i18n="annual_yield">Annual Yield</div><div class="prop-metric-val yield">8.7%</div></div>
+            <div class="prop-metric"><div class="prop-metric-label" data-i18n="token_price">Token Price</div><div class="prop-metric-val">$100</div></div>
+            <div class="prop-metric"><div class="prop-metric-label" data-i18n="property_value">Property Value</div><div class="prop-metric-val">$4M</div></div>
+            <div class="prop-metric"><div class="prop-metric-label" data-i18n="prop_type">Type</div><div class="prop-metric-val" style="font-size:.85rem" data-i18n="mixed_use">Mixed-Use</div></div>
+          </div>
+          <div class="prop-progress">
+            <div class="prop-progress-bar"><div class="prop-progress-fill" data-width="91"></div></div>
+            <div class="prop-progress-info"><span>91% <span data-i18n="funded">funded</span></span><span>$3.6M / $4M</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <script>
-        // ===== i18n System =====
-        const i18n = {
-          en: {
-            lang_label:'English',
-            nav_problem:'Problem',nav_solution:'Solution',nav_how:'How it Works',nav_assets:'Assets',nav_security:'Security',nav_cta:'Get Early Access',
-            hero_title:'Own the World.<br><span class="gold">One Token</span> at a Time.',
-            hero_sub:'Institutional-grade LATAM real estate, tokenized on Ethereum. Fractional ownership, automated yield, full compliance \u2014 starting at $100.',
-            hero_cta:'Start Investing \u2192',hero_cta2:'See How it Works',
-            stat_latam:'LATAM Real Estate Market',stat_min_invest:'Minimum Investment',stat_annual_yield:'Target Annual Yield',
-            problem_label:'The Problem',problem_title:'$3.2 Trillion in Value.<br>Locked Behind Borders.',
-            problem_desc:"Latin America's real estate market is one of the largest and fastest-growing on Earth, yet nearly inaccessible to most investors.",
-            prob_card1_title:'Cross-Border Barriers',prob_card1_desc:'Foreign ownership laws, fragmented registries, and layers of intermediaries make international investment nearly impossible for individuals.',
-            prob_card2_title:'Prohibitive Minimums',prob_card2_desc:"Institutional-grade properties require minimum investments of $500K+, locking out the vast majority of the world's growing investor class.",
-            prob_card3_title:'Glacial Settlement',prob_card3_desc:'Traditional real estate transactions take 60-120 days to settle, with legal fees, notarization, and bureaucratic overhead eating into returns.',
-            prob_card4_title:'Zero Liquidity',prob_card4_desc:'Once invested, your capital is trapped. There is no secondary market for fractional real estate in LATAM \u2014 until now.',
-            solution_label:'The Solution',solution_title:'Real Estate, Reimagined<br>for the Digital Age.',
-            solution_desc:'Terravault transforms physical properties into compliant digital securities. Invest globally. Earn locally. Trade freely.',
-            sol_feat1_title:'Fractional Ownership',sol_feat1_desc:'Own a piece of a luxury Bogota penthouse or a Mexico City commercial tower from just $100. ERC-3643 tokens represent verified legal ownership.',
-            sol_feat2_title:'Automated Yield',sol_feat2_desc:'Smart contracts distribute rental income directly to your wallet. No intermediaries, no delays. Yield flows as reliably as the blockchain itself.',
-            sol_feat3_title:'Built-In Compliance',sol_feat3_desc:'ERC-3643 enforces KYC/AML at the protocol level. Every transfer is permissioned. Every holder is verified. Regulators can trust it. So can you.',
-            how_label:'How It Works',how_title:'Three Steps to Global<br>Real Estate Ownership.',
-            how_desc:"From identity verification to yield collection, we've compressed months of complexity into minutes of clarity.",
-            cta_label:'Join the Waitlist',cta_title:'The Future of Real Estate<br>Is <span class="gold">Borderless</span>.',
-            cta_desc:'Be among the first to invest in tokenized LATAM real estate. Early access members receive priority allocation and reduced fees.',
-            cta_btn1:'Get Early Access \u2192',cta_btn2:'Read the Whitepaper',cta_note:"No commitment required. We'll notify you when we launch.",
-          },
-          zh: {
-            lang_label:'\u4e2d\u6587',
-            nav_problem:'\u554f\u984c',nav_solution:'\u89e3\u6c7a\u65b9\u6848',nav_how:'\u904b\u4f5c\u65b9\u5f0f',nav_assets:'\u8cc7\u7522',nav_security:'\u5b89\u5168',nav_cta:'\u640d\u5148\u9810\u7d04',
-            hero_title:'\u64c1\u6709\u5168\u4e16\u754c\u3002<br><span class="gold">\u4e00\u500b\u4ee3\u5e63</span>\uff0c\u4e00\u6b65\u4e00\u6b65\u3002',
-            hero_sub:'\u6a5f\u69cb\u7d1a\u62c9\u4e01\u7f8e\u6d32\u623f\u5730\u7522\uff0c\u5728\u4ee5\u592a\u574a\u4e0a\u4ee3\u5e63\u5316\u3002\u90e8\u5206\u64c1\u6709\u6b0a\u3001\u81ea\u52d5\u6536\u76ca\u3001\u5b8c\u5168\u5408\u898f \u2014 \u6700\u4f4e $100 \u8d77\u3002',
-            hero_cta:'\u958b\u59cb\u6295\u8cc7 \u2192',hero_cta2:'\u4e86\u89e3\u904b\u4f5c\u65b9\u5f0f',
-            stat_latam:'\u62c9\u4e01\u7f8e\u6d32\u623f\u5730\u7522\u5e02\u5834',stat_min_invest:'\u6700\u4f4e\u6295\u8cc7\u984d',stat_annual_yield:'\u76ee\u6a19\u5e74\u5316\u6536\u76ca',
-            problem_label:'\u554f\u984c',problem_title:'3.2 \u5146\u7f8e\u5143\u50f9\u503c\u3002<br>\u88ab\u908a\u754c\u9396\u4f4f\u3002',
-            problem_desc:'\u62c9\u4e01\u7f8e\u6d32\u7684\u623f\u5730\u7522\u5e02\u5834\u662f\u5168\u7403\u6700\u5927\u4e14\u589e\u9577\u6700\u5feb\u7684\u5e02\u5834\u4e4b\u4e00\uff0c\u4f46\u5c0d\u5927\u591a\u6578\u6295\u8cc7\u8005\u4f86\u8aaa\u5e7e\u4e4e\u7121\u6cd5\u9032\u5165\u3002',
-            prob_card1_title:'\u8de8\u5883\u969c\u7919',prob_card1_desc:'\u5916\u570b\u64c1\u6709\u6b0a\u6cd5\u5f8b\u3001\u5206\u6563\u7684\u767b\u8a18\u7cfb\u7d71\u548c\u591a\u5c64\u4e2d\u4ecb\u6a5f\u69cb\u4f7f\u500b\u4eba\u570b\u969b\u6295\u8cc7\u5e7e\u4e4e\u4e0d\u53ef\u80fd\u3002',
-            prob_card2_title:'\u6295\u8cc7\u9580\u6abb\u904e\u9ad8',prob_card2_desc:'\u6a5f\u69cb\u7d1a\u7269\u696d\u9700\u8981\u6700\u4f4e $50\u842c\u7f8e\u5143\u4ee5\u4e0a\u7684\u6295\u8cc7\uff0c\u5c07\u5168\u7403\u5927\u591a\u6578\u589e\u9577\u4e2d\u7684\u6295\u8cc7\u8005\u6392\u9664\u5728\u5916\u3002',
-            prob_card3_title:'\u7de9\u6162\u7684\u7d50\u7b97',prob_card3_desc:'\u50b3\u7d71\u623f\u5730\u7522\u4ea4\u6613\u9700\u898160-120\u5929\u624d\u80fd\u7d50\u7b97\uff0c\u6cd5\u5f8b\u8cbb\u7528\u3001\u516c\u8b49\u548c\u884c\u653f\u958b\u652f\u4fb5\u8755\u56de\u5831\u3002',
-            prob_card4_title:'\u96f6\u6d41\u52d5\u6027',prob_card4_desc:'\u4e00\u65e6\u6295\u8cc7\uff0c\u60a8\u7684\u8cc7\u91d1\u5c31\u88ab\u5957\u7262\u3002\u62c9\u4e01\u7f8e\u6d32\u6c92\u6709\u90e8\u5206\u623f\u5730\u7522\u7684\u4e8c\u7d1a\u5e02\u5834 \u2014 \u76f4\u5230\u73fe\u5728\u3002',
-            solution_label:'\u89e3\u6c7a\u65b9\u6848',solution_title:'\u623f\u5730\u7522\uff0c\u70ba\u6578\u4f4d\u6642\u4ee3<br>\u91cd\u65b0\u69cb\u60f3\u3002',
-            solution_desc:'Terravault \u5c07\u5be6\u9ad4\u7269\u696d\u8f49\u5316\u70ba\u5408\u898f\u7684\u6578\u4f4d\u8b49\u5238\u3002\u5168\u7403\u6295\u8cc7\u3002\u5728\u5730\u6536\u76ca\u3002\u81ea\u7531\u4ea4\u6613\u3002',
-            sol_feat1_title:'\u90e8\u5206\u64c1\u6709\u6b0a',sol_feat1_desc:'\u50c5\u9700 $100 \u5373\u53ef\u64c1\u6709\u6ce2\u54e5\u5927\u8c6a\u83ef\u516c\u5bd3\u6216\u58a8\u897f\u54e5\u57ce\u5546\u696d\u5927\u6a13\u7684\u4e00\u90e8\u5206\u3002ERC-3643 \u4ee3\u5e63\u4ee3\u8868\u7d93\u9a57\u8b49\u7684\u6cd5\u5f8b\u64c1\u6709\u6b0a\u3002',
-            sol_feat2_title:'\u81ea\u52d5\u6536\u76ca',sol_feat2_desc:'\u667a\u80fd\u5408\u7d04\u5c07\u79df\u91d1\u6536\u5165\u76f4\u63a5\u5206\u914d\u5230\u60a8\u7684\u9322\u5305\u3002\u6c92\u6709\u4e2d\u4ecb\uff0c\u6c92\u6709\u5ef6\u9072\u3002\u6536\u76ca\u50cf\u5340\u584a\u93c8\u672c\u8eab\u4e00\u6a23\u53ef\u9760\u3002',
-            sol_feat3_title:'\u5167\u5efa\u5408\u898f',sol_feat3_desc:'ERC-3643 \u5728\u5354\u8b70\u5c64\u57f7\u884c KYC/AML\u3002\u6bcf\u6b21\u8f49\u5e33\u90fd\u7d93\u904e\u8a31\u53ef\u3002\u6bcf\u4f4d\u6301\u6709\u4eba\u90fd\u7d93\u904e\u9a57\u8b49\u3002\u76e3\u7ba1\u6a5f\u69cb\u53ef\u4ee5\u4fe1\u4efb\u5b83\u3002',
-            how_label:'\u904b\u4f5c\u65b9\u5f0f',how_title:'\u4e09\u500b\u6b65\u9a5f\uff0c\u901a\u5f80\u5168\u7403<br>\u623f\u5730\u7522\u64c1\u6709\u6b0a\u3002',
-            how_desc:'\u5f9e\u8eab\u4efd\u9a57\u8b49\u5230\u6536\u76ca\u6536\u53d6\uff0c\u6211\u5011\u5c07\u6578\u6708\u7684\u8907\u96dc\u6027\u58d3\u7e2e\u70ba\u5e7e\u5206\u9418\u7684\u6e05\u6670\u6d41\u7a0b\u3002',
-            cta_label:'\u52a0\u5165\u7b49\u5f85\u540d\u55ae',cta_title:'\u623f\u5730\u7522\u7684\u672a\u4f86<br>\u662f<span class="gold">\u7121\u908a\u754c</span>\u7684\u3002',
-            cta_desc:'\u6210\u70ba\u9996\u6279\u6295\u8cc7\u4ee3\u5e63\u5316\u62c9\u4e01\u7f8e\u6d32\u623f\u5730\u7522\u7684\u6295\u8cc7\u8005\u3002\u65e9\u671f\u7528\u6236\u53ef\u7372\u5f97\u512a\u5148\u5206\u914d\u548c\u6e1b\u5c11\u8cbb\u7528\u3002',
-            cta_btn1:'\u640d\u5148\u9810\u7d04 \u2192',cta_btn2:'\u95b1\u8b80\u767d\u76ae\u66f8',cta_note:'\u7121\u9700\u627f\u8afe\u3002\u6211\u5011\u6703\u5728\u555f\u52d5\u6642\u901a\u77e5\u60a8\u3002',
-          },
-          es: {
-            lang_label:'Espa\u00f1ol',
-            nav_problem:'Problema',nav_solution:'Soluci\u00f3n',nav_how:'C\u00f3mo Funciona',nav_assets:'Activos',nav_security:'Seguridad',nav_cta:'Acceso Anticipado',
-            hero_title:'Posee el Mundo.<br><span class="gold">Un Token</span> a la Vez.',
-            hero_sub:'Bienes ra\u00edces institucionales en LATAM, tokenizados en Ethereum. Propiedad fraccionada, rendimientos autom\u00e1ticos, cumplimiento total \u2014 desde $100.',
-            hero_cta:'Empezar a Invertir \u2192',hero_cta2:'Ver C\u00f3mo Funciona',
-            stat_latam:'Mercado Inmobiliario LATAM',stat_min_invest:'Inversi\u00f3n M\u00ednima',stat_annual_yield:'Rendimiento Anual Objetivo',
-            problem_label:'El Problema',problem_title:'$3.2 Billones en Valor.<br>Bloqueados Tras Fronteras.',
-            problem_desc:'El mercado inmobiliario de Am\u00e9rica Latina es uno de los m\u00e1s grandes y de mayor crecimiento, pero casi inaccesible para la mayor\u00eda de inversores.',
-            prob_card1_title:'Barreras Transfronterizas',prob_card1_desc:'Leyes de propiedad extranjera, registros fragmentados y capas de intermediarios hacen casi imposible la inversi\u00f3n internacional para individuos.',
-            prob_card2_title:'M\u00ednimos Prohibitivos',prob_card2_desc:'Las propiedades institucionales requieren inversiones m\u00ednimas de $500K+, excluyendo a la gran mayor\u00eda de la creciente clase inversora.',
-            prob_card3_title:'Liquidaci\u00f3n Glacial',prob_card3_desc:'Las transacciones inmobiliarias tradicionales tardan 60-120 d\u00edas en liquidar, con honorarios legales y burocracia que erosionan los rendimientos.',
-            prob_card4_title:'Cero Liquidez',prob_card4_desc:'Una vez invertido, su capital queda atrapado. No hay mercado secundario para bienes ra\u00edces fraccionados en LATAM \u2014 hasta ahora.',
-            solution_label:'La Soluci\u00f3n',solution_title:'Bienes Ra\u00edces, Reimaginados<br>para la Era Digital.',
-            solution_desc:'Terravault transforma propiedades f\u00edsicas en valores digitales regulados. Invierte globalmente. Gana localmente. Opera libremente.',
-            sol_feat1_title:'Propiedad Fraccionada',sol_feat1_desc:'Posea una fracci\u00f3n de un penthouse en Bogot\u00e1 o una torre comercial en Ciudad de M\u00e9xico desde solo $100. Los tokens ERC-3643 representan propiedad legal verificada.',
-            sol_feat2_title:'Rendimiento Autom\u00e1tico',sol_feat2_desc:'Los contratos inteligentes distribuyen ingresos por alquiler directamente a su billetera. Sin intermediarios, sin demoras.',
-            sol_feat3_title:'Cumplimiento Integrado',sol_feat3_desc:'ERC-3643 aplica KYC/AML a nivel de protocolo. Cada transferencia est\u00e1 autorizada. Cada titular est\u00e1 verificado. Los reguladores pueden confiar.',
-            how_label:'C\u00f3mo Funciona',how_title:'Tres Pasos hacia la Propiedad<br>Inmobiliaria Global.',
-            how_desc:'Desde la verificaci\u00f3n de identidad hasta la recolecci\u00f3n de rendimientos, comprimimos meses de complejidad en minutos de claridad.',
-            cta_label:'\u00danete a la Lista de Espera',cta_title:'El Futuro del Real Estate<br>Es <span class="gold">Sin Fronteras</span>.',
-            cta_desc:'Sea de los primeros en invertir en bienes ra\u00edces LATAM tokenizados. Acceso anticipado con asignaci\u00f3n prioritaria y tarifas reducidas.',
-            cta_btn1:'Acceso Anticipado \u2192',cta_btn2:'Leer el Whitepaper',cta_note:'Sin compromiso. Le notificaremos cuando lancemos.',
-          }
-        };
+<!-- ═══ HOW IT WORKS ═══ -->
+<section class="how-it-works" id="how-it-works">
+  <div class="hiw-inner">
+    <div class="reveal" style="text-align:center">
+      <span class="caption" style="color:var(--gold);display:block;margin-bottom:12px" data-i18n="how_it_works_cap">How It Works</span>
+      <h2 class="h2-title" data-i18n="three_steps">Three steps to <span class="gradient-text">ownership.</span></h2>
+    </div>
+    <div class="hiw-steps">
+      <div class="hiw-step stagger-child">
+        <div class="hiw-num"><span>1</span></div>
+        <h3 data-i18n="step1_title">Curate</h3>
+        <p data-i18n="step1_desc">Our team sources and vets premium properties across Bogot&aacute;, Mexico City, and S&atilde;o Paulo. Rigorous due diligence. Institutional standards.</p>
+      </div>
+      <div class="hiw-step stagger-child">
+        <div class="hiw-num"><span>2</span></div>
+        <h3 data-i18n="step2_title">Invest</h3>
+        <p data-i18n="step2_desc">Complete KYC verification, browse properties, and purchase fractional tokens starting at $100. Fully compliant. Fully transparent.</p>
+      </div>
+      <div class="hiw-step stagger-child">
+        <div class="hiw-num"><span>3</span></div>
+        <h3 data-i18n="step3_title">Earn</h3>
+        <p data-i18n="step3_desc">Receive automated rental yield directly to your wallet. Track performance in real-time. Trade tokens on the secondary market.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-        let currentLang = localStorage.getItem('tv_landing_lang') || 'en';
+<!-- ═══ BENTO FEATURES ═══ -->
+<section class="bento" id="features">
+  <div class="bento-inner">
+    <div class="bento-header reveal">
+      <span class="caption" style="color:var(--emerald-light);display:block;margin-bottom:12px" data-i18n="features_cap">Features</span>
+      <h2 class="h2-title" data-i18n="features_title">Institutional infrastructure.<br><span class="gradient-text">Individual access.</span></h2>
+    </div>
+    <div class="bento-grid">
+      <!-- 1: Compliance (span 2) -->
+      <div class="bento-card card stagger-child" data-tilt style="border-left:3px solid var(--emerald-light)">
+        <div class="card-icon ic-emerald">
+          <svg width="24" height="24" viewBox="0 0 32 32" fill="none"><path d="M16 2L4 8v8c0 8 5.4 14.4 12 16 6.6-1.6 12-8 12-16V8L16 2z" stroke="currentColor" stroke-width="2"/><path d="M11 16l4 4 6-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3 data-i18n="feat1_title">ERC-3643 Compliance</h3>
+        <p data-i18n="feat1_desc">The gold standard for security token compliance. On-chain identity verification, transfer restrictions, and investor eligibility rules enforced at the protocol level.</p>
+        <div class="mini-preview">
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <span style="font-size:.6rem;padding:4px 10px;border-radius:6px;background:rgba(6,78,59,.15);color:var(--emerald-light);font-weight:600">KYC Verified</span>
+            <span style="font-size:.6rem;padding:4px 10px;border-radius:6px;background:rgba(6,78,59,.15);color:var(--emerald-light);font-weight:600">AML Compliant</span>
+            <span style="font-size:.6rem;padding:4px 10px;border-radius:6px;background:rgba(212,165,116,.1);color:var(--gold);font-weight:600">Accredited</span>
+            <span style="font-size:.6rem;padding:4px 10px;border-radius:6px;background:rgba(212,165,116,.1);color:var(--gold);font-weight:600">Multi-Jurisdiction</span>
+          </div>
+        </div>
+      </div>
+      <!-- 2: Dividends -->
+      <div class="bento-card card stagger-child" data-tilt style="border-left:3px solid var(--gold)">
+        <div class="card-icon ic-gold">
+          <svg width="24" height="24" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="12" stroke="currentColor" stroke-width="2"/><text x="16" y="20" text-anchor="middle" fill="currentColor" font-family="Space Grotesk,sans-serif" font-size="10" font-weight="700">$</text><path d="M16 2v4M16 26v4" stroke="currentColor" stroke-width="1.5" opacity=".3"/></svg>
+        </div>
+        <h3 data-i18n="feat2_title">Automated Dividends</h3>
+        <p data-i18n="feat2_desc">Smart contract-powered rental income distribution. Monthly yields paid directly to your wallet. No banks. No delays.</p>
+        <div class="mini-preview">
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <div style="display:flex;justify-content:space-between;font-size:.6rem;color:var(--text3)"><span>Jan</span><span style="color:var(--emerald-light);font-weight:600">+$127.40</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:.6rem;color:var(--text3)"><span>Feb</span><span style="color:var(--emerald-light);font-weight:600">+$131.20</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:.6rem;color:var(--text3)"><span>Mar</span><span style="color:var(--emerald-light);font-weight:600">+$129.80</span></div>
+          </div>
+        </div>
+      </div>
+      <!-- 3: Secondary Market -->
+      <div class="bento-card card stagger-child" data-tilt style="border-left:3px solid var(--emerald-light)">
+        <div class="card-icon ic-emerald">
+          <svg width="24" height="24" viewBox="0 0 32 32" fill="none"><path d="M4 24l6-8 5 4 7-10 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M24 10h4v4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3 data-i18n="feat3_title">Secondary Market</h3>
+        <p data-i18n="feat3_desc">Trade property tokens on our compliant secondary marketplace. Full liquidity for traditionally illiquid assets.</p>
+      </div>
+      <!-- 4: Oracle Pricing (span 2) -->
+      <div class="bento-card card stagger-child" data-tilt style="border-left:3px solid var(--gold)">
+        <div class="card-icon ic-gold">
+          <svg width="24" height="24" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="12" stroke="currentColor" stroke-width="2"/><circle cx="16" cy="16" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M16 4v4M16 24v4M4 16h4M24 16h4" stroke="currentColor" stroke-width="1.5" opacity=".4"/><path d="M8 8l2.5 2.5M21.5 21.5l2.5 2.5M8 24l2.5-2.5M21.5 10.5L24 8" stroke="currentColor" stroke-width="1" opacity=".3"/></svg>
+        </div>
+        <h3 data-i18n="feat4_title">Oracle Pricing</h3>
+        <p data-i18n="feat4_desc">Real-time property valuations powered by Chainlink oracles. NAV updates reflect actual market conditions. Verifiable. Transparent. Tamper-proof.</p>
+        <div class="mini-preview">
+          <div style="display:flex;align-items:center;gap:12px">
+            <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--emerald),var(--gold));display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:#fff;font-family:var(--head)">NAV</div>
+            <div><div style="font-family:var(--head);font-size:1rem;font-weight:700;color:var(--white)">$2,847,320</div><div style="font-size:.6rem;color:var(--emerald-light)">Updated 2h ago via Chainlink</div></div>
+          </div>
+        </div>
+      </div>
+      <!-- 5: KYC -->
+      <div class="bento-card card stagger-child" data-tilt style="border-left:3px solid var(--cream)">
+        <div class="card-icon ic-cream">
+          <svg width="24" height="24" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="12" r="6" stroke="currentColor" stroke-width="2"/><path d="M6 28c0-5.5 4.5-10 10-10s10 4.5 10 10" stroke="currentColor" stroke-width="2"/><path d="M22 10l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3 data-i18n="feat5_title">On-chain KYC</h3>
+        <p data-i18n="feat5_desc">Identity verification stored on-chain. Complete once, invest anywhere in the Terravault ecosystem. Privacy-preserving. GDPR compliant.</p>
+      </div>
+      <!-- 6: Multi-jurisdiction -->
+      <div class="bento-card card stagger-child" data-tilt style="border-left:3px solid var(--emerald-light)">
+        <div class="card-icon ic-emerald">
+          <svg width="24" height="24" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="12" stroke="currentColor" stroke-width="2"/><ellipse cx="16" cy="16" rx="6" ry="12" stroke="currentColor" stroke-width="1.5" opacity=".5"/><path d="M4 16h24" stroke="currentColor" stroke-width="1.5" opacity=".4"/><path d="M6 10h20M6 22h20" stroke="currentColor" stroke-width="1" opacity=".3"/></svg>
+        </div>
+        <h3 data-i18n="feat6_title">Multi-Jurisdiction</h3>
+        <p data-i18n="feat6_desc">Invest in Colombia, Mexico, and Brazil from anywhere in the world. Locally compliant. Globally accessible.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-        function t(key) { return i18n[currentLang]?.[key] || i18n.en[key] || key; }
+<!-- ═══ SECURITY ═══ -->
+<section class="security" id="security">
+  <div class="security-inner">
+    <div class="reveal">
+      <span class="caption" style="color:var(--emerald-light);display:block;margin-bottom:12px" data-i18n="security_cap">Security &amp; Compliance</span>
+      <h2 class="h2-title" data-i18n="security_title">Built on the <span class="gradient-text">highest standards.</span></h2>
+    </div>
+    <div class="security-badges">
+      <div class="sec-badge stagger-child glass">
+        <div class="sec-icon">
+          <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><path d="M16 2L4 8v8c0 8 5.4 14.4 12 16 6.6-1.6 12-8 12-16V8L16 2z" stroke="currentColor" stroke-width="2"/><path d="M11 16l4 4 6-8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <h4>ERC-3643</h4>
+        <p data-i18n="sec1_desc">Institutional-grade security token standard with built-in compliance rules.</p>
+      </div>
+      <div class="sec-badge stagger-child glass">
+        <div class="sec-icon">
+          <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><rect x="4" y="6" width="24" height="20" rx="3" stroke="currentColor" stroke-width="2"/><path d="M4 12h24" stroke="currentColor" stroke-width="1.5"/><circle cx="16" cy="20" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M15 20l1 1 2-2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        </div>
+        <h4 data-i18n="sec2_title">FINMA-Aligned</h4>
+        <p data-i18n="sec2_desc">Regulatory framework aligned with Swiss financial standards for digital assets.</p>
+      </div>
+      <div class="sec-badge stagger-child glass">
+        <div class="sec-icon">
+          <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><path d="M16 4l3 6h7l-5.5 4 2 7L16 17l-6.5 4 2-7L6 10h7l3-6z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+        </div>
+        <h4 data-i18n="sec3_title">Audited</h4>
+        <p data-i18n="sec3_desc">Smart contracts audited by leading Web3 security firms. Formal verification. Bug bounty program.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-        function applyI18n() {
-          document.querySelectorAll('[data-i18n]').forEach(el => {
-            const key = el.getAttribute('data-i18n');
-            const val = t(key);
-            if (val) el.textContent = val;
-          });
-          document.querySelectorAll('[data-i18n-html]').forEach(el => {
-            const key = el.getAttribute('data-i18n-html');
-            const val = t(key);
-            if (val) el.innerHTML = val;
-          });
-          document.getElementById('currentLangLabel').textContent = i18n[currentLang]?.lang_label || 'English';
-          document.querySelectorAll('.lang-option').forEach(opt => {
-            opt.classList.toggle('active', opt.dataset.lang === currentLang);
-          });
-          document.documentElement.lang = currentLang === 'zh' ? 'zh-Hant' : currentLang;
-        }
+<!-- ═══ STATS ═══ -->
+<section class="stats" id="stats">
+  <div class="stats-inner">
+    <div class="stat-item reveal"><div class="stat-num" data-target="16" data-prefix="$" data-suffix="T">0</div><div class="stat-label" data-i18n="stat1_label">Total Addressable Market</div></div>
+    <div class="stat-item reveal"><div class="stat-num" data-target="100" data-prefix="$" data-suffix="">0</div><div class="stat-label" data-i18n="stat2_label">Minimum Investment</div></div>
+    <div class="stat-item reveal"><div class="stat-num" data-target="8.5" data-prefix="" data-suffix="%" data-decimals="1">0</div><div class="stat-label" data-i18n="stat3_label">Avg. Annual Yield</div></div>
+    <div class="stat-item reveal"><div class="stat-num" data-target="3" data-prefix="" data-suffix="">0</div><div class="stat-label" data-i18n="stat4_label">Countries</div></div>
+  </div>
+</section>
 
-        function setLanguage(lang) {
-          currentLang = lang;
-          localStorage.setItem('tv_landing_lang', lang);
-          applyI18n();
-          document.getElementById('langDropdown').classList.remove('open');
-        }
+<!-- ═══ VISION ═══ -->
+<section class="vision">
+  <div class="vision-inner reveal">
+    <q data-i18n="vision_quote">The future of real estate is not a deed in a drawer. It&rsquo;s a <span class="gradient-text">token in your wallet.</span></q>
+  </div>
+</section>
 
-        function toggleLangDropdown() {
-          document.getElementById('langDropdown').classList.toggle('open');
-        }
+<!-- ═══ CTA ═══ -->
+<section class="cta-section" id="cta">
+  <div class="cta-inner reveal">
+    <span class="caption" style="color:var(--gold);display:block;margin-bottom:16px" data-i18n="cta_cap">Get Started</span>
+    <h2 class="h2-title" style="margin-bottom:16px" data-i18n="cta_title">Ready to own <span class="gradient-text">the world?</span></h2>
+    <p class="body-text" data-i18n="cta_desc">Join the next generation of real estate investors. Start building your portfolio with as little as $100.</p>
+    <a href="app.html" class="btn-primary magnetic" style="margin-top:8px;display:inline-flex;font-size:1.1rem;padding:18px 44px" data-i18n="start_investing_btn">Start Investing <span class="arrow">&rarr;</span></a>
+  </div>
+</section>
 
-        document.addEventListener('click', (e) => {
-          if (!e.target.closest('.lang-selector')) {
-            document.getElementById('langDropdown').classList.remove('open');
-          }
+<!-- ═══ FOOTER ═══ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-left">
+      <a href="#" class="footer-logo">
+        <svg viewBox="0 0 220 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <text x="0" y="22" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="18" fill="#fff" letter-spacing="-0.5">TERR</text>
+          <path d="M56 22 L50 22 L56 6 L62 22 Z" fill="none" stroke="#d4a574" stroke-width="2" stroke-linejoin="round"/>
+          <line x1="52" y1="17" x2="60" y2="17" stroke="#d4a574" stroke-width="1"/>
+          <path d="M68 6 L74 22 L80 6" stroke="#064e3b" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <circle cx="74" cy="15" r="2.5" stroke="#064e3b" stroke-width="1" fill="none"/>
+          <text x="84" y="22" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="18" fill="#fff" letter-spacing="-0.5">AULT</text>
+        </svg>
+      </a>
+      <div class="footer-links">
+        <a href="#" data-i18n="footer_privacy">Privacy</a>
+        <a href="#" data-i18n="footer_terms">Terms</a>
+        <a href="#" data-i18n="footer_contact">Contact</a>
+        <a href="#" data-i18n="footer_docs">Docs</a>
+      </div>
+    </div>
+    <div class="footer-badge"><span class="chain-dot"></span><span data-i18n="footer_chain">Built on Ethereum</span></div>
+  </div>
+</footer>
+
+<script>
+/* ═══ CURSOR ═══ */
+(function(){
+  const dot=document.querySelector('.cursor-dot'),ring=document.querySelector('.cursor-ring');
+  if(!dot||matchMedia('(pointer:coarse)').matches)return;
+  let mx=0,my=0,dx=0,dy=0,rx=0,ry=0;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+  const interactives='a,button,[data-tilt],.magnetic,input';
+  document.addEventListener('mouseover',e=>{if(e.target.closest(interactives)){dot.classList.add('active');ring.classList.add('active')}});
+  document.addEventListener('mouseout',e=>{if(e.target.closest(interactives)){dot.classList.remove('active');ring.classList.remove('active')}});
+  (function loop(){
+    dx+=(mx-dx)*.18;dy+=(my-dy)*.18;
+    rx+=(mx-rx)*.08;ry+=(my-ry)*.08;
+    dot.style.transform=`translate(${dx-dot.offsetWidth/2}px,${dy-dot.offsetHeight/2}px)`;
+    ring.style.transform=`translate(${rx-ring.offsetWidth/2}px,${ry-ring.offsetHeight/2}px)`;
+    requestAnimationFrame(loop);
+  })();
+})();
+
+/* ═══ SCROLL PROGRESS ═══ */
+(function(){
+  const bar=document.querySelector('.scroll-progress');
+  window.addEventListener('scroll',()=>{
+    const h=document.documentElement.scrollHeight-window.innerHeight;
+    bar.style.width=(window.scrollY/h*100)+'%';
+  },{passive:true});
+})();
+
+/* ═══ NAV ═══ */
+(function(){
+  const nav=document.getElementById('nav'),btn=document.getElementById('menuBtn'),links=document.getElementById('navLinks');
+  window.addEventListener('scroll',()=>{nav.classList.toggle('shrink',window.scrollY>60)},{passive:true});
+  btn.addEventListener('click',()=>links.classList.toggle('open'));
+})();
+
+/* ═══ HERO CHAR-BY-CHAR ═══ */
+(function(){
+  const headline=document.getElementById('heroHeadline');
+  const words=headline.querySelectorAll('.word');
+  let charIndex=0;
+  words.forEach(word=>{
+    const text=word.textContent;
+    const cls=word.className.replace('word','').trim();
+    word.textContent='';
+    word.setAttribute('aria-label',text);
+    for(let i=0;i<text.length;i++){
+      const span=document.createElement('span');
+      span.className='char';
+      if(cls)cls.split(' ').forEach(c=>c&&span.classList.add(c));
+      span.textContent=text[i]===' '?'\u00A0':text[i];
+      const baseDelay=charIndex*32;
+      const randomOffset=Math.random()*20-10;
+      span.style.transitionDelay=(baseDelay+randomOffset)+'ms';
+      word.appendChild(span);
+      charIndex++;
+    }
+  });
+  requestAnimationFrame(()=>{
+    setTimeout(()=>{
+      headline.querySelectorAll('.char').forEach(c=>{
+        c.style.opacity='1';c.style.transform='translateY(0) rotate(0)';
+        c.style.transition='opacity .6s cubic-bezier(0.22,1,0.36,1), transform .7s cubic-bezier(0.34,1.56,0.64,1)';
+      });
+      setTimeout(()=>{
+        const tag=document.querySelector('.hero-tag');
+        tag.style.transition='all .7s cubic-bezier(0.22,1,0.36,1)';tag.style.opacity='1';tag.style.transform='none';
+      },200);
+      setTimeout(()=>{
+        const sub=document.getElementById('heroSub');
+        sub.style.transition='all .8s cubic-bezier(0.22,1,0.36,1)';sub.style.opacity='1';sub.style.transform='none';
+      },500);
+      setTimeout(()=>{
+        const ctas=document.getElementById('heroCtas');
+        ctas.style.transition='all .8s cubic-bezier(0.22,1,0.36,1)';ctas.style.opacity='1';ctas.style.transform='none';
+      },700);
+      // Animate progress bars
+      setTimeout(()=>{
+        document.querySelectorAll('.fc-progress-fill,.prop-progress-fill').forEach(el=>{
+          el.style.width=(el.dataset.width||0)+'%';
         });
+      },1200);
+    },200);
+  });
+})();
 
-        applyI18n();
-
-        // ===== Scroll Reveal =====
-        const revealEls = document.querySelectorAll('.reveal');
-        const revealObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
-
-        revealEls.forEach(el => revealObserver.observe(el));
-
-        // ===== Nav Scroll =====
-        const nav = document.querySelector('nav');
-        window.addEventListener('scroll', () => {
-            nav.classList.toggle('scrolled', window.scrollY > 60);
-        });
-
-        // ===== Mobile Nav =====
-        const navToggle = document.getElementById('navToggle');
-        const navLinks = document.getElementById('navLinks');
-
-        navToggle.addEventListener('click', () => {
-            navLinks.classList.toggle('open');
-        });
-
-        navLinks.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('open');
-            });
-        });
-
-        // ===== Security Bars Animation =====
-        const barFills = document.querySelectorAll('.security-bar-fill');
-        const barObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('animated');
-                }
-            });
-        }, { threshold: 0.5 });
-
-        barFills.forEach(bar => barObserver.observe(bar));
-
-        // ===== Smooth Scroll =====
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            });
-        });
-
-        // ===== Counter Animation =====
-        function animateCounter(el, target, suffix = '') {
-            const duration = 2000;
-            const start = performance.now();
-            const initial = 0;
-
-            function update(now) {
-                const elapsed = now - start;
-                const progress = Math.min(elapsed / duration, 1);
-                const eased = 1 - Math.pow(1 - progress, 3);
-                const current = Math.floor(initial + (target - initial) * eased);
-
-                if (target >= 1000000) {
-                    el.textContent = (current / 1000000).toFixed(1) + 'M' + suffix;
-                } else if (target >= 1000) {
-                    el.textContent = (current / 1000).toFixed(1) + 'K' + suffix;
-                } else {
-                    el.textContent = current + suffix;
-                }
-
-                if (progress < 1) {
-                    requestAnimationFrame(update);
-                }
-            }
-
-            requestAnimationFrame(update);
+/* ═══ SCROLL REVEAL ═══ */
+(function(){
+  const obs=new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.classList.add('visible');
+        if(e.target.classList.contains('stagger-child')){
+          const siblings=Array.from(e.target.parentElement.children).filter(c=>c.classList.contains('stagger-child'));
+          siblings.forEach((s,i)=>{setTimeout(()=>s.classList.add('visible'),i*120)});
         }
+        obs.unobserve(e.target);
+      }
+    });
+  },{threshold:0.12,rootMargin:'0px 0px -40px 0px'});
+  document.querySelectorAll('.reveal,.reveal-left,.reveal-right,.stagger-child').forEach(el=>obs.observe(el));
+})();
 
-        // ===== Parallax Globe =====
-        const globe = document.querySelector('.globe-container');
-        if (globe) {
-            window.addEventListener('scroll', () => {
-                const scrolled = window.scrollY;
-                globe.style.transform = `translateY(calc(-50% + ${scrolled * 0.15}px))`;
-            }, { passive: true });
-        }
-    </script>
+/* ═══ FLOAT CARDS PARALLAX ═══ */
+(function(){
+  const wrap=document.getElementById('heroCards');
+  if(!wrap)return;
+  const cards=wrap.querySelectorAll('.float-card');
+  let time=0;
+  function animate(){
+    time+=0.012;
+    cards.forEach((card,i)=>{
+      const offset=i*2.2;
+      const floatY=Math.sin(time*1.1+offset)*10;
+      const floatX=Math.sin(time*0.7+offset+1.5)*5;
+      const rotate=Math.sin(time*0.5+offset+0.8)*2;
+      const base=card.classList.contains('c1')?-4:card.classList.contains('c2')?3:2;
+      card.style.transform=`rotate(${base+rotate}deg) translateY(${floatY}px) translateX(${floatX}px)`;
+    });
+    requestAnimationFrame(animate);
+  }
+  animate();
+  window.addEventListener('scroll',()=>{
+    const sy=window.scrollY;
+    wrap.style.transform=`translateY(${sy*-0.06}px)`;
+  },{passive:true});
+})();
+
+/* ═══ MESH ORB SINE MOTION ═══ */
+(function(){
+  const orbs=document.querySelectorAll('.mesh-orb');
+  let time=0;
+  function animateOrbs(){
+    time+=0.008;
+    orbs.forEach((orb,i)=>{
+      const speed=0.5+i*0.3;
+      const offset=i*2.1;
+      const x=Math.sin(time*speed+offset)*5;
+      const y=Math.sin(time*speed*0.7+offset+1)*4;
+      const s=1+Math.sin(time*speed*0.4+offset)*0.05;
+      orb.style.transform=`translate(${x}vw,${y}vh) scale(${s})`;
+    });
+    requestAnimationFrame(animateOrbs);
+  }
+  animateOrbs();
+})();
+
+/* ═══ MAGNETIC BUTTONS ═══ */
+(function(){
+  document.querySelectorAll('.magnetic').forEach(btn=>{
+    btn.addEventListener('mousemove',e=>{
+      const r=btn.getBoundingClientRect();
+      const x=e.clientX-r.left-r.width/2;
+      const y=e.clientY-r.top-r.height/2;
+      btn.style.transform=`translate(${x*.2}px,${y*.2}px)`;
+    });
+    btn.addEventListener('mouseleave',()=>{
+      btn.style.transform='';btn.style.transition='transform .4s cubic-bezier(0.34,1.56,0.64,1)';
+      setTimeout(()=>btn.style.transition='',400);
+    });
+  });
+})();
+
+/* ═══ TILT CARDS ═══ */
+(function(){
+  document.querySelectorAll('[data-tilt]').forEach(card=>{
+    card.addEventListener('mousemove',e=>{
+      const r=card.getBoundingClientRect();
+      const x=(e.clientX-r.left)/r.width-.5;
+      const y=(e.clientY-r.top)/r.height-.5;
+      card.style.transform=`perspective(800px) rotateY(${x*6}deg) rotateX(${-y*6}deg) translateY(-4px)`;
+    });
+    card.addEventListener('mouseleave',()=>{
+      card.style.transform='';card.style.transition='transform .5s cubic-bezier(0.34,1.56,0.64,1)';
+      setTimeout(()=>card.style.transition='',500);
+    });
+  });
+})();
+
+/* ═══ ANIMATED COUNTERS ═══ */
+(function(){
+  const fmt=(n,dec)=>{
+    if(dec)return n.toFixed(dec);
+    if(n>=1e12)return(n/1e12).toFixed(n%1e12?1:0).replace(/\.0$/,'');
+    if(n>=1e6)return(n/1e6).toFixed(n%1e6?1:0).replace(/\.0$/,'')+'M';
+    if(n>=1e3)return n.toLocaleString();
+    return n.toString();
+  };
+  const obs=new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(!e.isIntersecting)return;
+      const el=e.target;
+      const target=+el.dataset.target;
+      const prefix=el.dataset.prefix||'';
+      const suffix=el.dataset.suffix||'';
+      const decimals=el.dataset.decimals?+el.dataset.decimals:0;
+      const dur=1800;const t0=performance.now();
+      (function tick(now){
+        const p=Math.min(1,(now-t0)/dur);
+        const ease=1-Math.pow(1-p,4)*(1-Math.sin(p*Math.PI*.5));
+        const val=decimals?ease*target:Math.round(ease*target);
+        el.textContent=prefix+fmt(val,decimals)+suffix;
+        if(p<1)requestAnimationFrame(tick);
+        else el.textContent=prefix+fmt(target,decimals)+suffix;
+      })(t0);
+      obs.unobserve(el);
+    });
+  },{threshold:.5});
+  document.querySelectorAll('.stat-num[data-target]').forEach(el=>obs.observe(el));
+})();
+
+/* ═══ SMOOTH SCROLL ═══ */
+(function(){
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{
+    a.addEventListener('click',e=>{
+      e.preventDefault();
+      const target=document.querySelector(a.getAttribute('href'));
+      if(!target)return;
+      target.scrollIntoView({behavior:'smooth',block:'start'});
+      document.getElementById('navLinks').classList.remove('open');
+    });
+  });
+})();
+
+/* ═══ i18n ═══ */
+const translations={
+  es:{
+    nav_properties:'Propiedades',nav_how:'C\u00f3mo Funciona',nav_features:'Caracter\u00edsticas',nav_security:'Seguridad',nav_invest:'Invertir',
+    start_investing:'Empezar a Invertir',start_investing_btn:'Empezar a Invertir',
+    hero_tag:'Tokenizaci\u00f3n de Activos Reales',
+    hero_w1:'Due\u00f1o del ',hero_w2:'Mundo.',hero_w3:'Un Token ',hero_w4:'a la Vez.',
+    hero_sub:'Propiedad fraccionada de bienes ra\u00edces premium en Am\u00e9rica Latina. Cumplimiento de grado institucional. Distribuci\u00f3n automatizada de rendimientos. Desde $100.',
+    view_properties:'Ver Propiedades',
+    mq1:'Mercado inmobiliario LATAM de $16T',mq2:'Inversi\u00f3n m\u00ednima de $100',mq3:'Rendimiento anual del 8-14%',mq4:'Compatible con ERC-3643',mq5:'Distribuci\u00f3n automatizada de rendimientos',
+    the_problem:'El Problema',locked_out:'de los inversores est\u00e1n <span class="gradient-text">excluidos</span> del mercado inmobiliario.',
+    problem_desc:'M\u00ednimos elevados. Capital il\u00edquido. Barreras geogr\u00e1ficas. Complejidad transfronteriza. El mercado inmobiliario de $16 billones en LATAM sigue siendo dominio exclusivo de instituciones y los ultra ricos.',
+    the_solution:'La Soluci\u00f3n',solution_title:'Bienes ra\u00edces, <span class="gradient-text">reimaginados</span>.',
+    sol1_title:'Propiedad Fraccionada',sol1_desc:'Posee una parte de propiedades premium en LATAM desde $100. Los tokens de seguridad ERC-3643 representan participaciones legalmente vinculantes.',
+    sol2_title:'Rendimiento Automatizado',sol2_desc:'Los ingresos por alquiler fluyen directamente a tu billetera mediante contratos inteligentes. Sin intermediarios. Sin demoras.',
+    sol3_title:'Cumplimiento Integrado',sol3_desc:'El est\u00e1ndar ERC-3643 garantiza cumplimiento regulatorio entre jurisdicciones. KYC on-chain, restricciones de transferencia y elegibilidad integradas.',
+    featured_props:'Propiedades Destacadas',curated_portfolio:'Un portafolio curado de<br><span class="gradient-text">lo mejor de LATAM.</span>',
+    annual_yield:'Rendimiento Anual',token_price:'Precio del Token',property_value:'Valor de la Propiedad',prop_type:'Tipo',
+    commercial:'Comercial',residential:'Residencial',mixed_use:'Uso Mixto',funded:'financiado',badge_live:'EN VIVO',badge_upcoming:'PR\u00d3XIMAMENTE',
+    how_it_works_cap:'C\u00f3mo Funciona',three_steps:'Tres pasos hacia la <span class="gradient-text">propiedad.</span>',
+    step1_title:'Curar',step1_desc:'Nuestro equipo busca y eval\u00faa propiedades premium en Bogot\u00e1, Ciudad de M\u00e9xico y S\u00e3o Paulo. Due diligence rigurosa. Est\u00e1ndares institucionales.',
+    step2_title:'Invertir',step2_desc:'Completa la verificaci\u00f3n KYC, explora propiedades y compra tokens fraccionarios desde $100. Totalmente conforme. Totalmente transparente.',
+    step3_title:'Ganar',step3_desc:'Recibe rendimiento autom\u00e1tico de alquileres directamente en tu billetera. Sigue el rendimiento en tiempo real. Opera tokens en el mercado secundario.',
+    features_cap:'Caracter\u00edsticas',features_title:'Infraestructura institucional.<br><span class="gradient-text">Acceso individual.</span>',
+    feat1_title:'Cumplimiento ERC-3643',feat1_desc:'El est\u00e1ndar de oro para cumplimiento de tokens de seguridad. Verificaci\u00f3n de identidad on-chain, restricciones de transferencia y reglas de elegibilidad.',
+    feat2_title:'Dividendos Automatizados',feat2_desc:'Distribuci\u00f3n de ingresos por alquiler mediante contratos inteligentes. Rendimientos mensuales pagados directamente a tu billetera.',
+    feat3_title:'Mercado Secundario',feat3_desc:'Opera tokens de propiedad en nuestro mercado secundario regulado. Liquidez total para activos tradicionalmente il\u00edquidos.',
+    feat4_title:'Precios Oracle',feat4_desc:'Valuaciones inmobiliarias en tiempo real impulsadas por or\u00e1culos Chainlink. Actualizaciones de NAV que reflejan condiciones reales del mercado.',
+    feat5_title:'KYC On-chain',feat5_desc:'Verificaci\u00f3n de identidad almacenada on-chain. Completa una vez, invierte en cualquier lugar del ecosistema Terravault.',
+    feat6_title:'Multi-Jurisdicci\u00f3n',feat6_desc:'Invierte en Colombia, M\u00e9xico y Brasil desde cualquier parte del mundo. Conforme localmente. Accesible globalmente.',
+    security_cap:'Seguridad y Cumplimiento',security_title:'Construido con los <span class="gradient-text">m\u00e1s altos est\u00e1ndares.</span>',
+    sec1_desc:'Est\u00e1ndar de token de seguridad de grado institucional con reglas de cumplimiento integradas.',
+    sec2_title:'Alineado con FINMA',sec2_desc:'Marco regulatorio alineado con los est\u00e1ndares financieros suizos para activos digitales.',
+    sec3_title:'Auditado',sec3_desc:'Contratos inteligentes auditados por firmas l\u00edderes de seguridad Web3. Verificaci\u00f3n formal. Programa de recompensas.',
+    stat1_label:'Mercado Total Direccionable',stat2_label:'Inversi\u00f3n M\u00ednima',stat3_label:'Rendimiento Promedio Anual',stat4_label:'Pa\u00edses',
+    vision_quote:'El futuro del mercado inmobiliario no es una escritura en un caj\u00f3n. Es un <span class="gradient-text">token en tu billetera.</span>',
+    cta_cap:'Empieza Ya',cta_title:'\u00bfListo para ser due\u00f1o <span class="gradient-text">del mundo?</span>',
+    cta_desc:'\u00danete a la pr\u00f3xima generaci\u00f3n de inversores inmobiliarios. Comienza a construir tu portafolio con tan solo $100.',
+    footer_privacy:'Privacidad',footer_terms:'T\u00e9rminos',footer_contact:'Contacto',footer_docs:'Documentaci\u00f3n',footer_chain:'Construido en Ethereum'
+  },
+  zh:{
+    nav_properties:'\u7269\u696d',nav_how:'\u904b\u4f5c\u65b9\u5f0f',nav_features:'\u529f\u80fd',nav_security:'\u5b89\u5168',nav_invest:'\u6295\u8cc7',
+    start_investing:'\u958b\u59cb\u6295\u8cc7',start_investing_btn:'\u958b\u59cb\u6295\u8cc7',
+    hero_tag:'\u771f\u5be6\u4e16\u754c\u8cc7\u7522\u4ee3\u5e63\u5316',
+    hero_w1:'\u64c1\u6709',hero_w2:'\u4e16\u754c\u3002',hero_w3:'\u4e00\u500b\u4ee3\u5e63',hero_w4:'\u4e00\u6b65\u4e00\u6b65\u3002',
+    hero_sub:'\u62c9\u4e01\u7f8e\u6d32\u512a\u8cea\u623f\u5730\u7522\u7684\u5206\u5272\u64c1\u6709\u6b0a\u3002\u6a5f\u69cb\u7d1a\u5408\u898f\u3002\u81ea\u52d5\u5316\u6536\u76ca\u5206\u914d\u3002\u6700\u4f4e$100\u8d77\u3002',
+    view_properties:'\u67e5\u770b\u7269\u696d',
+    mq1:'$16\u5146\u62c9\u7f8e\u623f\u5730\u7522\u5e02\u5834',mq2:'\u6700\u4f4e\u6295\u8cc7$100',mq3:'\u5e74\u5316\u6536\u76ca\u73878-14%',mq4:'ERC-3643\u5408\u898f',mq5:'\u81ea\u52d5\u5316\u6536\u76ca\u5206\u914d',
+    the_problem:'\u554f\u984c',locked_out:'\u7684\u6295\u8cc7\u8005\u88ab<span class="gradient-text">\u6392\u9664</span>\u5728\u623f\u5730\u7522\u5e02\u5834\u4e4b\u5916\u3002',
+    problem_desc:'\u9ad8\u6700\u4f4e\u9580\u6abb\u3002\u6d41\u52d5\u6027\u4e0d\u8db3\u3002\u5730\u7406\u969c\u7919\u3002\u8de8\u5883\u8907\u96dc\u6027\u3002$16\u5146\u7684\u62c9\u7f8e\u623f\u5730\u7522\u5e02\u5834\u4ecd\u7136\u662f\u6a5f\u69cb\u548c\u8d85\u7d1a\u5bcc\u8c6a\u7684\u5c08\u5c6c\u9818\u57df\u3002',
+    the_solution:'\u89e3\u6c7a\u65b9\u6848',solution_title:'\u623f\u5730\u7522\uff0c<span class="gradient-text">\u91cd\u65b0\u60f3\u50cf\u3002</span>',
+    sol1_title:'\u5206\u5272\u64c1\u6709\u6b0a',sol1_desc:'\u5f9e$100\u8d77\u64c1\u6709\u62c9\u7f8e\u512a\u8cea\u7269\u696d\u7684\u4e00\u90e8\u5206\u3002ERC-3643\u8b49\u5238\u4ee3\u5e63\u4ee3\u8868\u771f\u5be6\u7684\u6cd5\u5f8b\u64c1\u6709\u6b0a\u3002',
+    sol2_title:'\u81ea\u52d5\u5316\u6536\u76ca',sol2_desc:'\u79df\u91d1\u6536\u5165\u901a\u904e\u667a\u80fd\u5408\u7d04\u76f4\u63a5\u6d41\u5165\u60a8\u7684\u9322\u5305\u3002\u7121\u4e2d\u9593\u4eba\u3002\u7121\u5ef6\u9072\u3002',
+    sol3_title:'\u5167\u5efa\u5408\u898f',sol3_desc:'ERC-3643\u6a19\u6e96\u78ba\u4fdd\u8de8\u53f8\u6cd5\u7ba1\u8f44\u5340\u7684\u76e3\u7ba1\u5408\u898f\u3002\u93c8\u4e0aKYC\u3001\u8f49\u8b93\u9650\u5236\u548c\u6295\u8cc7\u8005\u8cc7\u683c\u5167\u5efa\u65bc\u6bcf\u500b\u4ee3\u5e63\u3002',
+    featured_props:'\u7cbe\u9078\u7269\u696d',curated_portfolio:'\u7cbe\u5fc3\u7b56\u5283\u7684<br><span class="gradient-text">\u62c9\u7f8e\u6700\u4f73\u7269\u696d\u3002</span>',
+    annual_yield:'\u5e74\u5316\u6536\u76ca',token_price:'\u4ee3\u5e63\u50f9\u683c',property_value:'\u7269\u696d\u50f9\u503c',prop_type:'\u985e\u578b',
+    commercial:'\u5546\u696d',residential:'\u4f4f\u5b85',mixed_use:'\u7d9c\u5408\u7528\u9014',funded:'\u5df2\u52df\u96c6',badge_live:'\u6d3b\u8e8d',badge_upcoming:'\u5373\u5c07\u63a8\u51fa',
+    how_it_works_cap:'\u904b\u4f5c\u65b9\u5f0f',three_steps:'\u4e09\u6b65\u5373\u53ef<span class="gradient-text">\u64c1\u6709\u3002</span>',
+    step1_title:'\u7b56\u5283',step1_desc:'\u6211\u5011\u7684\u5718\u968a\u5728\u6ce2\u54e5\u5927\u3001\u58a8\u897f\u54e5\u57ce\u548c\u8056\u4fdd\u7f85\u5c0b\u627e\u548c\u5be9\u6838\u512a\u8cea\u7269\u696d\u3002\u56b4\u683c\u7684\u76e1\u8077\u8abf\u67e5\u3002\u6a5f\u69cb\u6a19\u6e96\u3002',
+    step2_title:'\u6295\u8cc7',step2_desc:'\u5b8c\u6210KYC\u9a57\u8b49\uff0c\u700f\u89bd\u7269\u696d\uff0c\u5f9e$100\u8d77\u8cfc\u8cb7\u5206\u5272\u4ee3\u5e63\u3002\u5b8c\u5168\u5408\u898f\u3002\u5b8c\u5168\u900f\u660e\u3002',
+    step3_title:'\u8cfa\u53d6',step3_desc:'\u81ea\u52d5\u63a5\u6536\u79df\u91d1\u6536\u76ca\u5230\u60a8\u7684\u9322\u5305\u3002\u5be6\u6642\u8ffd\u8e64\u8868\u73fe\u3002\u5728\u4e8c\u7d1a\u5e02\u5834\u4ea4\u6613\u4ee3\u5e63\u3002',
+    features_cap:'\u529f\u80fd',features_title:'\u6a5f\u69cb\u57fa\u790e\u8a2d\u65bd\u3002<br><span class="gradient-text">\u500b\u4eba\u8a2a\u554f\u3002</span>',
+    feat1_title:'ERC-3643\u5408\u898f',feat1_desc:'\u8b49\u5238\u4ee3\u5e63\u5408\u898f\u7684\u9ec3\u91d1\u6a19\u6e96\u3002\u93c8\u4e0a\u8eab\u4efd\u9a57\u8b49\u3001\u8f49\u8b93\u9650\u5236\u548c\u6295\u8cc7\u8005\u8cc7\u683c\u898f\u5247\u3002',
+    feat2_title:'\u81ea\u52d5\u80a1\u606f',feat2_desc:'\u667a\u80fd\u5408\u7d04\u9a45\u52d5\u7684\u79df\u91d1\u6536\u5165\u5206\u914d\u3002\u6bcf\u6708\u6536\u76ca\u76f4\u63a5\u652f\u4ed8\u5230\u60a8\u7684\u9322\u5305\u3002',
+    feat3_title:'\u4e8c\u7d1a\u5e02\u5834',feat3_desc:'\u5728\u6211\u5011\u5408\u898f\u7684\u4e8c\u7d1a\u5e02\u5834\u4ea4\u6613\u7269\u696d\u4ee3\u5e63\u3002\u50b3\u7d71\u4e0d\u6d41\u52d5\u8cc7\u7522\u7684\u5b8c\u5168\u6d41\u52d5\u6027\u3002',
+    feat4_title:'\u9810\u8a00\u6a5f\u5b9a\u50f9',feat4_desc:'\u7531Chainlink\u9810\u8a00\u6a5f\u63d0\u4f9b\u7684\u5be6\u6642\u7269\u696d\u4f30\u503c\u3002NAV\u66f4\u65b0\u53cd\u6620\u5be6\u969b\u5e02\u5834\u72c0\u6cc1\u3002',
+    feat5_title:'\u93c8\u4e0aKYC',feat5_desc:'\u8eab\u4efd\u9a57\u8b49\u5b58\u5132\u5728\u93c8\u4e0a\u3002\u5b8c\u6210\u4e00\u6b21\uff0c\u5728Terravault\u751f\u614b\u7cfb\u7d71\u4e2d\u4efb\u4f55\u5730\u65b9\u6295\u8cc7\u3002',
+    feat6_title:'\u591a\u53f8\u6cd5\u7ba1\u8f44\u5340',feat6_desc:'\u5f9e\u4e16\u754c\u4efb\u4f55\u5730\u65b9\u6295\u8cc7\u54e5\u502b\u6bd4\u4e9e\u3001\u58a8\u897f\u54e5\u548c\u5df4\u897f\u3002\u7576\u5730\u5408\u898f\u3002\u5168\u7403\u53ef\u8a2a\u554f\u3002',
+    security_cap:'\u5b89\u5168\u8207\u5408\u898f',security_title:'\u5efa\u7acb\u5728<span class="gradient-text">\u6700\u9ad8\u6a19\u6e96\u3002</span>',
+    sec1_desc:'\u6a5f\u69cb\u7d1a\u8b49\u5238\u4ee3\u5e63\u6a19\u6e96\uff0c\u5167\u5efa\u5408\u898f\u898f\u5247\u3002',
+    sec2_title:'FINMA\u5c0d\u9f4a',sec2_desc:'\u8207\u745e\u58eb\u6578\u5b57\u8cc7\u7522\u91d1\u878d\u6a19\u6e96\u5c0d\u9f4a\u7684\u76e3\u7ba1\u6846\u67b6\u3002',
+    sec3_title:'\u5df2\u5be9\u8a08',sec3_desc:'\u667a\u80fd\u5408\u7d04\u7531\u9818\u5148\u7684Web3\u5b89\u5168\u516c\u53f8\u5be9\u8a08\u3002\u5f62\u5f0f\u9a57\u8b49\u3002\u6f0f\u6d1e\u8cde\u91d1\u8a08\u5283\u3002',
+    stat1_label:'\u7e3d\u53ef\u5c0b\u5740\u5e02\u5834',stat2_label:'\u6700\u4f4e\u6295\u8cc7',stat3_label:'\u5e73\u5747\u5e74\u5316\u6536\u76ca',stat4_label:'\u570b\u5bb6',
+    vision_quote:'\u623f\u5730\u7522\u7684\u672a\u4f86\u4e0d\u662f\u62bd\u5c5c\u88e1\u7684\u5730\u5951\u3002\u800c\u662f\u60a8<span class="gradient-text">\u9322\u5305\u88e1\u7684\u4ee3\u5e63\u3002</span>',
+    cta_cap:'\u958b\u59cb',cta_title:'\u6e96\u5099\u597d<span class="gradient-text">\u64c1\u6709\u4e16\u754c\u4e86\u55ce\uff1f</span>',
+    cta_desc:'\u52a0\u5165\u4e0b\u4e00\u4ee3\u623f\u5730\u7522\u6295\u8cc7\u8005\u3002\u53ea\u9700$100\u5373\u53ef\u958b\u59cb\u5efa\u7acb\u60a8\u7684\u6295\u8cc7\u7d44\u5408\u3002',
+    footer_privacy:'\u96b1\u79c1',footer_terms:'\u689d\u6b3e',footer_contact:'\u806f\u7e6b',footer_docs:'\u6587\u6a94',footer_chain:'\u5efa\u65bc\u4ee5\u592a\u574a'
+  }
+};
+
+let currentLang='en';
+const defaultTexts={};
+
+function cacheLang(){
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    defaultTexts[el.dataset.i18n]=el.innerHTML;
+  });
+  document.querySelectorAll('[data-i18n-word]').forEach(el=>{
+    defaultTexts[el.dataset.i18nWord]=el.textContent;
+  });
+}
+cacheLang();
+
+function setLang(lang){
+  currentLang=lang;
+  const t=translations[lang];
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key=el.dataset.i18n;
+    el.innerHTML=t&&t[key]?t[key]:defaultTexts[key];
+  });
+  document.querySelectorAll('[data-i18n-word]').forEach(el=>{
+    const key=el.dataset.i18nWord;
+    if(t&&t[key]){
+      const text=t[key];
+      const cls=el.className.replace('word','').trim();
+      el.textContent='';
+      for(let i=0;i<text.length;i++){
+        const span=document.createElement('span');
+        span.className='char';
+        if(cls)cls.split(' ').forEach(c=>c&&span.classList.add(c));
+        span.textContent=text[i]===' '?'\u00A0':text[i];
+        span.style.opacity='1';span.style.transform='none';
+        el.appendChild(span);
+      }
+    }
+  });
+  document.querySelectorAll('.lang-option').forEach(o=>{
+    o.classList.toggle('active',o.dataset.lang===lang);
+  });
+  const names={en:'English',es:'Espa\u00f1ol',zh:'\u7e41\u9ad4\u4e2d\u6587'};
+  document.getElementById('lang-current').textContent=names[lang];
+  document.getElementById('lang-dropdown').classList.remove('open');
+  document.documentElement.lang=lang==='zh'?'zh-Hant':lang;
+}
+
+function toggleLangDropdown(){
+  document.getElementById('lang-dropdown').classList.toggle('open');
+}
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.lang-selector'))document.getElementById('lang-dropdown').classList.remove('open');
+});
+</script>
 </body>
 </html>
