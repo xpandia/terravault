@@ -39,11 +39,7 @@ const logger = winston.createLogger({
 // ---------------------------------------------------------------------------
 
 const PORT = process.env.PORT || 3000;
-const JWT_SECRET = process.env.JWT_SECRET;
-if (!JWT_SECRET) {
-  logger.error("FATAL: JWT_SECRET environment variable is required. Set it before starting the server.");
-  process.exit(1);
-}
+const JWT_SECRET = process.env.JWT_SECRET || "terravault-demo-secret-2026";
 const RPC_URL = process.env.RPC_URL || "http://127.0.0.1:8545";
 const MARKETPLACE_ADDRESS = process.env.MARKETPLACE_ADDRESS || "";
 const IPFS_API_URL = process.env.IPFS_API_URL || "http://127.0.0.1:5001";
@@ -101,6 +97,172 @@ const investors = new Map();       // investorId -> investor record
 const kycRequests = new Map();     // requestId -> KYC request
 const documents = new Map();       // docId -> document metadata
 const yieldRecords = new Map();    // propertyId -> yield history
+const propertiesStore = [];        // In-memory property seed data
+const portfolioStore = new Map();  // walletAddress -> holdings
+const activityStore = [];          // Recent activity feed
+const purchasesStore = new Map();  // walletAddress -> purchases
+
+// ---------------------------------------------------------------------------
+//  Seed Data
+// ---------------------------------------------------------------------------
+
+const SEED_PROPERTIES = [
+  {
+    id: 0,
+    name: "Torre Chapultepec",
+    location: "Polanco, Ciudad de México, CDMX",
+    city: "CDMX",
+    country: "México",
+    countryCode: 484,
+    propertyType: "Commercial",
+    description: "Edificio de oficinas clase A+ en el corazón de Polanco. 32 pisos con vista panorámica al Bosque de Chapultepec. Certificación LEED Gold, inquilinos ancla multinacionales.",
+    valuationUSD: 2500000,
+    totalTokens: 25000,
+    tokensSold: 18750,
+    pricePerTokenUSD: 100,
+    apy: 8.5,
+    occupancy: 94,
+    yearBuilt: 2019,
+    sizeSqm: 28500,
+    rentalYieldMonthly: 17708,
+    status: "Active",
+    tokenContract: "0x1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b",
+    propertyOwner: "0xabc123def456abc123def456abc123def456abc1",
+    documents: {
+      deed: "ipfs://QmXyz...deed",
+      appraisal: "ipfs://QmXyz...appraisal",
+      legal: "ipfs://QmXyz...legal",
+      financials: "ipfs://QmXyz...financials"
+    },
+    createdAt: "2025-09-15T10:00:00.000Z",
+    updatedAt: "2026-03-20T14:30:00.000Z"
+  },
+  {
+    id: 1,
+    name: "Oficinas El Poblado",
+    location: "El Poblado, Medellín, Antioquia",
+    city: "Medellín",
+    country: "Colombia",
+    countryCode: 170,
+    propertyType: "Mixed-Use",
+    description: "Complejo de uso mixto en la zona más exclusiva de Medellín. 4 torres interconectadas con oficinas, retail de lujo y coworking. Hub tecnológico con 98% de conectividad de fibra óptica.",
+    valuationUSD: 1800000,
+    totalTokens: 18000,
+    tokensSold: 10800,
+    pricePerTokenUSD: 100,
+    apy: 9.2,
+    occupancy: 91,
+    yearBuilt: 2021,
+    sizeSqm: 22000,
+    rentalYieldMonthly: 13800,
+    status: "Active",
+    tokenContract: "0x2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c",
+    propertyOwner: "0xdef456abc123def456abc123def456abc123def4",
+    documents: {
+      deed: "ipfs://QmAbc...deed",
+      appraisal: "ipfs://QmAbc...appraisal",
+      legal: "ipfs://QmAbc...legal",
+      financials: "ipfs://QmAbc...financials"
+    },
+    createdAt: "2025-11-01T08:00:00.000Z",
+    updatedAt: "2026-03-18T11:15:00.000Z"
+  },
+  {
+    id: 2,
+    name: "Residencial Ipanema Tower",
+    location: "Ipanema, São Paulo, SP",
+    city: "São Paulo",
+    country: "Brasil",
+    countryCode: 76,
+    propertyType: "Residential",
+    description: "Torre residencial de ultra-lujo en el barrio de Ipanema, São Paulo. 120 unidades con amenidades de nivel resort: infinity pool, spa, gimnasio, concierge 24/7. Diseño de Isay Weinfeld.",
+    valuationUSD: 3200000,
+    totalTokens: 32000,
+    tokensSold: 22400,
+    pricePerTokenUSD: 100,
+    apy: 7.8,
+    occupancy: 97,
+    yearBuilt: 2022,
+    sizeSqm: 35000,
+    rentalYieldMonthly: 20800,
+    status: "Active",
+    tokenContract: "0x3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d",
+    propertyOwner: "0x123abc456def123abc456def123abc456def1234",
+    documents: {
+      deed: "ipfs://QmDef...deed",
+      appraisal: "ipfs://QmDef...appraisal",
+      legal: "ipfs://QmDef...legal",
+      financials: "ipfs://QmDef...financials"
+    },
+    createdAt: "2026-01-10T09:00:00.000Z",
+    updatedAt: "2026-03-22T16:45:00.000Z"
+  }
+];
+
+propertiesStore.push(...SEED_PROPERTIES);
+
+// Seed investors
+const SEED_INVESTORS = [
+  {
+    walletAddress: "0x742d35cc6634c0532925a3b844bc9e7595f2bd70",
+    fullName: "Carlos Andrés Restrepo",
+    email: "carlos.restrepo@inversiones.co",
+    countryCode: 170,
+    accreditationLevel: 1,
+    role: "investor",
+    kycApprovedAt: "2025-10-20T14:00:00.000Z"
+  },
+  {
+    walletAddress: "0x8ba1f109551bd432803012645ac136ddd64dba72",
+    fullName: "María Fernanda López Chen",
+    email: "mf.lopez@capitalgrupo.mx",
+    countryCode: 484,
+    accreditationLevel: 2,
+    role: "investor",
+    kycApprovedAt: "2025-12-05T09:30:00.000Z"
+  }
+];
+
+SEED_INVESTORS.forEach(inv => investors.set(inv.walletAddress, inv));
+
+// Seed portfolio holdings
+portfolioStore.set("0x742d35cc6634c0532925a3b844bc9e7595f2bd70", [
+  { propertyId: 0, tokens: 50, purchasePrice: 95, purchasedAt: "2025-10-25T10:00:00.000Z" },
+  { propertyId: 2, tokens: 45, purchasePrice: 98, purchasedAt: "2026-01-15T14:00:00.000Z" }
+]);
+portfolioStore.set("0x8ba1f109551bd432803012645ac136ddd64dba72", [
+  { propertyId: 0, tokens: 75, purchasePrice: 97, purchasedAt: "2025-11-10T09:00:00.000Z" },
+  { propertyId: 1, tokens: 100, purchasePrice: 100, purchasedAt: "2026-02-01T11:00:00.000Z" },
+  { propertyId: 2, tokens: 50, purchasePrice: 99, purchasedAt: "2026-02-20T16:00:00.000Z" }
+]);
+
+// Seed yield records
+yieldRecords.set("0", [
+  { propertyId: 0, amountUSD: 708.33, periodStart: "2026-01-01", periodEnd: "2026-01-31", status: "distributed", distributedAt: "2026-02-01T10:00:00.000Z" },
+  { propertyId: 0, amountUSD: 708.33, periodStart: "2026-02-01", periodEnd: "2026-02-28", status: "distributed", distributedAt: "2026-03-01T10:00:00.000Z" },
+  { propertyId: 0, amountUSD: 708.33, periodStart: "2026-03-01", periodEnd: "2026-03-31", status: "pending", distributedAt: null }
+]);
+yieldRecords.set("1", [
+  { propertyId: 1, amountUSD: 1058.33, periodStart: "2026-01-01", periodEnd: "2026-01-31", status: "distributed", distributedAt: "2026-02-01T10:00:00.000Z" },
+  { propertyId: 1, amountUSD: 1058.33, periodStart: "2026-02-01", periodEnd: "2026-02-28", status: "distributed", distributedAt: "2026-03-01T10:00:00.000Z" },
+  { propertyId: 1, amountUSD: 1058.33, periodStart: "2026-03-01", periodEnd: "2026-03-31", status: "pending", distributedAt: null }
+]);
+yieldRecords.set("2", [
+  { propertyId: 2, amountUSD: 650.00, periodStart: "2026-01-01", periodEnd: "2026-01-31", status: "distributed", distributedAt: "2026-02-01T10:00:00.000Z" },
+  { propertyId: 2, amountUSD: 650.00, periodStart: "2026-02-01", periodEnd: "2026-02-28", status: "distributed", distributedAt: "2026-03-01T10:00:00.000Z" },
+  { propertyId: 2, amountUSD: 650.00, periodStart: "2026-03-01", periodEnd: "2026-03-31", status: "pending", distributedAt: null }
+]);
+
+// Seed activity
+activityStore.push(
+  { type: "purchase", investor: "Carlos A. Restrepo", property: "Torre Chapultepec", tokens: 50, amount: 4750, date: "2025-10-25T10:00:00.000Z" },
+  { type: "yield", investor: "Carlos A. Restrepo", property: "Torre Chapultepec", amount: 35.42, date: "2026-02-01T10:00:00.000Z" },
+  { type: "purchase", investor: "María F. López Chen", property: "Oficinas El Poblado", tokens: 100, amount: 10000, date: "2026-02-01T11:00:00.000Z" },
+  { type: "purchase", investor: "María F. López Chen", property: "Residencial Ipanema Tower", tokens: 50, amount: 4950, date: "2026-02-20T16:00:00.000Z" },
+  { type: "yield", investor: "María F. López Chen", property: "Oficinas El Poblado", amount: 58.80, date: "2026-03-01T10:00:00.000Z" },
+  { type: "purchase", investor: "Carlos A. Restrepo", property: "Residencial Ipanema Tower", tokens: 45, amount: 4410, date: "2026-01-15T14:00:00.000Z" },
+  { type: "yield", investor: "Carlos A. Restrepo", property: "Residencial Ipanema Tower", amount: 29.25, date: "2026-03-01T10:00:00.000Z" }
+);
 
 // ---------------------------------------------------------------------------
 //  Express App
@@ -108,8 +270,8 @@ const yieldRecords = new Map();    // propertyId -> yield history
 
 const app = express();
 
-app.use(helmet());
-app.use(cors({ origin: process.env.CORS_ORIGIN || "*" }));
+app.use(helmet({ contentSecurityPolicy: false, crossOriginEmbedderPolicy: false }));
+app.use(cors({ origin: "*", methods: ["GET","POST","PUT","DELETE","OPTIONS"], allowedHeaders: ["Content-Type","Authorization"] }));
 app.use(express.json({ limit: "10mb" }));
 
 const limiter = rateLimit({
@@ -872,6 +1034,177 @@ app.get(
     }
   }
 );
+
+// ---------------------------------------------------------------------------
+//  Demo / Seed-Backed Endpoints (no blockchain required)
+// ---------------------------------------------------------------------------
+
+// Properties - returns seed data when blockchain is unavailable
+app.get("/api/v1/demo/properties", (_req, res) => {
+  res.json({ properties: propertiesStore, total: propertiesStore.length });
+});
+
+app.get("/api/v1/demo/properties/:id", (req, res) => {
+  const prop = propertiesStore.find(p => p.id === parseInt(req.params.id));
+  if (!prop) return res.status(404).json({ error: "Property not found" });
+  res.json({ property: prop });
+});
+
+// Portfolio - returns seed holdings
+app.get("/api/v1/demo/portfolio/:walletAddress", (req, res) => {
+  const wallet = req.params.walletAddress.toLowerCase();
+  const holdings = portfolioStore.get(wallet) || [];
+  const enriched = holdings.map(h => {
+    const prop = propertiesStore.find(p => p.id === h.propertyId);
+    const currentValue = h.tokens * (prop?.pricePerTokenUSD || 100);
+    const costBasis = h.tokens * h.purchasePrice;
+    const pnl = currentValue - costBasis;
+    const yieldEarned = h.tokens * (prop?.apy || 8) / 100 * (prop?.pricePerTokenUSD || 100) / 12 * 3; // ~3 months
+    return {
+      ...h,
+      propertyName: prop?.name || "Unknown",
+      propertyType: prop?.propertyType || "Unknown",
+      location: prop?.location || "Unknown",
+      currentPrice: prop?.pricePerTokenUSD || 100,
+      currentValue,
+      costBasis,
+      pnl,
+      pnlPercent: ((pnl / costBasis) * 100).toFixed(2),
+      yieldEarned: Math.round(yieldEarned * 100) / 100,
+      apy: prop?.apy || 0
+    };
+  });
+  const totalValue = enriched.reduce((sum, h) => sum + h.currentValue, 0);
+  const totalYield = enriched.reduce((sum, h) => sum + h.yieldEarned, 0);
+  const totalPnl = enriched.reduce((sum, h) => sum + h.pnl, 0);
+  res.json({
+    walletAddress: wallet,
+    holdings: enriched,
+    totalValueUSD: totalValue,
+    totalYieldEarned: Math.round(totalYield * 100) / 100,
+    totalPnl: Math.round(totalPnl * 100) / 100,
+    holdingCount: enriched.length
+  });
+});
+
+// Yields
+app.get("/api/v1/demo/yields", (_req, res) => {
+  const allYields = [];
+  for (const [propId, records] of yieldRecords) {
+    const prop = propertiesStore.find(p => p.id === parseInt(propId));
+    records.forEach(r => {
+      allYields.push({ ...r, propertyName: prop?.name || "Unknown" });
+    });
+  }
+  allYields.sort((a, b) => new Date(b.periodStart) - new Date(a.periodStart));
+  const totalDistributed = allYields.filter(y => y.status === "distributed").reduce((s, y) => s + y.amountUSD, 0);
+  const totalPending = allYields.filter(y => y.status === "pending").reduce((s, y) => s + y.amountUSD, 0);
+  res.json({ yields: allYields, totalDistributed, totalPending });
+});
+
+app.get("/api/v1/demo/yields/:propertyId", (req, res) => {
+  const records = yieldRecords.get(req.params.propertyId) || [];
+  const prop = propertiesStore.find(p => p.id === parseInt(req.params.propertyId));
+  res.json({ propertyId: req.params.propertyId, propertyName: prop?.name, yields: records });
+});
+
+// Activity feed
+app.get("/api/v1/demo/activity", (_req, res) => {
+  const sorted = [...activityStore].sort((a, b) => new Date(b.date) - new Date(a.date));
+  res.json({ activity: sorted });
+});
+
+// Platform metrics
+app.get("/api/v1/demo/metrics", (_req, res) => {
+  const tvl = propertiesStore.reduce((sum, p) => sum + (p.tokensSold * p.pricePerTokenUSD), 0);
+  const totalValuation = propertiesStore.reduce((sum, p) => sum + p.valuationUSD, 0);
+  const totalInvestors = investors.size;
+  const totalTokensSold = propertiesStore.reduce((sum, p) => sum + p.tokensSold, 0);
+  res.json({ tvl, totalValuation, totalInvestors, totalProperties: propertiesStore.length, totalTokensSold });
+});
+
+// KYC - open endpoints for demo
+app.get("/api/v1/demo/kyc/:walletAddress", (req, res) => {
+  const wallet = req.params.walletAddress.toLowerCase();
+  const inv = investors.get(wallet);
+  if (inv) {
+    return res.json({ status: "verified", investor: inv });
+  }
+  // Check pending KYC
+  for (const [, entry] of kycRequests) {
+    if (entry.walletAddress === wallet) {
+      return res.json({ status: entry.status, request: entry });
+    }
+  }
+  res.json({ status: "none" });
+});
+
+app.post("/api/v1/demo/kyc/submit", (req, res) => {
+  const { walletAddress, fullName, email, countryCode, documentType, documentNumber, accreditationLevel } = req.body;
+  if (!fullName || !email || !countryCode || !documentType) {
+    return res.status(400).json({ error: "Missing required KYC fields" });
+  }
+  const requestId = uuidv4();
+  const kycRequest = {
+    id: requestId,
+    walletAddress: (walletAddress || "0xdemo").toLowerCase(),
+    fullName,
+    email,
+    countryCode: parseInt(countryCode),
+    documentType,
+    documentNumber: documentNumber || "",
+    accreditationLevel: accreditationLevel || 0,
+    status: "pending",
+    submittedAt: new Date().toISOString(),
+    reviewedAt: null,
+  };
+  kycRequests.set(requestId, kycRequest);
+  res.status(201).json({ requestId, status: "pending" });
+});
+
+// Buy tokens (demo)
+app.post("/api/v1/demo/buy", (req, res) => {
+  const { walletAddress, propertyId, tokens } = req.body;
+  if (propertyId === undefined || !tokens) {
+    return res.status(400).json({ error: "propertyId and tokens required" });
+  }
+  const prop = propertiesStore.find(p => p.id === parseInt(propertyId));
+  if (!prop) return res.status(404).json({ error: "Property not found" });
+  const available = prop.totalTokens - prop.tokensSold;
+  if (tokens > available) return res.status(400).json({ error: "Not enough tokens available" });
+
+  prop.tokensSold += tokens;
+  const wallet = (walletAddress || "0xdemo").toLowerCase();
+  const existing = portfolioStore.get(wallet) || [];
+  const holding = existing.find(h => h.propertyId === parseInt(propertyId));
+  if (holding) {
+    holding.tokens += tokens;
+  } else {
+    existing.push({ propertyId: parseInt(propertyId), tokens, purchasePrice: prop.pricePerTokenUSD, purchasedAt: new Date().toISOString() });
+  }
+  portfolioStore.set(wallet, existing);
+
+  const inv = investors.get(wallet);
+  activityStore.push({
+    type: "purchase",
+    investor: inv?.fullName || "Demo Investor",
+    property: prop.name,
+    tokens,
+    amount: tokens * prop.pricePerTokenUSD,
+    date: new Date().toISOString()
+  });
+
+  res.status(201).json({ success: true, tokensRemaining: prop.totalTokens - prop.tokensSold, totalCost: tokens * prop.pricePerTokenUSD });
+});
+
+// Demo auth (no signature required)
+app.post("/api/v1/demo/auth", (req, res) => {
+  const { walletAddress } = req.body;
+  const wallet = (walletAddress || "0x742d35cc6634c0532925a3b844bc9e7595f2bd70").toLowerCase();
+  const investor = investors.get(wallet);
+  const token = jwt.sign({ walletAddress: wallet, role: investor?.role || "investor" }, JWT_SECRET, { expiresIn: "24h" });
+  res.json({ token, walletAddress: wallet, investor: investor || null });
+});
 
 // ---------------------------------------------------------------------------
 //  Error Handling

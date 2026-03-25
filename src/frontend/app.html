@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terravault | Real World Asset Tokenization for LATAM Real Estate</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --emerald-900:#064e3b;--emerald-800:#065f46;--emerald-700:#047857;--emerald-600:#059669;--emerald-500:#10b981;
+  --gold:#d4a574;--gold-light:#e8c9a0;--gold-dark:#b8895a;
+  --cream:#faf7f2;--cream-dark:#f0ebe3;
+  --slate-900:#0f172a;--slate-800:#1e293b;--slate-700:#334155;--slate-600:#475569;--slate-500:#64748b;--slate-400:#94a3b8;--slate-300:#cbd5e1;--slate-200:#e2e8f0;--slate-100:#f1f5f9;
+  --red:#ef4444;--green:#22c55e;--blue:#3b82f6;
+  --sidebar-w:260px;
+  --radius:12px;--radius-sm:8px;--radius-xs:6px;
+  --shadow:0 1px 3px rgba(0,0,0,.1),0 1px 2px rgba(0,0,0,.06);
+  --shadow-md:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -2px rgba(0,0,0,.1);
+  --shadow-lg:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1);
+  --shadow-xl:0 20px 25px -5px rgba(0,0,0,.1),0 8px 10px -6px rgba(0,0,0,.1);
+}
+html{font-size:15px}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--cream);color:var(--slate-800);min-height:100vh;display:flex;overflow:hidden}
+
+/* Sidebar */
+.sidebar{width:var(--sidebar-w);min-height:100vh;background:linear-gradient(180deg,var(--emerald-900) 0%,#032d22 100%);display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;z-index:100}
+.sidebar-brand{padding:28px 24px 20px;border-bottom:1px solid rgba(255,255,255,.08)}
+.sidebar-brand h1{font-size:1.35rem;font-weight:700;color:#fff;letter-spacing:-.5px;display:flex;align-items:center;gap:10px}
+.sidebar-brand h1 .logo-icon{width:32px;height:32px;background:var(--gold);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.9rem}
+.sidebar-brand p{font-size:.7rem;color:var(--gold);margin-top:4px;text-transform:uppercase;letter-spacing:1.5px;font-weight:500}
+.sidebar-nav{flex:1;padding:16px 12px;display:flex;flex-direction:column;gap:2px}
+.nav-item{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:var(--radius-sm);color:rgba(255,255,255,.6);cursor:pointer;transition:all .2s;font-size:.88rem;font-weight:500;border:none;background:none;width:100%;text-align:left}
+.nav-item:hover{background:rgba(255,255,255,.06);color:rgba(255,255,255,.85)}
+.nav-item.active{background:rgba(212,165,116,.12);color:var(--gold);font-weight:600}
+.nav-item .nav-icon{font-size:1.15rem;width:24px;text-align:center}
+.sidebar-footer{padding:16px 20px;border-top:1px solid rgba(255,255,255,.08)}
+.sidebar-footer .wallet-badge{display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(255,255,255,.05);border-radius:var(--radius-sm);cursor:pointer;transition:background .2s}
+.sidebar-footer .wallet-badge:hover{background:rgba(255,255,255,.08)}
+.wallet-dot{width:8px;height:8px;background:var(--green);border-radius:50%;flex-shrink:0}
+.wallet-addr{color:rgba(255,255,255,.7);font-size:.75rem;font-family:'SF Mono',Monaco,Consolas,monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wallet-label{color:rgba(255,255,255,.4);font-size:.65rem;text-transform:uppercase;letter-spacing:.5px}
+
+/* Main */
+.main{margin-left:var(--sidebar-w);flex:1;min-height:100vh;overflow-y:auto;padding:0}
+.main-header{padding:24px 36px;background:#fff;border-bottom:1px solid var(--slate-200);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:50}
+.main-header h2{font-size:1.3rem;font-weight:700;color:var(--slate-900)}
+.main-header .header-actions{display:flex;gap:12px;align-items:center}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:var(--radius-sm);font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s;border:none;text-decoration:none}
+.btn-primary{background:var(--emerald-700);color:#fff}.btn-primary:hover{background:var(--emerald-600)}
+.btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:#fff}.btn-gold:hover{opacity:.9}
+.btn-outline{background:transparent;border:1.5px solid var(--slate-300);color:var(--slate-700)}.btn-outline:hover{border-color:var(--slate-400);background:var(--slate-100)}
+.btn-sm{padding:7px 14px;font-size:.78rem}
+.btn-xs{padding:5px 10px;font-size:.72rem;border-radius:var(--radius-xs)}
+.btn-danger{background:var(--red);color:#fff}.btn-danger:hover{opacity:.9}
+
+.content{padding:28px 36px 60px}
+
+/* Cards */
+.card{background:#fff;border-radius:var(--radius);border:1px solid var(--slate-200);overflow:hidden;transition:box-shadow .2s}
+.card:hover{box-shadow:var(--shadow-md)}
+.card-body{padding:20px 24px}
+
+/* Grid */
+.grid{display:grid;gap:20px}
+.grid-2{grid-template-columns:repeat(2,1fr)}
+.grid-3{grid-template-columns:repeat(3,1fr)}
+.grid-4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:1200px){.grid-4{grid-template-columns:repeat(2,1fr)}.grid-3{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:768px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr}.sidebar{display:none}.main{margin-left:0}}
+
+/* Stat Cards */
+.stat-card{padding:24px}
+.stat-card .stat-label{font-size:.72rem;text-transform:uppercase;letter-spacing:.8px;color:var(--slate-500);font-weight:600;margin-bottom:8px}
+.stat-card .stat-value{font-size:1.65rem;font-weight:800;color:var(--slate-900);letter-spacing:-.5px}
+.stat-card .stat-sub{font-size:.78rem;color:var(--slate-500);margin-top:4px;display:flex;align-items:center;gap:4px}
+.stat-card .stat-sub .up{color:var(--green)}
+.stat-card .stat-sub .down{color:var(--red)}
+.stat-card.emerald{background:linear-gradient(135deg,var(--emerald-800),var(--emerald-900));border-color:var(--emerald-700)}
+.stat-card.emerald .stat-label{color:var(--gold-light)}
+.stat-card.emerald .stat-value{color:#fff}
+.stat-card.emerald .stat-sub{color:rgba(255,255,255,.6)}
+
+/* Badge */
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.3px}
+.badge-commercial{background:#dbeafe;color:#1d4ed8}
+.badge-residential{background:#dcfce7;color:#15803d}
+.badge-mixed{background:#fef3c7;color:#b45309}
+.badge-active{background:#dcfce7;color:#15803d}
+.badge-pending{background:#fef3c7;color:#b45309}
+.badge-verified{background:#dcfce7;color:#15803d}
+.badge-rejected{background:#fee2e2;color:#b91c1c}
+.badge-distributed{background:#dcfce7;color:#15803d}
+
+/* Property Cards */
+.property-card{cursor:pointer;transition:all .25s}
+.property-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.property-img{height:180px;position:relative;overflow:hidden}
+.property-img-bg{width:100%;height:100%;display:flex;align-items:flex-end;padding:16px;position:relative}
+.prop-img-cdmx{background:linear-gradient(135deg,#1a1a2e 0%,#16213e 40%,#0f3460 70%,#e94560 100%)}
+.prop-img-medellin{background:linear-gradient(135deg,#2d3436 0%,#636e72 30%,#00b894 70%,#00cec9 100%)}
+.prop-img-saopaulo{background:linear-gradient(135deg,#2c3e50 0%,#3498db 40%,#2ecc71 70%,#f39c12 100%)}
+.property-img-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(0,0,0,.7) 100%)}
+.skyline{position:absolute;bottom:0;left:0;right:0;height:80px;opacity:.15}
+.skyline rect{fill:currentColor;color:rgba(255,255,255,.8)}
+.property-img .prop-name{position:relative;z-index:2;color:#fff;font-size:1rem;font-weight:700;text-shadow:0 1px 3px rgba(0,0,0,.5)}
+.property-img .prop-location{position:relative;z-index:2;color:rgba(255,255,255,.8);font-size:.75rem;margin-top:2px}
+.property-details{padding:18px 20px}
+.property-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.property-row:last-child{margin-bottom:0}
+.prop-label{font-size:.72rem;color:var(--slate-500);text-transform:uppercase;letter-spacing:.4px;font-weight:500}
+.prop-val{font-size:.88rem;font-weight:700;color:var(--slate-800)}
+.prop-val.apy{color:var(--green);display:flex;align-items:center;gap:4px}
+.prop-val.apy::before{content:'';width:6px;height:6px;background:var(--green);border-radius:50%}
+.progress-bar{height:6px;background:var(--slate-200);border-radius:3px;overflow:hidden;margin:12px 0}
+.progress-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--emerald-600),var(--gold));transition:width .5s ease}
+.token-info{display:flex;justify-content:space-between;font-size:.72rem;color:var(--slate-500);margin-bottom:14px}
+.btn-invest{width:100%;padding:12px;background:linear-gradient(135deg,var(--emerald-800),var(--emerald-700));color:#fff;border:none;border-radius:var(--radius-sm);font-size:.88rem;font-weight:700;cursor:pointer;transition:all .2s;letter-spacing:.3px}
+.btn-invest:hover{background:linear-gradient(135deg,var(--emerald-700),var(--emerald-600));transform:translateY(-1px)}
+
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);z-index:200;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
+.modal-overlay.active{opacity:1;pointer-events:auto}
+.modal{background:#fff;border-radius:16px;width:90%;max-width:680px;max-height:85vh;overflow-y:auto;box-shadow:var(--shadow-xl);transform:scale(.95);transition:transform .3s}
+.modal-overlay.active .modal{transform:scale(1)}
+.modal-header{padding:24px 28px 16px;border-bottom:1px solid var(--slate-200);display:flex;justify-content:space-between;align-items:center}
+.modal-header h3{font-size:1.15rem;font-weight:700;color:var(--slate-900)}
+.modal-close{width:32px;height:32px;border-radius:50%;background:var(--slate-100);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:var(--slate-500);transition:all .2s}
+.modal-close:hover{background:var(--slate-200);color:var(--slate-800)}
+.modal-body{padding:24px 28px}
+.modal-section{margin-bottom:24px}
+.modal-section h4{font-size:.78rem;text-transform:uppercase;letter-spacing:.8px;color:var(--slate-500);font-weight:600;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--slate-100)}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.detail-item{display:flex;flex-direction:column;gap:2px}
+.detail-item .d-label{font-size:.7rem;color:var(--slate-500);text-transform:uppercase;letter-spacing:.4px}
+.detail-item .d-value{font-size:.9rem;font-weight:600;color:var(--slate-800)}
+.doc-link{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--slate-100);border-radius:var(--radius-xs);color:var(--slate-700);font-size:.82rem;font-weight:500;text-decoration:none;transition:background .2s;cursor:pointer;margin-bottom:6px}
+.doc-link:hover{background:var(--slate-200)}
+.buy-form{background:var(--cream);border-radius:var(--radius-sm);padding:20px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.75rem;font-weight:600;color:var(--slate-600);margin-bottom:6px;text-transform:uppercase;letter-spacing:.4px}
+.form-input{width:100%;padding:11px 14px;border:1.5px solid var(--slate-300);border-radius:var(--radius-xs);font-size:.9rem;background:#fff;transition:border-color .2s;font-family:inherit}
+.form-input:focus{outline:none;border-color:var(--emerald-600);box-shadow:0 0 0 3px rgba(5,150,105,.1)}
+.form-row{display:flex;gap:12px}
+.form-row .form-group{flex:1}
+.cost-preview{display:flex;justify-content:space-between;padding:12px 0;border-top:1px solid var(--slate-200);margin-top:8px}
+.cost-preview .cp-label{color:var(--slate-600);font-size:.82rem}
+.cost-preview .cp-value{font-weight:700;color:var(--slate-900);font-size:.95rem}
+
+/* Tables */
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;padding:10px 16px;font-size:.7rem;text-transform:uppercase;letter-spacing:.6px;color:var(--slate-500);font-weight:600;background:var(--slate-100);border-bottom:1px solid var(--slate-200)}
+td{padding:12px 16px;font-size:.85rem;border-bottom:1px solid var(--slate-100);color:var(--slate-700)}
+tr:hover td{background:rgba(250,247,242,.5)}
+
+/* Activity feed */
+.activity-item{display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--slate-100)}
+.activity-item:last-child{border-bottom:none}
+.activity-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0}
+.activity-icon.purchase{background:#dbeafe;color:#2563eb}
+.activity-icon.yield{background:#dcfce7;color:#16a34a}
+.activity-text{flex:1}
+.activity-text .at-main{font-size:.84rem;color:var(--slate-800);font-weight:500}
+.activity-text .at-sub{font-size:.72rem;color:var(--slate-500);margin-top:2px}
+.activity-amount{font-weight:700;font-size:.88rem;color:var(--slate-800)}
+
+/* Pie chart (CSS) */
+.pie-chart{width:180px;height:180px;border-radius:50%;position:relative;margin:0 auto}
+.pie-legend{display:flex;flex-direction:column;gap:8px;margin-top:16px}
+.pie-legend-item{display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--slate-700)}
+.pie-legend-item .dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+
+/* Bar chart */
+.bar-chart{display:flex;align-items:flex-end;gap:16px;height:140px;padding-top:10px}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px}
+.bar-fill{width:100%;border-radius:6px 6px 0 0;transition:height .5s ease;min-width:40px}
+.bar-label{font-size:.68rem;color:var(--slate-500);text-align:center;font-weight:500}
+.bar-value{font-size:.72rem;font-weight:700;color:var(--slate-700)}
+
+/* Section Headers */
+.section-title{font-size:1rem;font-weight:700;color:var(--slate-800);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.section-title .st-icon{font-size:1.1rem}
+
+/* Countdown */
+.countdown{display:flex;gap:12px;margin-top:8px}
+.countdown-unit{text-align:center}
+.countdown-val{font-size:1.5rem;font-weight:800;color:var(--emerald-800);line-height:1}
+.countdown-label{font-size:.6rem;text-transform:uppercase;letter-spacing:.5px;color:var(--slate-500);margin-top:4px}
+
+/* KYC */
+.kyc-status-banner{padding:20px 24px;border-radius:var(--radius);display:flex;align-items:center;gap:16px;margin-bottom:24px}
+.kyc-status-banner.verified{background:linear-gradient(135deg,#dcfce7,#bbf7d0);border:1px solid #86efac}
+.kyc-status-banner.pending{background:linear-gradient(135deg,#fef3c7,#fde68a);border:1px solid #fcd34d}
+.kyc-status-banner.none{background:var(--slate-100);border:1px solid var(--slate-200)}
+.kyc-icon{font-size:2rem}
+.kyc-info h3{font-size:1rem;font-weight:700;color:var(--slate-900)}
+.kyc-info p{font-size:.82rem;color:var(--slate-600);margin-top:2px}
+.compliance-badges{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.compliance-badge{display:flex;align-items:center;gap:6px;padding:8px 14px;background:#fff;border:1px solid var(--slate-200);border-radius:var(--radius-xs);font-size:.78rem;font-weight:500;color:var(--slate-700)}
+.compliance-badge .cb-icon{color:var(--emerald-600)}
+
+/* Settings */
+.settings-section{padding:20px 0;border-bottom:1px solid var(--slate-100)}
+.settings-section:last-child{border-bottom:none}
+.settings-section h4{font-size:.9rem;font-weight:700;color:var(--slate-800);margin-bottom:12px}
+
+/* Tab content */
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+/* Notifications */
+.toast{position:fixed;top:24px;right:24px;z-index:300;padding:14px 20px;border-radius:var(--radius-sm);color:#fff;font-size:.85rem;font-weight:500;transform:translateX(120%);transition:transform .4s ease;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow-lg)}
+.toast.show{transform:translateX(0)}
+.toast.success{background:var(--emerald-700)}
+.toast.error{background:var(--red)}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--slate-300);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--slate-400)}
+
+/* Loading */
+.loading{display:flex;align-items:center;justify-content:center;padding:40px;color:var(--slate-400);font-size:.9rem}
+.spinner{width:20px;height:20px;border:2.5px solid var(--slate-200);border-top-color:var(--emerald-600);border-radius:50%;animation:spin .7s linear infinite;margin-right:10px}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <h1><span class="logo-icon">TV</span> Terravault</h1>
+    <p>RWA Tokenization Platform</p>
+  </div>
+  <nav class="sidebar-nav">
+    <button class="nav-item active" data-tab="dashboard"><span class="nav-icon">&#127968;</span> Dashboard</button>
+    <button class="nav-item" data-tab="properties"><span class="nav-icon">&#127970;</span> Properties</button>
+    <button class="nav-item" data-tab="portfolio"><span class="nav-icon">&#128188;</span> Portfolio</button>
+    <button class="nav-item" data-tab="yields"><span class="nav-icon">&#128176;</span> Yields</button>
+    <button class="nav-item" data-tab="kyc"><span class="nav-icon">&#128203;</span> KYC</button>
+    <button class="nav-item" data-tab="settings"><span class="nav-icon">&#9881;</span> Settings</button>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="wallet-badge" onclick="connectWallet()">
+      <span class="wallet-dot" id="walletDot"></span>
+      <div>
+        <div class="wallet-label" id="walletLabel">Connected</div>
+        <div class="wallet-addr" id="walletAddr">0x742d...2bd70</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- Main -->
+<div class="main">
+  <header class="main-header">
+    <h2 id="pageTitle">Dashboard</h2>
+    <div class="header-actions">
+      <span style="font-size:.78rem;color:var(--slate-500)" id="networkBadge">&#9679; Testnet</span>
+      <button class="btn btn-outline btn-sm" onclick="connectWallet()">&#128279; Connect</button>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <!-- DASHBOARD -->
+    <div class="tab-content active" id="tab-dashboard">
+      <div class="grid grid-4" style="margin-bottom:24px">
+        <div class="card stat-card emerald">
+          <div class="stat-label">Portfolio Value</div>
+          <div class="stat-value" id="dashPortfolioVal">$14,500</div>
+          <div class="stat-sub"><span class="up">&#9650; 3.2%</span> vs last month</div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-label">Yield This Month</div>
+          <div class="stat-value" id="dashYieldMonth">$123.47</div>
+          <div class="stat-sub"><span class="up">&#9650; 12%</span> vs Feb</div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-label">Properties Owned</div>
+          <div class="stat-value" id="dashPropsOwned">2</div>
+          <div class="stat-sub">Across 2 countries</div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-label">Total Value Locked</div>
+          <div class="stat-value" id="dashTVL">$5.2M</div>
+          <div class="stat-sub">Platform-wide</div>
+        </div>
+      </div>
+
+      <div class="grid grid-3" style="margin-bottom:24px">
+        <div class="card" style="grid-column:1/3">
+          <div class="card-body">
+            <div class="section-title"><span class="st-icon">&#127968;</span> Market Overview</div>
+            <div class="grid grid-3" id="dashMarketCards" style="gap:14px"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <div class="section-title"><span class="st-icon">&#128200;</span> Recent Activity</div>
+            <div id="dashActivity" style="max-height:340px;overflow-y:auto"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROPERTIES -->
+    <div class="tab-content" id="tab-properties">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+        <div class="section-title" style="margin-bottom:0"><span class="st-icon">&#127970;</span> Property Marketplace</div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-outline btn-sm filter-btn active" data-filter="all">All</button>
+          <button class="btn btn-outline btn-sm filter-btn" data-filter="Commercial">Commercial</button>
+          <button class="btn btn-outline btn-sm filter-btn" data-filter="Residential">Residential</button>
+          <button class="btn btn-outline btn-sm filter-btn" data-filter="Mixed-Use">Mixed-Use</button>
+        </div>
+      </div>
+      <div class="grid grid-3" id="propertiesGrid"></div>
+    </div>
+
+    <!-- PORTFOLIO -->
+    <div class="tab-content" id="tab-portfolio">
+      <div class="grid grid-3" style="margin-bottom:24px">
+        <div class="card stat-card emerald">
+          <div class="stat-label">Total Value</div>
+          <div class="stat-value" id="portTotalVal">$0</div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-label">Total P&amp;L</div>
+          <div class="stat-value" id="portPnl">$0</div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-label">Total Yield Earned</div>
+          <div class="stat-value" id="portYield">$0</div>
+        </div>
+      </div>
+      <div class="grid grid-3" style="margin-bottom:24px">
+        <div class="card" style="grid-column:1/3">
+          <div class="card-body">
+            <div class="section-title">Holdings</div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Property</th><th>Tokens</th><th>Cost Basis</th><th>Current Value</th><th>P&amp;L</th><th>Yield</th><th></th></tr></thead>
+                <tbody id="portTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <div class="section-title">Diversification</div>
+            <div id="pieChart" class="pie-chart"></div>
+            <div id="pieLegend" class="pie-legend"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- YIELDS -->
+    <div class="tab-content" id="tab-yields">
+      <div class="grid grid-3" style="margin-bottom:24px">
+        <div class="card stat-card emerald">
+          <div class="stat-label">Total Yield Earned</div>
+          <div class="stat-value" id="yieldTotal">$0</div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-label">Pending Distribution</div>
+          <div class="stat-value" id="yieldPending">$0</div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-label">Next Distribution</div>
+          <div class="stat-value" style="font-size:1rem" id="yieldNext">Loading...</div>
+          <div class="countdown" id="yieldCountdown"></div>
+        </div>
+      </div>
+      <div class="grid grid-2" style="margin-bottom:24px">
+        <div class="card">
+          <div class="card-body">
+            <div class="section-title">Yield by Property</div>
+            <div class="bar-chart" id="yieldBarChart"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <div class="section-title">Yield History</div>
+            <div class="table-wrap" style="max-height:300px;overflow-y:auto">
+              <table>
+                <thead><tr><th>Date</th><th>Property</th><th>Amount</th><th>Status</th></tr></thead>
+                <tbody id="yieldTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KYC -->
+    <div class="tab-content" id="tab-kyc">
+      <div id="kycBanner" class="kyc-status-banner none">
+        <div class="kyc-icon" id="kycIcon">&#128203;</div>
+        <div class="kyc-info">
+          <h3 id="kycTitle">KYC Not Submitted</h3>
+          <p id="kycSubtitle">Complete verification to start investing</p>
+        </div>
+      </div>
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="card-body">
+            <div class="section-title">Submit KYC / Verificacion</div>
+            <form id="kycForm" onsubmit="submitKYC(event)">
+              <div class="form-group">
+                <label>Full Name / Nombre Completo</label>
+                <input class="form-input" name="fullName" placeholder="Carlos Restrepo" required>
+              </div>
+              <div class="form-group">
+                <label>Email</label>
+                <input class="form-input" name="email" type="email" placeholder="carlos@example.com" required>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Country / Pais</label>
+                  <select class="form-input" name="countryCode" required>
+                    <option value="">Select...</option>
+                    <option value="170">Colombia</option>
+                    <option value="484">Mexico</option>
+                    <option value="76">Brasil</option>
+                    <option value="604">Peru</option>
+                    <option value="32">Argentina</option>
+                    <option value="152">Chile</option>
+                    <option value="840">United States</option>
+                    <option value="344">Hong Kong</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>ID Type / Tipo de Documento</label>
+                  <select class="form-input" name="documentType" required>
+                    <option value="">Select...</option>
+                    <option value="passport">Passport</option>
+                    <option value="cedula">Cedula de Ciudadania</option>
+                    <option value="cpf">CPF (Brasil)</option>
+                    <option value="ine">INE (Mexico)</option>
+                    <option value="national_id">National ID</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Document Number</label>
+                <input class="form-input" name="documentNumber" placeholder="ABC123456">
+              </div>
+              <div class="form-group">
+                <label>Accreditation Level / Nivel de Acreditacion</label>
+                <select class="form-input" name="accreditationLevel">
+                  <option value="0">Retail Investor</option>
+                  <option value="1">Accredited Investor</option>
+                  <option value="2">Institutional</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Document Upload</label>
+                <div style="padding:30px;border:2px dashed var(--slate-300);border-radius:var(--radius-sm);text-align:center;color:var(--slate-500);font-size:.82rem;cursor:pointer">
+                  &#128206; Click to upload ID document (PDF, JPG, PNG)<br>
+                  <span style="font-size:.7rem;color:var(--slate-400)">Max 50MB. Stored on IPFS.</span>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary" style="width:100%">Submit KYC</button>
+            </form>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <div class="section-title">Compliance Badges</div>
+            <div class="compliance-badges" id="complianceBadges">
+              <div class="compliance-badge"><span class="cb-icon">&#9679;</span> AML/KYC Check</div>
+              <div class="compliance-badge"><span class="cb-icon">&#9679;</span> FATCA Compliant</div>
+              <div class="compliance-badge"><span class="cb-icon">&#9679;</span> Accredited Investor</div>
+              <div class="compliance-badge"><span class="cb-icon">&#9679;</span> LATAM Eligible</div>
+              <div class="compliance-badge"><span class="cb-icon">&#9679;</span> T-REX Identity</div>
+              <div class="compliance-badge"><span class="cb-icon">&#9679;</span> ERC-3643 Verified</div>
+            </div>
+            <div style="margin-top:24px">
+              <div class="section-title">Verification Timeline</div>
+              <div style="padding:16px 0">
+                <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px" id="kycTimeline">
+                  <div style="width:12px;height:12px;border-radius:50%;background:var(--slate-300);flex-shrink:0"></div>
+                  <div><div style="font-size:.82rem;font-weight:600;color:var(--slate-700)">Submit KYC</div><div style="font-size:.7rem;color:var(--slate-500)">Provide identity documents</div></div>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+                  <div style="width:12px;height:12px;border-radius:50%;background:var(--slate-300);flex-shrink:0"></div>
+                  <div><div style="font-size:.82rem;font-weight:600;color:var(--slate-700)">Review Process</div><div style="font-size:.7rem;color:var(--slate-500)">24-48 hour verification</div></div>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px">
+                  <div style="width:12px;height:12px;border-radius:50%;background:var(--slate-300);flex-shrink:0"></div>
+                  <div><div style="font-size:.82rem;font-weight:600;color:var(--slate-700)">On-Chain Registration</div><div style="font-size:.7rem;color:var(--slate-500)">T-REX Identity Registry</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="tab-content" id="tab-settings">
+      <div class="card">
+        <div class="card-body">
+          <div class="settings-section">
+            <h4>API Configuration</h4>
+            <div class="form-group">
+              <label>Backend URL</label>
+              <input class="form-input" id="settingsApiUrl" value="http://localhost:3000">
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="updateApiUrl()">Save</button>
+          </div>
+          <div class="settings-section">
+            <h4>Wallet</h4>
+            <div class="form-group">
+              <label>Demo Wallet Address</label>
+              <input class="form-input" id="settingsWallet" value="0x742d35cc6634c0532925a3b844bc9e7595f2bd70">
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="updateWallet()">Update Wallet</button>
+          </div>
+          <div class="settings-section">
+            <h4>Display</h4>
+            <div class="form-group">
+              <label>Currency</label>
+              <select class="form-input" style="max-width:200px"><option>USD</option></select>
+            </div>
+            <div class="form-group">
+              <label>Language</label>
+              <select class="form-input" style="max-width:200px"><option>Spanish / English (Mixed)</option><option>English</option><option>Espanol</option><option>Portugues</option></select>
+            </div>
+          </div>
+          <div class="settings-section">
+            <h4>About</h4>
+            <p style="font-size:.82rem;color:var(--slate-600);line-height:1.6">
+              Terravault is a Real World Asset tokenization platform for LATAM real estate.
+              Built with ERC-3643 / T-REX compliance framework. Properties are tokenized as security tokens
+              with on-chain identity verification and automated yield distribution.<br><br>
+              <strong>Version:</strong> 1.0.0<br>
+              <strong>Network:</strong> Ethereum Sepolia Testnet<br>
+              <strong>Smart Contracts:</strong> Solidity 0.8.24
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Property Detail Modal -->
+<div class="modal-overlay" id="propertyModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modalTitle">Property Details</h3>
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ---------------------------------------------------------------------------
+//  State
+// ---------------------------------------------------------------------------
+let API_URL = 'http://localhost:3000';
+let WALLET = '0x742d35cc6634c0532925a3b844bc9e7595f2bd70';
+let TOKEN = null;
+let properties = [];
+let portfolio = null;
+let yields = null;
+let metrics = null;
+let activity = [];
+
+// ---------------------------------------------------------------------------
+//  API helpers
+// ---------------------------------------------------------------------------
+async function api(path, opts = {}) {
+  const headers = { 'Content-Type': 'application/json' };
+  if (TOKEN) headers['Authorization'] = 'Bearer ' + TOKEN;
+  try {
+    const res = await fetch(API_URL + path, { ...opts, headers });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return await res.json();
+  } catch (e) {
+    console.warn('API error:', path, e.message);
+    return null;
+  }
+}
+
+function showToast(msg, type = 'success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast ' + type + ' show';
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ---------------------------------------------------------------------------
+//  Navigation
+// ---------------------------------------------------------------------------
+document.querySelectorAll('.nav-item').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const tab = btn.dataset.tab;
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('active');
+    document.getElementById('pageTitle').textContent = btn.textContent.trim();
+    if (tab === 'portfolio') loadPortfolio();
+    if (tab === 'yields') loadYields();
+    if (tab === 'kyc') loadKYC();
+  });
+});
+
+// Property type filters
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderProperties(btn.dataset.filter);
+  });
+});
+
+// ---------------------------------------------------------------------------
+//  Connect / Auth
+// ---------------------------------------------------------------------------
+async function connectWallet() {
+  const res = await api('/api/v1/demo/auth', {
+    method: 'POST',
+    body: JSON.stringify({ walletAddress: WALLET })
+  });
+  if (res && res.token) {
+    TOKEN = res.token;
+    document.getElementById('walletAddr').textContent = WALLET.slice(0, 6) + '...' + WALLET.slice(-5);
+    document.getElementById('walletDot').style.background = 'var(--green)';
+    document.getElementById('walletLabel').textContent = 'Connected';
+    showToast('Wallet connected');
+  }
+}
+
+// ---------------------------------------------------------------------------
+//  Load Data
+// ---------------------------------------------------------------------------
+async function loadAll() {
+  await connectWallet();
+  const [pRes, mRes, aRes] = await Promise.all([
+    api('/api/v1/demo/properties'),
+    api('/api/v1/demo/metrics'),
+    api('/api/v1/demo/activity')
+  ]);
+  if (pRes) properties = pRes.properties;
+  if (mRes) metrics = mRes;
+  if (aRes) activity = aRes.activity;
+  renderDashboard();
+  renderProperties('all');
+}
+
+// ---------------------------------------------------------------------------
+//  Render: Dashboard
+// ---------------------------------------------------------------------------
+function renderDashboard() {
+  // TVL
+  if (metrics) {
+    document.getElementById('dashTVL').textContent = '$' + (metrics.tvl / 1000000).toFixed(1) + 'M';
+  }
+
+  // Market overview cards
+  const grid = document.getElementById('dashMarketCards');
+  grid.innerHTML = '';
+  properties.slice(0, 3).forEach(p => {
+    const pctSold = ((p.tokensSold / p.totalTokens) * 100).toFixed(0);
+    grid.innerHTML += `
+      <div style="background:var(--slate-100);border-radius:var(--radius-sm);padding:14px">
+        <div style="font-size:.82rem;font-weight:700;color:var(--slate-800);margin-bottom:4px">${p.name}</div>
+        <div style="font-size:.7rem;color:var(--slate-500);margin-bottom:8px">${p.city}, ${p.country}</div>
+        <div style="display:flex;justify-content:space-between;font-size:.75rem;margin-bottom:4px">
+          <span style="color:var(--slate-500)">Valuation</span>
+          <span style="font-weight:700;color:var(--slate-800)">$${(p.valuationUSD/1000000).toFixed(1)}M</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:.75rem;margin-bottom:4px">
+          <span style="color:var(--slate-500)">APY</span>
+          <span style="font-weight:700;color:var(--green)">${p.apy}%</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:.75rem">
+          <span style="color:var(--slate-500)">Sold</span>
+          <span style="font-weight:600;color:var(--slate-700)">${pctSold}%</span>
+        </div>
+        <div class="progress-bar" style="margin:8px 0 0"><div class="progress-fill" style="width:${pctSold}%"></div></div>
+      </div>`;
+  });
+
+  // Activity feed
+  const feed = document.getElementById('dashActivity');
+  feed.innerHTML = '';
+  activity.slice(0, 8).forEach(a => {
+    const icon = a.type === 'purchase' ? '&#128179;' : '&#128176;';
+    const iconClass = a.type === 'purchase' ? 'purchase' : 'yield';
+    const label = a.type === 'purchase'
+      ? `${a.investor} bought ${a.tokens} tokens of ${a.property}`
+      : `Yield distributed to ${a.investor} from ${a.property}`;
+    const date = new Date(a.date).toLocaleDateString('es-MX', { day:'numeric', month:'short', year:'numeric' });
+    feed.innerHTML += `
+      <div class="activity-item">
+        <div class="activity-icon ${iconClass}">${icon}</div>
+        <div class="activity-text">
+          <div class="at-main">${label}</div>
+          <div class="at-sub">${date}</div>
+        </div>
+        <div class="activity-amount">$${a.amount.toLocaleString()}</div>
+      </div>`;
+  });
+}
+
+// ---------------------------------------------------------------------------
+//  Render: Properties
+// ---------------------------------------------------------------------------
+function renderProperties(filter) {
+  const grid = document.getElementById('propertiesGrid');
+  grid.innerHTML = '';
+  const filtered = filter === 'all' ? properties : properties.filter(p => p.propertyType === filter);
+  filtered.forEach(p => {
+    const pctSold = ((p.tokensSold / p.totalTokens) * 100).toFixed(0);
+    const available = p.totalTokens - p.tokensSold;
+    const imgClass = p.id === 0 ? 'prop-img-cdmx' : p.id === 1 ? 'prop-img-medellin' : 'prop-img-saopaulo';
+    const badgeClass = p.propertyType === 'Commercial' ? 'badge-commercial' : p.propertyType === 'Residential' ? 'badge-residential' : 'badge-mixed';
+    grid.innerHTML += `
+      <div class="card property-card" onclick="openPropertyModal(${p.id})">
+        <div class="property-img">
+          <div class="property-img-bg ${imgClass}">
+            <svg class="skyline" viewBox="0 0 400 80"><rect x="10" y="20" width="30" height="60"/><rect x="50" y="35" width="25" height="45"/><rect x="85" y="10" width="20" height="70"/><rect x="115" y="40" width="35" height="40"/><rect x="160" y="15" width="22" height="65"/><rect x="192" y="30" width="28" height="50"/><rect x="230" y="5" width="18" height="75"/><rect x="258" y="25" width="32" height="55"/><rect x="300" y="18" width="24" height="62"/><rect x="334" y="38" width="30" height="42"/><rect x="374" y="22" width="20" height="58"/></svg>
+            <div>
+              <div class="prop-name">${p.name}</div>
+              <div class="prop-location">${p.city}, ${p.country}</div>
+            </div>
+          </div>
+        </div>
+        <div class="property-details">
+          <div class="property-row">
+            <span class="badge ${badgeClass}">${p.propertyType}</span>
+            <span class="prop-val apy">${p.apy}% APY</span>
+          </div>
+          <div class="property-row">
+            <span class="prop-label">Valuation</span>
+            <span class="prop-val">$${(p.valuationUSD/1000000).toFixed(1)}M USD</span>
+          </div>
+          <div class="property-row">
+            <span class="prop-label">Token Price</span>
+            <span class="prop-val">$${p.pricePerTokenUSD}</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" style="width:${pctSold}%"></div></div>
+          <div class="token-info">
+            <span>${available.toLocaleString()} available</span>
+            <span>${p.tokensSold.toLocaleString()} / ${p.totalTokens.toLocaleString()} sold</span>
+          </div>
+          <button class="btn-invest" onclick="event.stopPropagation();openPropertyModal(${p.id})">Invertir</button>
+        </div>
+      </div>`;
+  });
+}
+
+// ---------------------------------------------------------------------------
+//  Property Modal
+// ---------------------------------------------------------------------------
+function openPropertyModal(id) {
+  const p = properties.find(x => x.id === id);
+  if (!p) return;
+  document.getElementById('modalTitle').textContent = p.name;
+  const available = p.totalTokens - p.tokensSold;
+  const pctSold = ((p.tokensSold / p.totalTokens) * 100).toFixed(1);
+  document.getElementById('modalBody').innerHTML = `
+    <div class="modal-section">
+      <h4>Property Specifications</h4>
+      <div class="detail-grid">
+        <div class="detail-item"><span class="d-label">Location</span><span class="d-value">${p.location}</span></div>
+        <div class="detail-item"><span class="d-label">Type</span><span class="d-value">${p.propertyType}</span></div>
+        <div class="detail-item"><span class="d-label">Size</span><span class="d-value">${p.sizeSqm.toLocaleString()} m&sup2;</span></div>
+        <div class="detail-item"><span class="d-label">Year Built</span><span class="d-value">${p.yearBuilt}</span></div>
+        <div class="detail-item"><span class="d-label">Occupancy</span><span class="d-value">${p.occupancy}%</span></div>
+        <div class="detail-item"><span class="d-label">Country</span><span class="d-value">${p.country}</span></div>
+      </div>
+    </div>
+    <div class="modal-section">
+      <h4>Financial Details</h4>
+      <div class="detail-grid">
+        <div class="detail-item"><span class="d-label">Valuation</span><span class="d-value">$${p.valuationUSD.toLocaleString()} USD</span></div>
+        <div class="detail-item"><span class="d-label">Annual Yield (APY)</span><span class="d-value" style="color:var(--green)">${p.apy}%</span></div>
+        <div class="detail-item"><span class="d-label">Monthly Rental Yield</span><span class="d-value">$${p.rentalYieldMonthly.toLocaleString()}</span></div>
+        <div class="detail-item"><span class="d-label">Occupancy Rate</span><span class="d-value">${p.occupancy}%</span></div>
+      </div>
+    </div>
+    <div class="modal-section">
+      <h4>Token Information</h4>
+      <div class="detail-grid">
+        <div class="detail-item"><span class="d-label">Total Supply</span><span class="d-value">${p.totalTokens.toLocaleString()} tokens</span></div>
+        <div class="detail-item"><span class="d-label">Price per Token</span><span class="d-value">$${p.pricePerTokenUSD} USD</span></div>
+        <div class="detail-item"><span class="d-label">Tokens Sold</span><span class="d-value">${p.tokensSold.toLocaleString()} (${pctSold}%)</span></div>
+        <div class="detail-item"><span class="d-label">Available</span><span class="d-value">${available.toLocaleString()} tokens</span></div>
+      </div>
+      <div class="progress-bar" style="margin-top:12px"><div class="progress-fill" style="width:${pctSold}%"></div></div>
+    </div>
+    <div class="modal-section">
+      <h4>Documents</h4>
+      <div class="doc-link">&#128196; Property Deed (Escritura)</div>
+      <div class="doc-link">&#128200; Appraisal Report (Avaluo)</div>
+      <div class="doc-link">&#9878; Legal Opinion (Concepto Juridico)</div>
+      <div class="doc-link">&#128202; Financial Projections</div>
+    </div>
+    <div class="modal-section">
+      <h4>Comprar Tokens / Buy Tokens</h4>
+      <div class="buy-form">
+        <div class="form-group">
+          <label>Amount of Tokens / Cantidad</label>
+          <input class="form-input" type="number" id="buyAmount" min="1" max="${available}" value="10" oninput="updateBuyPreview(${p.pricePerTokenUSD})">
+        </div>
+        <div class="cost-preview">
+          <span class="cp-label">Subtotal</span>
+          <span class="cp-value" id="buySubtotal">$${10 * p.pricePerTokenUSD}</span>
+        </div>
+        <div class="cost-preview" style="border-top:none;padding-top:0">
+          <span class="cp-label">Platform Fee (0.5%)</span>
+          <span class="cp-value" id="buyFee">$${(10 * p.pricePerTokenUSD * 0.005).toFixed(2)}</span>
+        </div>
+        <div class="cost-preview" style="border-top:2px solid var(--slate-300);font-size:1rem">
+          <span class="cp-label" style="font-weight:700">Total</span>
+          <span class="cp-value" id="buyTotal" style="color:var(--emerald-800)">$${(10 * p.pricePerTokenUSD * 1.005).toFixed(2)}</span>
+        </div>
+        <button class="btn btn-gold" style="width:100%;margin-top:12px;padding:14px;font-size:.95rem" onclick="buyTokens(${p.id})">
+          Comprar Tokens
+        </button>
+      </div>
+    </div>
+    <p style="font-size:.7rem;color:var(--slate-400);margin-top:12px;text-align:center">
+      Token Contract: ${p.tokenContract}<br>
+      Last Updated: ${new Date(p.updatedAt).toLocaleDateString('es-MX')}
+    </p>`;
+  document.getElementById('propertyModal').classList.add('active');
+}
+
+function closeModal() {
+  document.getElementById('propertyModal').classList.remove('active');
+}
+
+function updateBuyPreview(price) {
+  const amt = parseInt(document.getElementById('buyAmount').value) || 0;
+  const sub = amt * price;
+  const fee = sub * 0.005;
+  document.getElementById('buySubtotal').textContent = '$' + sub.toLocaleString();
+  document.getElementById('buyFee').textContent = '$' + fee.toFixed(2);
+  document.getElementById('buyTotal').textContent = '$' + (sub + fee).toFixed(2);
+}
+
+async function buyTokens(propertyId) {
+  const tokens = parseInt(document.getElementById('buyAmount').value);
+  if (!tokens || tokens < 1) return showToast('Enter a valid amount', 'error');
+  const res = await api('/api/v1/demo/buy', {
+    method: 'POST',
+    body: JSON.stringify({ walletAddress: WALLET, propertyId, tokens })
+  });
+  if (res && res.success) {
+    showToast(`Purchased ${tokens} tokens successfully!`);
+    closeModal();
+    await loadAll();
+  } else {
+    showToast(res?.error || 'Purchase failed', 'error');
+  }
+}
+
+// ---------------------------------------------------------------------------
+//  Render: Portfolio
+// ---------------------------------------------------------------------------
+async function loadPortfolio() {
+  const res = await api('/api/v1/demo/portfolio/' + WALLET);
+  if (!res) return;
+  portfolio = res;
+  document.getElementById('portTotalVal').textContent = '$' + res.totalValueUSD.toLocaleString();
+  const pnlSign = res.totalPnl >= 0 ? '+' : '';
+  document.getElementById('portPnl').textContent = pnlSign + '$' + res.totalPnl.toLocaleString();
+  document.getElementById('portPnl').style.color = res.totalPnl >= 0 ? 'var(--green)' : 'var(--red)';
+  document.getElementById('portYield').textContent = '$' + res.totalYieldEarned.toLocaleString();
+
+  // Update dashboard values
+  document.getElementById('dashPortfolioVal').textContent = '$' + res.totalValueUSD.toLocaleString();
+  document.getElementById('dashYieldMonth').textContent = '$' + (res.totalYieldEarned / 3).toFixed(2);
+  document.getElementById('dashPropsOwned').textContent = res.holdingCount;
+
+  // Table
+  const tbody = document.getElementById('portTable');
+  tbody.innerHTML = '';
+  res.holdings.forEach(h => {
+    const pnlColor = h.pnl >= 0 ? 'var(--green)' : 'var(--red)';
+    const pnlPrefix = h.pnl >= 0 ? '+' : '';
+    tbody.innerHTML += `<tr>
+      <td><strong>${h.propertyName}</strong><br><span style="font-size:.7rem;color:var(--slate-500)">${h.location}</span></td>
+      <td>${h.tokens}</td>
+      <td>$${h.costBasis.toLocaleString()}</td>
+      <td>$${h.currentValue.toLocaleString()}</td>
+      <td style="color:${pnlColor};font-weight:600">${pnlPrefix}$${h.pnl.toFixed(2)} (${pnlPrefix}${h.pnlPercent}%)</td>
+      <td style="color:var(--green)">$${h.yieldEarned.toFixed(2)}</td>
+      <td><button class="btn btn-outline btn-xs">Vender</button></td>
+    </tr>`;
+  });
+
+  // Pie chart
+  renderPieChart(res.holdings);
+}
+
+function renderPieChart(holdings) {
+  if (!holdings.length) return;
+  const total = holdings.reduce((s, h) => s + h.currentValue, 0);
+  const colors = ['var(--emerald-700)', 'var(--gold)', 'var(--blue)', '#8b5cf6', '#ec4899'];
+  let conic = '';
+  let start = 0;
+  holdings.forEach((h, i) => {
+    const pct = (h.currentValue / total) * 100;
+    const end = start + pct;
+    conic += `${colors[i % colors.length]} ${start}% ${end}%,`;
+    start = end;
+  });
+  conic = conic.slice(0, -1);
+  document.getElementById('pieChart').style.background = `conic-gradient(${conic})`;
+
+  const legend = document.getElementById('pieLegend');
+  legend.innerHTML = '';
+  holdings.forEach((h, i) => {
+    const pct = ((h.currentValue / total) * 100).toFixed(1);
+    legend.innerHTML += `<div class="pie-legend-item"><span class="dot" style="background:${colors[i % colors.length]}"></span>${h.propertyName} (${pct}%)</div>`;
+  });
+}
+
+// ---------------------------------------------------------------------------
+//  Render: Yields
+// ---------------------------------------------------------------------------
+async function loadYields() {
+  const res = await api('/api/v1/demo/yields');
+  if (!res) return;
+  yields = res;
+  document.getElementById('yieldTotal').textContent = '$' + res.totalDistributed.toFixed(2);
+  document.getElementById('yieldPending').textContent = '$' + res.totalPending.toFixed(2);
+
+  // Countdown to April 1
+  const nextDist = new Date('2026-04-01T10:00:00.000Z');
+  const now = new Date();
+  const diff = nextDist - now;
+  const days = Math.max(0, Math.floor(diff / 86400000));
+  const hours = Math.max(0, Math.floor((diff % 86400000) / 3600000));
+  const mins = Math.max(0, Math.floor((diff % 3600000) / 60000));
+  document.getElementById('yieldNext').textContent = 'April 1, 2026';
+  document.getElementById('yieldCountdown').innerHTML = `
+    <div class="countdown-unit"><div class="countdown-val">${days}</div><div class="countdown-label">Days</div></div>
+    <div class="countdown-unit"><div class="countdown-val">${hours}</div><div class="countdown-label">Hours</div></div>
+    <div class="countdown-unit"><div class="countdown-val">${mins}</div><div class="countdown-label">Mins</div></div>`;
+
+  // Table
+  const tbody = document.getElementById('yieldTable');
+  tbody.innerHTML = '';
+  res.yields.forEach(y => {
+    const badgeClass = y.status === 'distributed' ? 'badge-distributed' : 'badge-pending';
+    tbody.innerHTML += `<tr>
+      <td>${y.periodStart}</td>
+      <td>${y.propertyName}</td>
+      <td style="font-weight:600">$${y.amountUSD.toFixed(2)}</td>
+      <td><span class="badge ${badgeClass}">${y.status}</span></td>
+    </tr>`;
+  });
+
+  // Bar chart
+  renderYieldBarChart(res.yields);
+}
+
+function renderYieldBarChart(yields) {
+  const byProp = {};
+  yields.filter(y => y.status === 'distributed').forEach(y => {
+    byProp[y.propertyName] = (byProp[y.propertyName] || 0) + y.amountUSD;
+  });
+  const entries = Object.entries(byProp);
+  const max = Math.max(...entries.map(e => e[1]));
+  const colors = ['var(--emerald-700)', 'var(--gold)', 'var(--blue)'];
+  const chart = document.getElementById('yieldBarChart');
+  chart.innerHTML = '';
+  entries.forEach(([name, val], i) => {
+    const h = max > 0 ? (val / max) * 120 : 0;
+    chart.innerHTML += `<div class="bar-col">
+      <div class="bar-value">$${val.toFixed(0)}</div>
+      <div class="bar-fill" style="height:${h}px;background:${colors[i % colors.length]}"></div>
+      <div class="bar-label">${name.split(' ')[0]}</div>
+    </div>`;
+  });
+}
+
+// ---------------------------------------------------------------------------
+//  KYC
+// ---------------------------------------------------------------------------
+async function loadKYC() {
+  const res = await api('/api/v1/demo/kyc/' + WALLET);
+  if (!res) return;
+  const banner = document.getElementById('kycBanner');
+  const icon = document.getElementById('kycIcon');
+  const title = document.getElementById('kycTitle');
+  const sub = document.getElementById('kycSubtitle');
+  banner.className = 'kyc-status-banner';
+  if (res.status === 'verified') {
+    banner.classList.add('verified');
+    icon.innerHTML = '&#9989;';
+    title.textContent = 'KYC Verified / Verificado';
+    sub.textContent = `Approved: ${res.investor?.fullName || ''} | ${res.investor?.email || ''}`;
+  } else if (res.status === 'pending') {
+    banner.classList.add('pending');
+    icon.innerHTML = '&#9203;';
+    title.textContent = 'KYC Pending / En Revision';
+    sub.textContent = 'Your submission is being reviewed (24-48 hours)';
+  } else {
+    banner.classList.add('none');
+    icon.innerHTML = '&#128203;';
+    title.textContent = 'KYC Not Submitted';
+    sub.textContent = 'Complete verification to start investing';
+  }
+}
+
+async function submitKYC(e) {
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  const data = Object.fromEntries(fd.entries());
+  data.walletAddress = WALLET;
+  const res = await api('/api/v1/demo/kyc/submit', {
+    method: 'POST',
+    body: JSON.stringify(data)
+  });
+  if (res && res.requestId) {
+    showToast('KYC submitted successfully!');
+    loadKYC();
+  } else {
+    showToast('Failed to submit KYC', 'error');
+  }
+}
+
+// ---------------------------------------------------------------------------
+//  Settings
+// ---------------------------------------------------------------------------
+function updateApiUrl() {
+  API_URL = document.getElementById('settingsApiUrl').value.replace(/\/$/, '');
+  showToast('API URL updated');
+  loadAll();
+}
+
+function updateWallet() {
+  WALLET = document.getElementById('settingsWallet').value.toLowerCase();
+  showToast('Wallet updated');
+  loadAll();
+}
+
+// ---------------------------------------------------------------------------
+//  Close modal on overlay click
+// ---------------------------------------------------------------------------
+document.getElementById('propertyModal').addEventListener('click', (e) => {
+  if (e.target === e.currentTarget) closeModal();
+});
+
+// Escape key
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeModal();
+});
+
+// ---------------------------------------------------------------------------
+//  Init
+// ---------------------------------------------------------------------------
+loadAll();
+</script>
+</body>
+</html>
