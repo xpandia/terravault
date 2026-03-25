@@ -236,9 +236,111 @@ tr:hover td{background:rgba(250,247,242,.5)}
 .lang-option:last-child{border-radius:0 0 var(--radius-sm) var(--radius-sm)}
 .lang-option:hover{background:var(--slate-100)}
 .lang-option.active{background:rgba(5,150,105,.08);color:var(--emerald-700);font-weight:600}
+
+/* === AHA MOMENT ENHANCEMENTS === */
+
+/* Confetti canvas */
+#confettiCanvas{position:fixed;inset:0;z-index:9999;pointer-events:none}
+
+/* Buy flow multi-step modal */
+.buy-step{display:none;animation:fadeSlideIn .35s ease}
+.buy-step.active{display:block}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+.step-indicators{display:flex;gap:4px;margin-bottom:20px}
+.step-dot{flex:1;height:4px;border-radius:2px;background:var(--slate-200);transition:background .4s}
+.step-dot.done{background:var(--emerald-600)}
+.step-dot.current{background:var(--gold)}
+
+/* Blockchain processing animation */
+.blockchain-viz{background:var(--slate-900);border-radius:var(--radius-sm);padding:20px;color:#fff;font-family:'SF Mono',Monaco,Consolas,monospace;font-size:.75rem;overflow:hidden;position:relative}
+.blockchain-viz .chain-blocks{display:flex;gap:8px;align-items:center;margin-bottom:14px;overflow:hidden}
+.chain-block{width:42px;height:42px;border-radius:6px;background:var(--emerald-800);display:flex;align-items:center;justify-content:center;font-size:.65rem;color:var(--gold);flex-shrink:0;animation:blockAppear .4s ease backwards;border:1px solid var(--emerald-600)}
+.chain-block:nth-child(1){animation-delay:.0s}
+.chain-block:nth-child(2){animation-delay:.3s}
+.chain-block:nth-child(3){animation-delay:.6s}
+.chain-block:nth-child(4){animation-delay:.9s}
+.chain-block:nth-child(5){animation-delay:1.2s}
+.chain-block.new{background:var(--gold-dark);border-color:var(--gold);animation-delay:1.5s}
+.chain-connector{width:16px;height:2px;background:var(--emerald-600);flex-shrink:0;animation:blockAppear .3s ease backwards}
+.chain-connector:nth-of-type(2){animation-delay:.15s}
+.chain-connector:nth-of-type(4){animation-delay:.45s}
+.chain-connector:nth-of-type(6){animation-delay:.75s}
+.chain-connector:nth-of-type(8){animation-delay:1.05s}
+.chain-connector:nth-of-type(10){animation-delay:1.35s}
+@keyframes blockAppear{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:scale(1)}}
+
+.tx-hash{color:var(--gold);word-break:break-all;margin-top:6px;min-height:1.2em}
+.tx-hash-typing{border-right:2px solid var(--gold);animation:blink .6s step-end infinite}
+@keyframes blink{50%{border-color:transparent}}
+
+.processing-spinner{width:40px;height:40px;border:3px solid rgba(255,255,255,.15);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px}
+
+/* Success state */
+.success-card{text-align:center;padding:20px 10px}
+.success-icon{font-size:3.5rem;margin-bottom:8px;animation:successPop .5s ease}
+@keyframes successPop{0%{transform:scale(0)}60%{transform:scale(1.2)}100%{transform:scale(1)}}
+.success-ownership{display:inline-block;padding:8px 20px;background:linear-gradient(135deg,var(--emerald-800),var(--emerald-700));color:#fff;border-radius:20px;font-size:.88rem;font-weight:700;margin:10px 0;animation:fadeSlideIn .5s ease .3s backwards}
+.success-details{display:flex;justify-content:center;gap:24px;margin:16px 0;font-size:.8rem;color:var(--slate-500)}
+.success-details strong{color:var(--slate-800)}
+
+/* Portfolio glow for new holdings */
+@keyframes portfolioGlow{0%,100%{box-shadow:0 0 0 0 rgba(16,185,129,0)}50%{box-shadow:0 0 20px 4px rgba(16,185,129,.35)}}
+.holding-glow{animation:portfolioGlow 1.5s ease 3}
+
+/* Portfolio sparkline */
+.sparkline{display:inline-flex;align-items:flex-end;gap:1px;height:20px;vertical-align:middle}
+.sparkline-bar{width:4px;border-radius:1px;background:var(--emerald-500);transition:height .3s}
+
+/* Portfolio ownership pie slice */
+.ownership-slice{display:inline-block;width:24px;height:24px;border-radius:50%;vertical-align:middle;margin-right:4px;border:2px solid var(--emerald-700)}
+
+/* Yield earned badge */
+.yield-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;background:#dcfce7;border-radius:10px;font-size:.72rem;font-weight:600;color:#15803d}
+
+/* Animated counter */
+@keyframes countUp{from{opacity:.5}to{opacity:1}}
+
+/* Property card hot badge */
+.hot-badge{position:absolute;top:12px;right:12px;z-index:3;background:var(--red);color:#fff;font-size:.65rem;font-weight:700;padding:3px 10px;border-radius:12px;text-transform:uppercase;letter-spacing:.5px;animation:hotPulse 2s ease infinite}
+@keyframes hotPulse{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.5)}50%{box-shadow:0 0 12px 4px rgba(239,68,68,.3)}}
+
+/* Occupancy bar */
+.occupancy-bar{height:4px;background:var(--slate-200);border-radius:2px;overflow:hidden;margin-top:2px}
+.occupancy-fill{height:100%;border-radius:2px;background:var(--green);transition:width .6s ease}
+
+/* Token progress animation on purchase */
+.progress-fill.animate-purchase{animation:progressPulse 1s ease}
+@keyframes progressPulse{0%{box-shadow:0 0 0 0 rgba(212,165,116,.6)}50%{box-shadow:0 0 12px 3px rgba(212,165,116,.4)}100%{box-shadow:0 0 0 0 rgba(212,165,116,0)}}
+
+/* KYC verification step animation */
+.kyc-step-animated{display:flex;align-items:center;gap:12px;margin-bottom:18px;opacity:.4;transform:translateX(-8px);transition:all .4s ease}
+.kyc-step-animated.completed{opacity:1;transform:translateX(0)}
+.kyc-step-check{width:28px;height:28px;border-radius:50%;background:var(--slate-200);display:flex;align-items:center;justify-content:center;font-size:.8rem;transition:all .4s ease;flex-shrink:0}
+.kyc-step-animated.completed .kyc-step-check{background:var(--green);color:#fff;animation:checkPop .4s ease}
+@keyframes checkPop{0%{transform:scale(0)}60%{transform:scale(1.3)}100%{transform:scale(1)}}
+
+/* Verified badge shine */
+.verified-badge-shine{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;background:linear-gradient(135deg,#dcfce7,#bbf7d0);border:1px solid #86efac;border-radius:20px;font-size:.82rem;font-weight:700;color:#15803d;position:relative;overflow:hidden}
+.verified-badge-shine::after{content:'';position:absolute;top:-50%;left:-50%;width:30px;height:200%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent);transform:rotate(25deg);animation:shine 2.5s ease infinite}
+@keyframes shine{0%{left:-50%}100%{left:150%}}
+
+/* Yield distribution animation */
+.yield-coin{position:fixed;z-index:9998;font-size:1.2rem;pointer-events:none;animation:coinFly 1.2s ease-in forwards}
+@keyframes coinFly{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.4)}}
+
+.yield-receipt{animation:fadeSlideIn .4s ease;background:var(--cream);border:1px solid var(--slate-200);border-radius:var(--radius-sm);padding:16px;margin-top:16px}
+.yield-receipt-line{display:flex;justify-content:space-between;padding:6px 0;font-size:.82rem;border-bottom:1px solid var(--slate-100)}
+.yield-receipt-line:last-child{border-bottom:none;font-weight:700;color:var(--emerald-800)}
+
+/* Simulate button */
+.btn-simulate{background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:#fff;border:none;padding:10px 20px;border-radius:var(--radius-sm);font-size:.82rem;font-weight:600;cursor:pointer;transition:all .2s;margin-bottom:20px}
+.btn-simulate:hover{opacity:.9;transform:translateY(-1px)}
 </style>
 </head>
 <body>
+
+<canvas id="confettiCanvas"></canvas>
 
 <!-- Language Selector -->
 <div class="lang-selector">
@@ -397,6 +499,9 @@ tr:hover td{background:rgba(250,247,242,.5)}
           <div class="countdown" id="yieldCountdown"></div>
         </div>
       </div>
+      <button class="btn-simulate" onclick="simulateYieldDistribution()">&#128176; Simulate Yield Distribution</button>
+      <div id="yieldReceipt"></div>
+
       <div class="grid grid-2" style="margin-bottom:24px">
         <div class="card">
           <div class="card-body">
@@ -870,9 +975,11 @@ function renderProperties(filter) {
     const available = p.totalTokens - p.tokensSold;
     const imgClass = p.id === 0 ? 'prop-img-cdmx' : p.id === 1 ? 'prop-img-medellin' : 'prop-img-saopaulo';
     const badgeClass = p.propertyType === 'Commercial' ? 'badge-commercial' : p.propertyType === 'Residential' ? 'badge-residential' : 'badge-mixed';
+    const isHot = p.apy >= 9 || pctSold >= 70;
     grid.innerHTML += `
-      <div class="card property-card" onclick="openPropertyModal(${p.id})">
+      <div class="card property-card" onclick="openPropertyModal(${p.id})" id="propCard-${p.id}">
         <div class="property-img">
+          ${isHot ? '<div class="hot-badge">Hot</div>' : ''}
           <div class="property-img-bg ${imgClass}">
             <svg class="skyline" viewBox="0 0 400 80"><rect x="10" y="20" width="30" height="60"/><rect x="50" y="35" width="25" height="45"/><rect x="85" y="10" width="20" height="70"/><rect x="115" y="40" width="35" height="40"/><rect x="160" y="15" width="22" height="65"/><rect x="192" y="30" width="28" height="50"/><rect x="230" y="5" width="18" height="75"/><rect x="258" y="25" width="32" height="55"/><rect x="300" y="18" width="24" height="62"/><rect x="334" y="38" width="30" height="42"/><rect x="374" y="22" width="20" height="58"/></svg>
             <div>
@@ -894,12 +1001,17 @@ function renderProperties(filter) {
             <span class="prop-label">Token Price</span>
             <span class="prop-val">$${p.pricePerTokenUSD}</span>
           </div>
-          <div class="progress-bar"><div class="progress-fill" style="width:${pctSold}%"></div></div>
+          <div class="property-row">
+            <span class="prop-label">Occupancy</span>
+            <span class="prop-val">${p.occupancy}%</span>
+          </div>
+          <div class="occupancy-bar"><div class="occupancy-fill" style="width:${p.occupancy}%"></div></div>
+          <div class="progress-bar"><div class="progress-fill" id="progFill-${p.id}" style="width:${pctSold}%"></div></div>
           <div class="token-info">
-            <span>${available.toLocaleString()} available</span>
+            <span id="avail-${p.id}">${available.toLocaleString()} available</span>
             <span>${p.tokensSold.toLocaleString()} / ${p.totalTokens.toLocaleString()} sold</span>
           </div>
-          <button class="btn-invest" onclick="event.stopPropagation();openPropertyModal(${p.id})">Invest</button>
+          <button class="btn-invest" onclick="event.stopPropagation();openBuyFlow(${p.id})">Buy Tokens</button>
         </div>
       </div>`;
   });
@@ -954,27 +1066,9 @@ function openPropertyModal(id) {
     </div>
     <div class="modal-section">
       <h4>${t('buy_tokens_title')}</h4>
-      <div class="buy-form">
-        <div class="form-group">
-          <label>${t('token_amount')}</label>
-          <input class="form-input" type="number" id="buyAmount" min="1" max="${available}" value="10" oninput="updateBuyPreview(${p.pricePerTokenUSD})">
-        </div>
-        <div class="cost-preview">
-          <span class="cp-label">Subtotal</span>
-          <span class="cp-value" id="buySubtotal">$${10 * p.pricePerTokenUSD}</span>
-        </div>
-        <div class="cost-preview" style="border-top:none;padding-top:0">
-          <span class="cp-label">Platform Fee (0.5%)</span>
-          <span class="cp-value" id="buyFee">$${(10 * p.pricePerTokenUSD * 0.005).toFixed(2)}</span>
-        </div>
-        <div class="cost-preview" style="border-top:2px solid var(--slate-300);font-size:1rem">
-          <span class="cp-label" style="font-weight:700">Total</span>
-          <span class="cp-value" id="buyTotal" style="color:var(--emerald-800)">$${(10 * p.pricePerTokenUSD * 1.005).toFixed(2)}</span>
-        </div>
-        <button class="btn btn-gold" style="width:100%;margin-top:12px;padding:14px;font-size:.95rem" onclick="buyTokens(${p.id})">
-          Buy Tokens
-        </button>
-      </div>
+      <button class="btn btn-gold" style="width:100%;padding:14px;font-size:.95rem" onclick="closeModal();openBuyFlow(${p.id})">
+        Buy Tokens
+      </button>
     </div>
     <p style="font-size:.7rem;color:var(--slate-400);margin-top:12px;text-align:center">
       Token Contract: ${p.tokenContract}<br>
@@ -990,26 +1084,240 @@ function closeModal() {
 function updateBuyPreview(price) {
   const amt = parseInt(document.getElementById('buyAmount').value) || 0;
   const sub = amt * price;
-  const fee = sub * 0.005;
   document.getElementById('buySubtotal').textContent = '$' + sub.toLocaleString();
-  document.getElementById('buyFee').textContent = '$' + fee.toFixed(2);
-  document.getElementById('buyTotal').textContent = '$' + (sub + fee).toFixed(2);
 }
 
-async function buyTokens(propertyId) {
+// Multi-step buy flow
+let buyFlowProperty = null;
+let buyFlowStep = 1;
+
+function openBuyFlow(id) {
+  const p = properties.find(x => x.id === id);
+  if (!p) return;
+  buyFlowProperty = p;
+  buyFlowStep = 1;
+  const available = p.totalTokens - p.tokensSold;
+  document.getElementById('modalTitle').textContent = 'Buy ' + p.name + ' Tokens';
+  document.getElementById('modalBody').innerHTML = `
+    <div class="step-indicators">
+      <div class="step-dot current" id="sd1"></div>
+      <div class="step-dot" id="sd2"></div>
+      <div class="step-dot" id="sd3"></div>
+      <div class="step-dot" id="sd4"></div>
+      <div class="step-dot" id="sd5"></div>
+    </div>
+
+    <!-- Step 1: Amount -->
+    <div class="buy-step active" id="buyStep1">
+      <h4 style="font-size:.95rem;font-weight:700;margin-bottom:16px">Select Amount</h4>
+      <div class="buy-form">
+        <div class="form-group">
+          <label>Number of Tokens</label>
+          <input class="form-input" type="number" id="buyAmount" min="1" max="${available}" value="10" oninput="updateBuyPreview(${p.pricePerTokenUSD})" style="font-size:1.1rem;font-weight:700;text-align:center">
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:14px">
+          <button class="btn btn-outline btn-xs" onclick="document.getElementById('buyAmount').value=5;updateBuyPreview(${p.pricePerTokenUSD})">5 tokens</button>
+          <button class="btn btn-outline btn-xs" onclick="document.getElementById('buyAmount').value=10;updateBuyPreview(${p.pricePerTokenUSD})">10 tokens</button>
+          <button class="btn btn-outline btn-xs" onclick="document.getElementById('buyAmount').value=50;updateBuyPreview(${p.pricePerTokenUSD})">50 tokens</button>
+          <button class="btn btn-outline btn-xs" onclick="document.getElementById('buyAmount').value=100;updateBuyPreview(${p.pricePerTokenUSD})">100 tokens</button>
+        </div>
+        <div style="font-size:.75rem;color:var(--slate-500);margin-bottom:6px">${available.toLocaleString()} tokens available at $${p.pricePerTokenUSD} each</div>
+        <div class="cost-preview">
+          <span class="cp-label">Subtotal</span>
+          <span class="cp-value" id="buySubtotal">$${10 * p.pricePerTokenUSD}</span>
+        </div>
+        <button class="btn btn-primary" style="width:100%;margin-top:12px" onclick="goToBuyStep(2)">Continue to Review</button>
+      </div>
+    </div>
+
+    <!-- Step 2: Review -->
+    <div class="buy-step" id="buyStep2">
+      <h4 style="font-size:.95rem;font-weight:700;margin-bottom:16px">Review Order</h4>
+      <div style="background:var(--cream);border-radius:var(--radius-sm);padding:16px;margin-bottom:16px">
+        <div style="font-weight:700;font-size:1rem;margin-bottom:12px">${p.name}</div>
+        <div style="font-size:.78rem;color:var(--slate-500);margin-bottom:12px">${p.city}, ${p.country}</div>
+        <div class="cost-preview"><span class="cp-label">Tokens</span><span class="cp-value" id="reviewTokens">10</span></div>
+        <div class="cost-preview" style="border-top:none;padding-top:0"><span class="cp-label">Price per Token</span><span class="cp-value">$${p.pricePerTokenUSD}</span></div>
+        <div class="cost-preview" style="border-top:none;padding-top:0"><span class="cp-label">Platform Fee (0.5%)</span><span class="cp-value" id="buyFee">$${(10 * p.pricePerTokenUSD * 0.005).toFixed(2)}</span></div>
+        <div class="cost-preview" style="border-top:2px solid var(--slate-300);font-size:1.1rem"><span class="cp-label" style="font-weight:700">Total</span><span class="cp-value" id="buyTotal" style="color:var(--emerald-800)">$${(10 * p.pricePerTokenUSD * 1.005).toFixed(2)}</span></div>
+      </div>
+      <div style="display:flex;gap:10px">
+        <button class="btn btn-outline" style="flex:1" onclick="goToBuyStep(1)">Back</button>
+        <button class="btn btn-gold" style="flex:2" onclick="goToBuyStep(3)">Confirm Purchase</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Confirm (brief) -->
+    <div class="buy-step" id="buyStep3" style="text-align:center;padding:30px 10px">
+      <div style="font-size:2.5rem;margin-bottom:10px">&#128274;</div>
+      <h4 style="font-size:1rem;font-weight:700;margin-bottom:8px">Confirm Transaction</h4>
+      <p style="font-size:.82rem;color:var(--slate-500);margin-bottom:20px">You are about to purchase <strong id="confirmTokens">10</strong> tokens of <strong>${p.name}</strong></p>
+      <button class="btn btn-gold" style="width:100%;padding:14px;font-size:1rem" onclick="executeBuy(${p.id})">Sign & Execute</button>
+    </div>
+
+    <!-- Step 4: Processing -->
+    <div class="buy-step" id="buyStep4" style="text-align:center;padding:20px 0">
+      <div class="processing-spinner"></div>
+      <h4 style="font-size:1rem;font-weight:700;margin-bottom:16px">Processing Transaction...</h4>
+      <div class="blockchain-viz">
+        <div style="font-size:.68rem;color:var(--slate-400);margin-bottom:8px">BLOCKCHAIN VERIFICATION</div>
+        <div class="chain-blocks">
+          <div class="chain-block">#421</div>
+          <div class="chain-connector"></div>
+          <div class="chain-block">#422</div>
+          <div class="chain-connector"></div>
+          <div class="chain-block">#423</div>
+          <div class="chain-connector"></div>
+          <div class="chain-block">#424</div>
+          <div class="chain-connector"></div>
+          <div class="chain-block new">&#9889;NEW</div>
+        </div>
+        <div style="font-size:.68rem;color:var(--slate-400);margin-top:8px">Transaction Hash:</div>
+        <div class="tx-hash tx-hash-typing" id="txHashDisplay"></div>
+      </div>
+    </div>
+
+    <!-- Step 5: Success -->
+    <div class="buy-step" id="buyStep5">
+      <div class="success-card">
+        <div class="success-icon">&#127881;</div>
+        <h3 style="font-size:1.15rem;font-weight:800;color:var(--slate-900);margin-bottom:4px">Transaction Successful!</h3>
+        <div class="success-ownership" id="successOwnership">You now own 0.4% of ${p.name}!</div>
+        <div class="success-details">
+          <div><strong id="successTokens">10</strong><br>Tokens</div>
+          <div><strong id="successTotal">$0</strong><br>Invested</div>
+          <div><strong>${p.apy}%</strong><br>Est. APY</div>
+        </div>
+        <button class="btn btn-primary" style="width:100%;margin-top:12px" onclick="closeModal();switchToTab('portfolio')">View in Portfolio</button>
+        <button class="btn btn-outline" style="width:100%;margin-top:8px" onclick="closeModal()">Done</button>
+      </div>
+    </div>`;
+  document.getElementById('propertyModal').classList.add('active');
+}
+
+function goToBuyStep(step) {
+  buyFlowStep = step;
+  const tokens = parseInt(document.getElementById('buyAmount')?.value) || 10;
+  const price = buyFlowProperty.pricePerTokenUSD;
+  // Update step indicators
+  for (let i = 1; i <= 5; i++) {
+    const dot = document.getElementById('sd' + i);
+    dot.className = 'step-dot' + (i < step ? ' done' : i === step ? ' current' : '');
+  }
+  // Hide all steps, show current
+  for (let i = 1; i <= 5; i++) {
+    document.getElementById('buyStep' + i).classList.toggle('active', i === step);
+  }
+  // Populate review/confirm values
+  if (step === 2) {
+    document.getElementById('reviewTokens').textContent = tokens;
+    const fee = (tokens * price * 0.005).toFixed(2);
+    const total = (tokens * price * 1.005).toFixed(2);
+    document.getElementById('buyFee').textContent = '$' + fee;
+    document.getElementById('buyTotal').textContent = '$' + total;
+  }
+  if (step === 3) {
+    document.getElementById('confirmTokens').textContent = tokens;
+  }
+}
+
+async function executeBuy(propertyId) {
   const tokens = parseInt(document.getElementById('buyAmount').value);
   if (!tokens || tokens < 1) return showToast('Enter a valid amount', 'error');
+  goToBuyStep(4);
+
+  // Animate tx hash typing
+  const fakeHash = '0x' + Array.from({length:64}, () => '0123456789abcdef'[Math.floor(Math.random()*16)]).join('');
+  const hashEl = document.getElementById('txHashDisplay');
+  let idx = 0;
+  const typeInterval = setInterval(() => {
+    if (idx <= fakeHash.length) {
+      hashEl.textContent = fakeHash.slice(0, idx);
+      idx++;
+    } else {
+      clearInterval(typeInterval);
+    }
+  }, 30);
+
+  // API call in parallel
   const res = await api('/api/v1/demo/buy', {
     method: 'POST',
     body: JSON.stringify({ walletAddress: WALLET, propertyId, tokens })
   });
+
+  // Ensure minimum processing visual time
+  await new Promise(r => setTimeout(r, 2200));
+  clearInterval(typeInterval);
+  hashEl.textContent = fakeHash;
+
   if (res && res.success) {
-    showToast(`Purchased ${tokens} tokens successfully!`);
-    closeModal();
+    const p = buyFlowProperty;
+    const price = p.pricePerTokenUSD;
+    const total = (tokens * price * 1.005).toFixed(2);
+    const ownershipPct = ((tokens / p.totalTokens) * 100).toFixed(2);
+    goToBuyStep(5);
+    document.getElementById('successTokens').textContent = tokens;
+    document.getElementById('successTotal').textContent = '$' + total;
+    document.getElementById('successOwnership').textContent = `You now own ${ownershipPct}% of ${p.name}!`;
+    fireConfetti();
+    // Refresh data
     await loadAll();
   } else {
     showToast(res?.error || 'Purchase failed', 'error');
+    closeModal();
   }
+}
+
+function switchToTab(tab) {
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  document.querySelector(`.nav-item[data-tab="${tab}"]`).classList.add('active');
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  document.getElementById('pageTitle').textContent = tab.charAt(0).toUpperCase() + tab.slice(1);
+  if (tab === 'portfolio') loadPortfolio();
+  if (tab === 'yields') loadYields();
+  if (tab === 'kyc') loadKYC();
+}
+
+// Confetti
+function fireConfetti() {
+  const canvas = document.getElementById('confettiCanvas');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const ctx = canvas.getContext('2d');
+  const particles = [];
+  const colors = ['#10b981','#d4a574','#3b82f6','#ef4444','#f59e0b','#8b5cf6','#ec4899'];
+  for (let i = 0; i < 120; i++) {
+    particles.push({
+      x: canvas.width/2 + (Math.random()-0.5)*200,
+      y: canvas.height/2,
+      vx: (Math.random()-0.5)*12,
+      vy: -Math.random()*14 - 4,
+      w: Math.random()*8+4, h: Math.random()*6+3,
+      color: colors[Math.floor(Math.random()*colors.length)],
+      rot: Math.random()*360, vr: (Math.random()-0.5)*10,
+      life: 1
+    });
+  }
+  function draw() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    let alive = false;
+    particles.forEach(p => {
+      if (p.life <= 0) return;
+      alive = true;
+      p.x += p.vx; p.y += p.vy; p.vy += 0.3; p.rot += p.vr; p.life -= 0.008;
+      ctx.save();
+      ctx.translate(p.x,p.y);
+      ctx.rotate(p.rot*Math.PI/180);
+      ctx.globalAlpha = Math.max(0,p.life);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
+      ctx.restore();
+    });
+    if (alive) requestAnimationFrame(draw);
+    else ctx.clearRect(0,0,canvas.width,canvas.height);
+  }
+  draw();
 }
 
 // ---------------------------------------------------------------------------
@@ -1030,19 +1338,60 @@ async function loadPortfolio() {
   document.getElementById('dashYieldMonth').textContent = '$' + (res.totalYieldEarned / 3).toFixed(2);
   document.getElementById('dashPropsOwned').textContent = res.holdingCount;
 
-  // Table
+  // Table with sparklines, ownership slices, yield badges
   const tbody = document.getElementById('portTable');
   tbody.innerHTML = '';
   res.holdings.forEach(h => {
     const pnlColor = h.pnl >= 0 ? 'var(--green)' : 'var(--red)';
     const pnlPrefix = h.pnl >= 0 ? '+' : '';
-    tbody.innerHTML += `<tr>
-      <td><strong>${h.propertyName}</strong><br><span style="font-size:.7rem;color:var(--slate-500)">${h.location}</span></td>
+    const pnlArrow = h.pnl >= 0 ? '&#9650;' : '&#9660;';
+    // Generate mini sparkline data (7 points simulated from cost basis to current)
+    const sparkData = [];
+    const base = h.costBasis / h.tokens;
+    const curr = h.currentValue / h.tokens;
+    for (let i = 0; i < 7; i++) {
+      const t = i / 6;
+      sparkData.push(base + (curr - base) * t + (Math.random()-0.5) * base * 0.03);
+    }
+    const sparkMax = Math.max(...sparkData);
+    const sparkMin = Math.min(...sparkData);
+    const sparkRange = sparkMax - sparkMin || 1;
+    const sparkBars = sparkData.map(v => {
+      const h2 = Math.max(3, ((v - sparkMin) / sparkRange) * 18);
+      const color = v >= base ? 'var(--green)' : 'var(--red)';
+      return `<div class="sparkline-bar" style="height:${h2}px;background:${color}"></div>`;
+    }).join('');
+
+    // Ownership percentage
+    const prop = properties.find(pp => pp.name === h.propertyName);
+    const ownershipPct = prop ? ((h.tokens / prop.totalTokens) * 100).toFixed(2) : '?';
+    const sliceDeg = prop ? (h.tokens / prop.totalTokens) * 360 : 0;
+
+    const isNewPurchase = h._isNew;
+    const glowClass = isNewPurchase ? 'holding-glow' : '';
+
+    tbody.innerHTML += `<tr class="${glowClass}">
+      <td>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="ownership-slice" style="background:conic-gradient(var(--emerald-700) 0deg ${sliceDeg}deg, var(--slate-200) ${sliceDeg}deg 360deg)" title="${ownershipPct}% ownership"></span>
+          <div>
+            <strong>${h.propertyName}</strong><br>
+            <span style="font-size:.7rem;color:var(--slate-500)">${h.location}</span><br>
+            <span style="font-size:.68rem;color:var(--emerald-700);font-weight:600">Your ownership: ${ownershipPct}%</span>
+          </div>
+        </div>
+      </td>
       <td>${h.tokens}</td>
       <td>$${h.costBasis.toLocaleString()}</td>
-      <td>$${h.currentValue.toLocaleString()}</td>
-      <td style="color:${pnlColor};font-weight:600">${pnlPrefix}$${h.pnl.toFixed(2)} (${pnlPrefix}${h.pnlPercent}%)</td>
-      <td style="color:var(--green)">$${h.yieldEarned.toFixed(2)}</td>
+      <td>
+        <div>$${h.currentValue.toLocaleString()}</div>
+        <div class="sparkline">${sparkBars}</div>
+      </td>
+      <td>
+        <span style="color:${pnlColor};font-weight:700">${pnlArrow} ${pnlPrefix}$${h.pnl.toFixed(2)}</span><br>
+        <span style="font-size:.72rem;color:${pnlColor}">${pnlPrefix}${h.pnlPercent}%</span>
+      </td>
+      <td><span class="yield-badge">&#128176; $${h.yieldEarned.toFixed(2)}</span></td>
       <td><button class="btn btn-outline btn-xs">Sell</button></td>
     </tr>`;
   });
@@ -1173,11 +1522,135 @@ async function submitKYC(e) {
     body: JSON.stringify(data)
   });
   if (res && res.requestId) {
-    showToast('KYC submitted successfully!');
-    loadKYC();
+    // Show animated verification steps
+    showKYCVerificationAnimation();
   } else {
     showToast('Failed to submit KYC', 'error');
   }
+}
+
+function showKYCVerificationAnimation() {
+  const steps = [
+    { label: 'Document Check', desc: 'Verifying uploaded documents...' },
+    { label: 'Identity Match', desc: 'Cross-referencing identity databases...' },
+    { label: 'Compliance Review', desc: 'AML/FATCA compliance screening...' },
+    { label: 'Approved', desc: 'Verification complete!' }
+  ];
+  const modal = document.getElementById('modalBody');
+  document.getElementById('modalTitle').textContent = 'KYC Verification';
+  modal.innerHTML = `
+    <div style="padding:20px 0">
+      ${steps.map((s, i) => `
+        <div class="kyc-step-animated" id="kycAnimStep${i}">
+          <div class="kyc-step-check" id="kycAnimCheck${i}">&#9679;</div>
+          <div>
+            <div style="font-size:.88rem;font-weight:700;color:var(--slate-800)">${s.label}</div>
+            <div style="font-size:.75rem;color:var(--slate-500)">${s.desc}</div>
+          </div>
+        </div>
+      `).join('')}
+      <div id="kycVerifiedBadgeContainer" style="text-align:center;margin-top:24px;display:none">
+        <span class="verified-badge-shine">&#9989; Verified Investor</span>
+      </div>
+    </div>`;
+  document.getElementById('propertyModal').classList.add('active');
+
+  // Animate steps sequentially
+  steps.forEach((_, i) => {
+    setTimeout(() => {
+      const step = document.getElementById('kycAnimStep' + i);
+      const check = document.getElementById('kycAnimCheck' + i);
+      step.classList.add('completed');
+      check.innerHTML = '&#10003;';
+      if (i === steps.length - 1) {
+        setTimeout(() => {
+          document.getElementById('kycVerifiedBadgeContainer').style.display = 'block';
+          showToast('KYC Verified Successfully!');
+          setTimeout(() => { closeModal(); loadKYC(); }, 2000);
+        }, 600);
+      }
+    }, 800 * (i + 1));
+  });
+}
+
+// ---------------------------------------------------------------------------
+//  Yield Distribution Simulation
+// ---------------------------------------------------------------------------
+async function simulateYieldDistribution() {
+  if (!portfolio || !portfolio.holdings || !portfolio.holdings.length) {
+    showToast('No holdings to distribute yield to. Buy tokens first!', 'error');
+    return;
+  }
+
+  const holdings = portfolio.holdings;
+  const distributions = holdings.map(h => {
+    const monthlyYield = (h.currentValue * 0.08 / 12); // ~8% APY monthly
+    return { name: h.propertyName, amount: monthlyYield };
+  });
+
+  // Animate coins flying to balance
+  const balanceEl = document.getElementById('yieldTotal');
+  const balanceRect = balanceEl.getBoundingClientRect();
+
+  distributions.forEach((d, i) => {
+    setTimeout(() => {
+      // Create coin elements
+      for (let c = 0; c < 3; c++) {
+        const coin = document.createElement('div');
+        coin.className = 'yield-coin';
+        coin.textContent = '\uD83E\uDE99';
+        const startX = 200 + i * 150 + Math.random() * 50;
+        const startY = 400 + Math.random() * 80;
+        coin.style.left = startX + 'px';
+        coin.style.top = startY + 'px';
+        coin.style.setProperty('--dx', (balanceRect.left - startX) + 'px');
+        coin.style.setProperty('--dy', (balanceRect.top - startY) + 'px');
+        coin.style.animationDelay = (c * 0.15) + 's';
+        document.body.appendChild(coin);
+        setTimeout(() => coin.remove(), 1500);
+      }
+    }, i * 400);
+  });
+
+  // After animation, update balance and show receipt
+  const totalDistributed = distributions.reduce((s, d) => s + d.amount, 0);
+  setTimeout(() => {
+    // Animate counter
+    const startVal = parseFloat(balanceEl.textContent.replace(/[$,]/g, '')) || 0;
+    const endVal = startVal + totalDistributed;
+    animateCounter(balanceEl, startVal, endVal, 1200);
+
+    // Show receipt
+    const receipt = document.getElementById('yieldReceipt');
+    receipt.innerHTML = `
+      <div class="yield-receipt">
+        <div style="font-weight:700;font-size:.9rem;margin-bottom:10px">&#128203; Distribution Receipt</div>
+        ${distributions.map(d => `
+          <div class="yield-receipt-line">
+            <span>${d.name}</span>
+            <span style="color:var(--green);font-weight:600">+$${d.amount.toFixed(2)}</span>
+          </div>
+        `).join('')}
+        <div class="yield-receipt-line">
+          <span>Total Distributed</span>
+          <span>$${totalDistributed.toFixed(2)}</span>
+        </div>
+      </div>`;
+    showToast(`Yield distributed: +$${totalDistributed.toFixed(2)}`);
+  }, distributions.length * 400 + 800);
+}
+
+function animateCounter(el, from, to, duration) {
+  const start = performance.now();
+  function update(now) {
+    const elapsed = now - start;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const current = from + (to - from) * eased;
+    el.textContent = '$' + current.toFixed(2);
+    if (progress < 1) requestAnimationFrame(update);
+  }
+  requestAnimationFrame(update);
 }
 
 // ---------------------------------------------------------------------------
