@@ -1237,9 +1237,32 @@
                 padding: 0 20px;
             }
         }
+
+        /* Language Selector */
+        .lang-selector{position:fixed;top:20px;right:100px;z-index:1001}
+        @media(max-width:768px){.lang-selector{right:60px;top:16px}}
+        .lang-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:7px 14px;font-size:.8rem;cursor:pointer;display:flex;align-items:center;gap:6px;color:rgba(255,255,255,.8);font-weight:500;backdrop-filter:blur(8px);transition:all .2s}
+        .lang-btn:hover{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.35)}
+        .lang-dropdown{position:absolute;top:calc(100% + 6px);right:0;background:var(--white);border:1px solid rgba(0,0,0,.08);border-radius:10px;box-shadow:0 10px 40px rgba(0,0,0,.15);min-width:160px;opacity:0;pointer-events:none;transform:translateY(-4px);transition:all .2s}
+        .lang-dropdown.open{opacity:1;pointer-events:auto;transform:translateY(0)}
+        .lang-option{display:flex;align-items:center;gap:8px;padding:10px 16px;font-size:.82rem;color:var(--gray-700);cursor:pointer;transition:background .15s}
+        .lang-option:first-child{border-radius:10px 10px 0 0}
+        .lang-option:last-child{border-radius:0 0 10px 10px}
+        .lang-option:hover{background:var(--cream)}
+        .lang-option.active{background:rgba(6,78,59,.06);color:var(--emerald-deep);font-weight:600}
     </style>
 </head>
 <body>
+
+    <!-- Language Selector -->
+    <div class="lang-selector">
+      <button class="lang-btn" onclick="toggleLangDropdown()">&#127760; <span id="currentLangLabel">English</span> &#9662;</button>
+      <div class="lang-dropdown" id="langDropdown">
+        <div class="lang-option active" data-lang="en" onclick="setLanguage('en')">&#127468;&#127463; English</div>
+        <div class="lang-option" data-lang="zh" onclick="setLanguage('zh')">&#127469;&#127472; &#20013;&#25991;</div>
+        <div class="lang-option" data-lang="es" onclick="setLanguage('es')">&#127466;&#127480; Espa&#241;ol</div>
+      </div>
+    </div>
 
     <!-- NAV -->
     <nav>
@@ -1249,12 +1272,12 @@
                 <span class="nav-logo-text">Terravault</span>
             </a>
             <ul class="nav-links" id="navLinks">
-                <li><a href="#problem">Problem</a></li>
-                <li><a href="#solution">Solution</a></li>
-                <li><a href="#how">How it Works</a></li>
-                <li><a href="#assets">Assets</a></li>
-                <li><a href="#security">Security</a></li>
-                <li><a href="#cta" class="nav-cta">Get Early Access</a></li>
+                <li><a href="#problem" data-i18n="nav_problem">Problem</a></li>
+                <li><a href="#solution" data-i18n="nav_solution">Solution</a></li>
+                <li><a href="#how" data-i18n="nav_how">How it Works</a></li>
+                <li><a href="#assets" data-i18n="nav_assets">Assets</a></li>
+                <li><a href="#security" data-i18n="nav_security">Security</a></li>
+                <li><a href="#cta" class="nav-cta" data-i18n="nav_cta">Get Early Access</a></li>
             </ul>
             <button class="nav-mobile-toggle" id="navToggle" aria-label="Toggle navigation">
                 <span></span>
@@ -1288,24 +1311,24 @@
                     <span class="hero-badge-dot"></span>
                     RWA Demo Day &middot; Hong Kong Web3 Festival
                 </div>
-                <h1 class="reveal reveal-delay-1">Own the World.<br><span class="gold">One Token</span> at a Time.</h1>
-                <p class="hero-sub reveal reveal-delay-2">Institutional-grade LATAM real estate, tokenized on Ethereum. Fractional ownership, automated yield, full compliance &mdash; starting at $100.</p>
+                <h1 class="reveal reveal-delay-1" data-i18n-html="hero_title">Own the World.<br><span class="gold">One Token</span> at a Time.</h1>
+                <p class="hero-sub reveal reveal-delay-2" data-i18n="hero_sub">Institutional-grade LATAM real estate, tokenized on Ethereum. Fractional ownership, automated yield, full compliance — starting at $100.</p>
                 <div class="hero-actions reveal reveal-delay-3">
-                    <a href="#cta" class="btn-primary">Start Investing &rarr;</a>
-                    <a href="#how" class="btn-secondary">See How it Works</a>
+                    <a href="#cta" class="btn-primary" data-i18n="hero_cta">Start Investing &rarr;</a>
+                    <a href="#how" class="btn-secondary" data-i18n="hero_cta2">See How it Works</a>
                 </div>
                 <div class="hero-stats reveal reveal-delay-4">
                     <div>
                         <div class="hero-stat-value">$3.2T</div>
-                        <div class="hero-stat-label">LATAM Real Estate Market</div>
+                        <div class="hero-stat-label" data-i18n="stat_latam">LATAM Real Estate Market</div>
                     </div>
                     <div>
                         <div class="hero-stat-value">$100</div>
-                        <div class="hero-stat-label">Minimum Investment</div>
+                        <div class="hero-stat-label" data-i18n="stat_min_invest">Minimum Investment</div>
                     </div>
                     <div>
                         <div class="hero-stat-value">8-14%</div>
-                        <div class="hero-stat-label">Target Annual Yield</div>
+                        <div class="hero-stat-label" data-i18n="stat_annual_yield">Target Annual Yield</div>
                     </div>
                 </div>
             </div>
@@ -1316,9 +1339,9 @@
     <section class="problem" id="problem">
         <div class="container">
             <div class="reveal">
-                <div class="section-label">The Problem</div>
-                <h2 class="section-title">$3.2 Trillion in Value.<br>Locked Behind Borders.</h2>
-                <p class="section-desc">Latin America's real estate market is one of the largest and fastest-growing on Earth, yet nearly inaccessible to most investors.</p>
+                <div class="section-label" data-i18n="problem_label">The Problem</div>
+                <h2 class="section-title" data-i18n-html="problem_title">$3.2 Trillion in Value.<br>Locked Behind Borders.</h2>
+                <p class="section-desc" data-i18n="problem_desc">Latin America's real estate market is one of the largest and fastest-growing on Earth, yet nearly inaccessible to most investors.</p>
             </div>
 
             <div class="problem-grid">
@@ -1326,8 +1349,8 @@
                     <div class="problem-icon">
                         <svg width="24" height="24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
                     </div>
-                    <h3>Cross-Border Barriers</h3>
-                    <p>Foreign ownership laws, fragmented registries, and layers of intermediaries make international investment nearly impossible for individuals.</p>
+                    <h3 data-i18n="prob_card1_title">Cross-Border Barriers</h3>
+                    <p data-i18n="prob_card1_desc">Foreign ownership laws, fragmented registries, and layers of intermediaries make international investment nearly impossible for individuals.</p>
                     <span class="problem-stat">92%</span>
                     <p style="font-size:13px;color:var(--gray-400);margin-top:4px;">of properties inaccessible to retail investors</p>
                 </div>
@@ -1336,8 +1359,8 @@
                     <div class="problem-icon">
                         <svg width="24" height="24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
                     </div>
-                    <h3>Prohibitive Minimums</h3>
-                    <p>Institutional-grade properties require minimum investments of $500K+, locking out the vast majority of the world's growing investor class.</p>
+                    <h3 data-i18n="prob_card2_title">Prohibitive Minimums</h3>
+                    <p data-i18n="prob_card2_desc">Institutional-grade properties require minimum investments of $500K+, locking out the vast majority of the world's growing investor class.</p>
                     <span class="problem-stat">$500K+</span>
                     <p style="font-size:13px;color:var(--gray-400);margin-top:4px;">typical minimum investment</p>
                 </div>
@@ -1346,8 +1369,8 @@
                     <div class="problem-icon">
                         <svg width="24" height="24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                     </div>
-                    <h3>Glacial Settlement</h3>
-                    <p>Traditional real estate transactions take 60-120 days to settle, with legal fees, notarization, and bureaucratic overhead eating into returns.</p>
+                    <h3 data-i18n="prob_card3_title">Glacial Settlement</h3>
+                    <p data-i18n="prob_card3_desc">Traditional real estate transactions take 60-120 days to settle, with legal fees, notarization, and bureaucratic overhead eating into returns.</p>
                     <span class="problem-stat">60-120 days</span>
                     <p style="font-size:13px;color:var(--gray-400);margin-top:4px;">average settlement time</p>
                 </div>
@@ -1356,8 +1379,8 @@
                     <div class="problem-icon">
                         <svg width="24" height="24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                     </div>
-                    <h3>Zero Liquidity</h3>
-                    <p>Once invested, your capital is trapped. There is no secondary market for fractional real estate in LATAM — until now.</p>
+                    <h3 data-i18n="prob_card4_title">Zero Liquidity</h3>
+                    <p data-i18n="prob_card4_desc">Once invested, your capital is trapped. There is no secondary market for fractional real estate in LATAM — until now.</p>
                     <span class="problem-stat">0</span>
                     <p style="font-size:13px;color:var(--gray-400);margin-top:4px;">liquid secondary markets available</p>
                 </div>
@@ -1369,9 +1392,9 @@
     <section class="solution" id="solution">
         <div class="container">
             <div class="reveal">
-                <div class="section-label">The Solution</div>
-                <h2 class="section-title">Real Estate, Reimagined<br>for the Digital Age.</h2>
-                <p class="section-desc">Terravault transforms physical properties into compliant digital securities. Invest globally. Earn locally. Trade freely.</p>
+                <div class="section-label" data-i18n="solution_label">The Solution</div>
+                <h2 class="section-title" data-i18n-html="solution_title">Real Estate, Reimagined<br>for the Digital Age.</h2>
+                <p class="section-desc" data-i18n="solution_desc">Terravault transforms physical properties into compliant digital securities. Invest globally. Earn locally. Trade freely.</p>
             </div>
 
             <div class="solution-features">
@@ -1379,24 +1402,24 @@
                     <span class="solution-feature-icon">
                         <svg width="36" height="36" fill="none" stroke="#d4a574" stroke-width="1.5" stroke-linecap="round"><rect x="4" y="4" width="28" height="28" rx="6"/><line x1="4" y1="14" x2="32" y2="14"/><line x1="14" y1="4" x2="14" y2="14"/></svg>
                     </span>
-                    <h3>Fractional Ownership</h3>
-                    <p>Own a piece of a luxury Bogota penthouse or a Mexico City commercial tower from just $100. ERC-3643 tokens represent verified legal ownership.</p>
+                    <h3 data-i18n="sol_feat1_title">Fractional Ownership</h3>
+                    <p data-i18n="sol_feat1_desc">Own a piece of a luxury Bogota penthouse or a Mexico City commercial tower from just $100. ERC-3643 tokens represent verified legal ownership.</p>
                 </div>
 
                 <div class="solution-feature reveal reveal-delay-2">
                     <span class="solution-feature-icon">
                         <svg width="36" height="36" fill="none" stroke="#d4a574" stroke-width="1.5" stroke-linecap="round"><path d="M18 4v28M4 18h28"/><circle cx="18" cy="18" r="14"/><circle cx="18" cy="18" r="6"/></svg>
                     </span>
-                    <h3>Automated Yield</h3>
-                    <p>Smart contracts distribute rental income directly to your wallet. No intermediaries, no delays. Yield flows as reliably as the blockchain itself.</p>
+                    <h3 data-i18n="sol_feat2_title">Automated Yield</h3>
+                    <p data-i18n="sol_feat2_desc">Smart contracts distribute rental income directly to your wallet. No intermediaries, no delays. Yield flows as reliably as the blockchain itself.</p>
                 </div>
 
                 <div class="solution-feature reveal reveal-delay-3">
                     <span class="solution-feature-icon">
                         <svg width="36" height="36" fill="none" stroke="#d4a574" stroke-width="1.5" stroke-linecap="round"><path d="M18 4l14 8v12l-14 8L4 24V12z"/><line x1="18" y1="4" x2="18" y2="32"/><line x1="4" y1="12" x2="32" y2="12"/></svg>
                     </span>
-                    <h3>Built-In Compliance</h3>
-                    <p>ERC-3643 enforces KYC/AML at the protocol level. Every transfer is permissioned. Every holder is verified. Regulators can trust it. So can you.</p>
+                    <h3 data-i18n="sol_feat3_title">Built-In Compliance</h3>
+                    <p data-i18n="sol_feat3_desc">ERC-3643 enforces KYC/AML at the protocol level. Every transfer is permissioned. Every holder is verified. Regulators can trust it. So can you.</p>
                 </div>
             </div>
         </div>
@@ -1406,9 +1429,9 @@
     <section class="how" id="how">
         <div class="container">
             <div class="how-header reveal">
-                <div class="section-label">How It Works</div>
-                <h2 class="section-title">Three Steps to Global<br>Real Estate Ownership.</h2>
-                <p class="section-desc">From identity verification to yield collection, we've compressed months of complexity into minutes of clarity.</p>
+                <div class="section-label" data-i18n="how_label">How It Works</div>
+                <h2 class="section-title" data-i18n-html="how_title">Three Steps to Global<br>Real Estate Ownership.</h2>
+                <p class="section-desc" data-i18n="how_desc">From identity verification to yield collection, we've compressed months of complexity into minutes of clarity.</p>
             </div>
 
             <div class="how-steps">
@@ -1692,14 +1715,14 @@
     <section class="cta" id="cta">
         <div class="container">
             <div class="cta-content">
-                <div class="section-label reveal">Join the Waitlist</div>
-                <h2 class="reveal reveal-delay-1">The Future of Real Estate<br>Is <span class="gold">Borderless</span>.</h2>
-                <p class="reveal reveal-delay-2">Be among the first to invest in tokenized LATAM real estate. Early access members receive priority allocation and reduced fees.</p>
+                <div class="section-label reveal" data-i18n="cta_label">Join the Waitlist</div>
+                <h2 class="reveal reveal-delay-1" data-i18n-html="cta_title">The Future of Real Estate<br>Is <span class="gold">Borderless</span>.</h2>
+                <p class="reveal reveal-delay-2" data-i18n="cta_desc">Be among the first to invest in tokenized LATAM real estate. Early access members receive priority allocation and reduced fees.</p>
                 <div class="cta-actions reveal reveal-delay-3">
-                    <a href="#" class="btn-primary">Get Early Access &rarr;</a>
-                    <a href="#" class="btn-secondary">Read the Whitepaper</a>
+                    <a href="#" class="btn-primary" data-i18n="cta_btn1">Get Early Access &rarr;</a>
+                    <a href="#" class="btn-secondary" data-i18n="cta_btn2">Read the Whitepaper</a>
                 </div>
-                <p class="cta-note reveal reveal-delay-4">No commitment required. We'll notify you when we launch.</p>
+                <p class="cta-note reveal reveal-delay-4" data-i18n="cta_note">No commitment required. We'll notify you when we launch.</p>
             </div>
         </div>
     </section>
@@ -1754,6 +1777,123 @@
     </footer>
 
     <script>
+        // ===== i18n System =====
+        const i18n = {
+          en: {
+            lang_label:'English',
+            nav_problem:'Problem',nav_solution:'Solution',nav_how:'How it Works',nav_assets:'Assets',nav_security:'Security',nav_cta:'Get Early Access',
+            hero_title:'Own the World.<br><span class="gold">One Token</span> at a Time.',
+            hero_sub:'Institutional-grade LATAM real estate, tokenized on Ethereum. Fractional ownership, automated yield, full compliance \u2014 starting at $100.',
+            hero_cta:'Start Investing \u2192',hero_cta2:'See How it Works',
+            stat_latam:'LATAM Real Estate Market',stat_min_invest:'Minimum Investment',stat_annual_yield:'Target Annual Yield',
+            problem_label:'The Problem',problem_title:'$3.2 Trillion in Value.<br>Locked Behind Borders.',
+            problem_desc:"Latin America's real estate market is one of the largest and fastest-growing on Earth, yet nearly inaccessible to most investors.",
+            prob_card1_title:'Cross-Border Barriers',prob_card1_desc:'Foreign ownership laws, fragmented registries, and layers of intermediaries make international investment nearly impossible for individuals.',
+            prob_card2_title:'Prohibitive Minimums',prob_card2_desc:"Institutional-grade properties require minimum investments of $500K+, locking out the vast majority of the world's growing investor class.",
+            prob_card3_title:'Glacial Settlement',prob_card3_desc:'Traditional real estate transactions take 60-120 days to settle, with legal fees, notarization, and bureaucratic overhead eating into returns.',
+            prob_card4_title:'Zero Liquidity',prob_card4_desc:'Once invested, your capital is trapped. There is no secondary market for fractional real estate in LATAM \u2014 until now.',
+            solution_label:'The Solution',solution_title:'Real Estate, Reimagined<br>for the Digital Age.',
+            solution_desc:'Terravault transforms physical properties into compliant digital securities. Invest globally. Earn locally. Trade freely.',
+            sol_feat1_title:'Fractional Ownership',sol_feat1_desc:'Own a piece of a luxury Bogota penthouse or a Mexico City commercial tower from just $100. ERC-3643 tokens represent verified legal ownership.',
+            sol_feat2_title:'Automated Yield',sol_feat2_desc:'Smart contracts distribute rental income directly to your wallet. No intermediaries, no delays. Yield flows as reliably as the blockchain itself.',
+            sol_feat3_title:'Built-In Compliance',sol_feat3_desc:'ERC-3643 enforces KYC/AML at the protocol level. Every transfer is permissioned. Every holder is verified. Regulators can trust it. So can you.',
+            how_label:'How It Works',how_title:'Three Steps to Global<br>Real Estate Ownership.',
+            how_desc:"From identity verification to yield collection, we've compressed months of complexity into minutes of clarity.",
+            cta_label:'Join the Waitlist',cta_title:'The Future of Real Estate<br>Is <span class="gold">Borderless</span>.',
+            cta_desc:'Be among the first to invest in tokenized LATAM real estate. Early access members receive priority allocation and reduced fees.',
+            cta_btn1:'Get Early Access \u2192',cta_btn2:'Read the Whitepaper',cta_note:"No commitment required. We'll notify you when we launch.",
+          },
+          zh: {
+            lang_label:'\u4e2d\u6587',
+            nav_problem:'\u554f\u984c',nav_solution:'\u89e3\u6c7a\u65b9\u6848',nav_how:'\u904b\u4f5c\u65b9\u5f0f',nav_assets:'\u8cc7\u7522',nav_security:'\u5b89\u5168',nav_cta:'\u640d\u5148\u9810\u7d04',
+            hero_title:'\u64c1\u6709\u5168\u4e16\u754c\u3002<br><span class="gold">\u4e00\u500b\u4ee3\u5e63</span>\uff0c\u4e00\u6b65\u4e00\u6b65\u3002',
+            hero_sub:'\u6a5f\u69cb\u7d1a\u62c9\u4e01\u7f8e\u6d32\u623f\u5730\u7522\uff0c\u5728\u4ee5\u592a\u574a\u4e0a\u4ee3\u5e63\u5316\u3002\u90e8\u5206\u64c1\u6709\u6b0a\u3001\u81ea\u52d5\u6536\u76ca\u3001\u5b8c\u5168\u5408\u898f \u2014 \u6700\u4f4e $100 \u8d77\u3002',
+            hero_cta:'\u958b\u59cb\u6295\u8cc7 \u2192',hero_cta2:'\u4e86\u89e3\u904b\u4f5c\u65b9\u5f0f',
+            stat_latam:'\u62c9\u4e01\u7f8e\u6d32\u623f\u5730\u7522\u5e02\u5834',stat_min_invest:'\u6700\u4f4e\u6295\u8cc7\u984d',stat_annual_yield:'\u76ee\u6a19\u5e74\u5316\u6536\u76ca',
+            problem_label:'\u554f\u984c',problem_title:'3.2 \u5146\u7f8e\u5143\u50f9\u503c\u3002<br>\u88ab\u908a\u754c\u9396\u4f4f\u3002',
+            problem_desc:'\u62c9\u4e01\u7f8e\u6d32\u7684\u623f\u5730\u7522\u5e02\u5834\u662f\u5168\u7403\u6700\u5927\u4e14\u589e\u9577\u6700\u5feb\u7684\u5e02\u5834\u4e4b\u4e00\uff0c\u4f46\u5c0d\u5927\u591a\u6578\u6295\u8cc7\u8005\u4f86\u8aaa\u5e7e\u4e4e\u7121\u6cd5\u9032\u5165\u3002',
+            prob_card1_title:'\u8de8\u5883\u969c\u7919',prob_card1_desc:'\u5916\u570b\u64c1\u6709\u6b0a\u6cd5\u5f8b\u3001\u5206\u6563\u7684\u767b\u8a18\u7cfb\u7d71\u548c\u591a\u5c64\u4e2d\u4ecb\u6a5f\u69cb\u4f7f\u500b\u4eba\u570b\u969b\u6295\u8cc7\u5e7e\u4e4e\u4e0d\u53ef\u80fd\u3002',
+            prob_card2_title:'\u6295\u8cc7\u9580\u6abb\u904e\u9ad8',prob_card2_desc:'\u6a5f\u69cb\u7d1a\u7269\u696d\u9700\u8981\u6700\u4f4e $50\u842c\u7f8e\u5143\u4ee5\u4e0a\u7684\u6295\u8cc7\uff0c\u5c07\u5168\u7403\u5927\u591a\u6578\u589e\u9577\u4e2d\u7684\u6295\u8cc7\u8005\u6392\u9664\u5728\u5916\u3002',
+            prob_card3_title:'\u7de9\u6162\u7684\u7d50\u7b97',prob_card3_desc:'\u50b3\u7d71\u623f\u5730\u7522\u4ea4\u6613\u9700\u898160-120\u5929\u624d\u80fd\u7d50\u7b97\uff0c\u6cd5\u5f8b\u8cbb\u7528\u3001\u516c\u8b49\u548c\u884c\u653f\u958b\u652f\u4fb5\u8755\u56de\u5831\u3002',
+            prob_card4_title:'\u96f6\u6d41\u52d5\u6027',prob_card4_desc:'\u4e00\u65e6\u6295\u8cc7\uff0c\u60a8\u7684\u8cc7\u91d1\u5c31\u88ab\u5957\u7262\u3002\u62c9\u4e01\u7f8e\u6d32\u6c92\u6709\u90e8\u5206\u623f\u5730\u7522\u7684\u4e8c\u7d1a\u5e02\u5834 \u2014 \u76f4\u5230\u73fe\u5728\u3002',
+            solution_label:'\u89e3\u6c7a\u65b9\u6848',solution_title:'\u623f\u5730\u7522\uff0c\u70ba\u6578\u4f4d\u6642\u4ee3<br>\u91cd\u65b0\u69cb\u60f3\u3002',
+            solution_desc:'Terravault \u5c07\u5be6\u9ad4\u7269\u696d\u8f49\u5316\u70ba\u5408\u898f\u7684\u6578\u4f4d\u8b49\u5238\u3002\u5168\u7403\u6295\u8cc7\u3002\u5728\u5730\u6536\u76ca\u3002\u81ea\u7531\u4ea4\u6613\u3002',
+            sol_feat1_title:'\u90e8\u5206\u64c1\u6709\u6b0a',sol_feat1_desc:'\u50c5\u9700 $100 \u5373\u53ef\u64c1\u6709\u6ce2\u54e5\u5927\u8c6a\u83ef\u516c\u5bd3\u6216\u58a8\u897f\u54e5\u57ce\u5546\u696d\u5927\u6a13\u7684\u4e00\u90e8\u5206\u3002ERC-3643 \u4ee3\u5e63\u4ee3\u8868\u7d93\u9a57\u8b49\u7684\u6cd5\u5f8b\u64c1\u6709\u6b0a\u3002',
+            sol_feat2_title:'\u81ea\u52d5\u6536\u76ca',sol_feat2_desc:'\u667a\u80fd\u5408\u7d04\u5c07\u79df\u91d1\u6536\u5165\u76f4\u63a5\u5206\u914d\u5230\u60a8\u7684\u9322\u5305\u3002\u6c92\u6709\u4e2d\u4ecb\uff0c\u6c92\u6709\u5ef6\u9072\u3002\u6536\u76ca\u50cf\u5340\u584a\u93c8\u672c\u8eab\u4e00\u6a23\u53ef\u9760\u3002',
+            sol_feat3_title:'\u5167\u5efa\u5408\u898f',sol_feat3_desc:'ERC-3643 \u5728\u5354\u8b70\u5c64\u57f7\u884c KYC/AML\u3002\u6bcf\u6b21\u8f49\u5e33\u90fd\u7d93\u904e\u8a31\u53ef\u3002\u6bcf\u4f4d\u6301\u6709\u4eba\u90fd\u7d93\u904e\u9a57\u8b49\u3002\u76e3\u7ba1\u6a5f\u69cb\u53ef\u4ee5\u4fe1\u4efb\u5b83\u3002',
+            how_label:'\u904b\u4f5c\u65b9\u5f0f',how_title:'\u4e09\u500b\u6b65\u9a5f\uff0c\u901a\u5f80\u5168\u7403<br>\u623f\u5730\u7522\u64c1\u6709\u6b0a\u3002',
+            how_desc:'\u5f9e\u8eab\u4efd\u9a57\u8b49\u5230\u6536\u76ca\u6536\u53d6\uff0c\u6211\u5011\u5c07\u6578\u6708\u7684\u8907\u96dc\u6027\u58d3\u7e2e\u70ba\u5e7e\u5206\u9418\u7684\u6e05\u6670\u6d41\u7a0b\u3002',
+            cta_label:'\u52a0\u5165\u7b49\u5f85\u540d\u55ae',cta_title:'\u623f\u5730\u7522\u7684\u672a\u4f86<br>\u662f<span class="gold">\u7121\u908a\u754c</span>\u7684\u3002',
+            cta_desc:'\u6210\u70ba\u9996\u6279\u6295\u8cc7\u4ee3\u5e63\u5316\u62c9\u4e01\u7f8e\u6d32\u623f\u5730\u7522\u7684\u6295\u8cc7\u8005\u3002\u65e9\u671f\u7528\u6236\u53ef\u7372\u5f97\u512a\u5148\u5206\u914d\u548c\u6e1b\u5c11\u8cbb\u7528\u3002',
+            cta_btn1:'\u640d\u5148\u9810\u7d04 \u2192',cta_btn2:'\u95b1\u8b80\u767d\u76ae\u66f8',cta_note:'\u7121\u9700\u627f\u8afe\u3002\u6211\u5011\u6703\u5728\u555f\u52d5\u6642\u901a\u77e5\u60a8\u3002',
+          },
+          es: {
+            lang_label:'Espa\u00f1ol',
+            nav_problem:'Problema',nav_solution:'Soluci\u00f3n',nav_how:'C\u00f3mo Funciona',nav_assets:'Activos',nav_security:'Seguridad',nav_cta:'Acceso Anticipado',
+            hero_title:'Posee el Mundo.<br><span class="gold">Un Token</span> a la Vez.',
+            hero_sub:'Bienes ra\u00edces institucionales en LATAM, tokenizados en Ethereum. Propiedad fraccionada, rendimientos autom\u00e1ticos, cumplimiento total \u2014 desde $100.',
+            hero_cta:'Empezar a Invertir \u2192',hero_cta2:'Ver C\u00f3mo Funciona',
+            stat_latam:'Mercado Inmobiliario LATAM',stat_min_invest:'Inversi\u00f3n M\u00ednima',stat_annual_yield:'Rendimiento Anual Objetivo',
+            problem_label:'El Problema',problem_title:'$3.2 Billones en Valor.<br>Bloqueados Tras Fronteras.',
+            problem_desc:'El mercado inmobiliario de Am\u00e9rica Latina es uno de los m\u00e1s grandes y de mayor crecimiento, pero casi inaccesible para la mayor\u00eda de inversores.',
+            prob_card1_title:'Barreras Transfronterizas',prob_card1_desc:'Leyes de propiedad extranjera, registros fragmentados y capas de intermediarios hacen casi imposible la inversi\u00f3n internacional para individuos.',
+            prob_card2_title:'M\u00ednimos Prohibitivos',prob_card2_desc:'Las propiedades institucionales requieren inversiones m\u00ednimas de $500K+, excluyendo a la gran mayor\u00eda de la creciente clase inversora.',
+            prob_card3_title:'Liquidaci\u00f3n Glacial',prob_card3_desc:'Las transacciones inmobiliarias tradicionales tardan 60-120 d\u00edas en liquidar, con honorarios legales y burocracia que erosionan los rendimientos.',
+            prob_card4_title:'Cero Liquidez',prob_card4_desc:'Una vez invertido, su capital queda atrapado. No hay mercado secundario para bienes ra\u00edces fraccionados en LATAM \u2014 hasta ahora.',
+            solution_label:'La Soluci\u00f3n',solution_title:'Bienes Ra\u00edces, Reimaginados<br>para la Era Digital.',
+            solution_desc:'Terravault transforma propiedades f\u00edsicas en valores digitales regulados. Invierte globalmente. Gana localmente. Opera libremente.',
+            sol_feat1_title:'Propiedad Fraccionada',sol_feat1_desc:'Posea una fracci\u00f3n de un penthouse en Bogot\u00e1 o una torre comercial en Ciudad de M\u00e9xico desde solo $100. Los tokens ERC-3643 representan propiedad legal verificada.',
+            sol_feat2_title:'Rendimiento Autom\u00e1tico',sol_feat2_desc:'Los contratos inteligentes distribuyen ingresos por alquiler directamente a su billetera. Sin intermediarios, sin demoras.',
+            sol_feat3_title:'Cumplimiento Integrado',sol_feat3_desc:'ERC-3643 aplica KYC/AML a nivel de protocolo. Cada transferencia est\u00e1 autorizada. Cada titular est\u00e1 verificado. Los reguladores pueden confiar.',
+            how_label:'C\u00f3mo Funciona',how_title:'Tres Pasos hacia la Propiedad<br>Inmobiliaria Global.',
+            how_desc:'Desde la verificaci\u00f3n de identidad hasta la recolecci\u00f3n de rendimientos, comprimimos meses de complejidad en minutos de claridad.',
+            cta_label:'\u00danete a la Lista de Espera',cta_title:'El Futuro del Real Estate<br>Es <span class="gold">Sin Fronteras</span>.',
+            cta_desc:'Sea de los primeros en invertir en bienes ra\u00edces LATAM tokenizados. Acceso anticipado con asignaci\u00f3n prioritaria y tarifas reducidas.',
+            cta_btn1:'Acceso Anticipado \u2192',cta_btn2:'Leer el Whitepaper',cta_note:'Sin compromiso. Le notificaremos cuando lancemos.',
+          }
+        };
+
+        let currentLang = localStorage.getItem('tv_landing_lang') || 'en';
+
+        function t(key) { return i18n[currentLang]?.[key] || i18n.en[key] || key; }
+
+        function applyI18n() {
+          document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            const val = t(key);
+            if (val) el.textContent = val;
+          });
+          document.querySelectorAll('[data-i18n-html]').forEach(el => {
+            const key = el.getAttribute('data-i18n-html');
+            const val = t(key);
+            if (val) el.innerHTML = val;
+          });
+          document.getElementById('currentLangLabel').textContent = i18n[currentLang]?.lang_label || 'English';
+          document.querySelectorAll('.lang-option').forEach(opt => {
+            opt.classList.toggle('active', opt.dataset.lang === currentLang);
+          });
+          document.documentElement.lang = currentLang === 'zh' ? 'zh-Hant' : currentLang;
+        }
+
+        function setLanguage(lang) {
+          currentLang = lang;
+          localStorage.setItem('tv_landing_lang', lang);
+          applyI18n();
+          document.getElementById('langDropdown').classList.remove('open');
+        }
+
+        function toggleLangDropdown() {
+          document.getElementById('langDropdown').classList.toggle('open');
+        }
+
+        document.addEventListener('click', (e) => {
+          if (!e.target.closest('.lang-selector')) {
+            document.getElementById('langDropdown').classList.remove('open');
+          }
+        });
+
+        applyI18n();
+
         // ===== Scroll Reveal =====
         const revealEls = document.querySelectorAll('.reveal');
         const revealObserver = new IntersectionObserver((entries) => {

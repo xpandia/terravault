@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -224,23 +224,45 @@ tr:hover td{background:rgba(250,247,242,.5)}
 .loading{display:flex;align-items:center;justify-content:center;padding:40px;color:var(--slate-400);font-size:.9rem}
 .spinner{width:20px;height:20px;border:2.5px solid var(--slate-200);border-top-color:var(--emerald-600);border-radius:50%;animation:spin .7s linear infinite;margin-right:10px}
 @keyframes spin{to{transform:rotate(360deg)}}
+
+/* Language Selector */
+.lang-selector{position:fixed;top:16px;right:16px;z-index:300}
+.lang-btn{background:rgba(255,255,255,.12);border:1px solid var(--slate-300);border-radius:var(--radius-sm);padding:7px 14px;font-size:.8rem;cursor:pointer;display:flex;align-items:center;gap:6px;color:var(--slate-700);font-weight:500;backdrop-filter:blur(8px);transition:all .2s}
+.lang-btn:hover{background:rgba(255,255,255,.25);border-color:var(--slate-400)}
+.lang-dropdown{position:absolute;top:calc(100% + 6px);right:0;background:#fff;border:1px solid var(--slate-200);border-radius:var(--radius-sm);box-shadow:var(--shadow-lg);min-width:160px;opacity:0;pointer-events:none;transform:translateY(-4px);transition:all .2s}
+.lang-dropdown.open{opacity:1;pointer-events:auto;transform:translateY(0)}
+.lang-option{display:flex;align-items:center;gap:8px;padding:10px 16px;font-size:.82rem;color:var(--slate-700);cursor:pointer;transition:background .15s}
+.lang-option:first-child{border-radius:var(--radius-sm) var(--radius-sm) 0 0}
+.lang-option:last-child{border-radius:0 0 var(--radius-sm) var(--radius-sm)}
+.lang-option:hover{background:var(--slate-100)}
+.lang-option.active{background:rgba(5,150,105,.08);color:var(--emerald-700);font-weight:600}
 </style>
 </head>
 <body>
+
+<!-- Language Selector -->
+<div class="lang-selector">
+  <button class="lang-btn" onclick="toggleLangDropdown()">&#127760; <span id="currentLangLabel">English</span> &#9662;</button>
+  <div class="lang-dropdown" id="langDropdown">
+    <div class="lang-option active" data-lang="en" onclick="setLanguage('en')">&#127468;&#127463; English</div>
+    <div class="lang-option" data-lang="zh" onclick="setLanguage('zh')">&#127469;&#127472; &#20013;&#25991;</div>
+    <div class="lang-option" data-lang="es" onclick="setLanguage('es')">&#127466;&#127480; Espa&#241;ol</div>
+  </div>
+</div>
 
 <!-- Sidebar -->
 <aside class="sidebar">
   <div class="sidebar-brand">
     <h1><span class="logo-icon">TV</span> Terravault</h1>
-    <p>RWA Tokenization Platform</p>
+    <p data-i18n="sidebar_subtitle">RWA Tokenization Platform</p>
   </div>
   <nav class="sidebar-nav">
-    <button class="nav-item active" data-tab="dashboard"><span class="nav-icon">&#127968;</span> Dashboard</button>
-    <button class="nav-item" data-tab="properties"><span class="nav-icon">&#127970;</span> Properties</button>
-    <button class="nav-item" data-tab="portfolio"><span class="nav-icon">&#128188;</span> Portfolio</button>
-    <button class="nav-item" data-tab="yields"><span class="nav-icon">&#128176;</span> Yields</button>
-    <button class="nav-item" data-tab="kyc"><span class="nav-icon">&#128203;</span> KYC</button>
-    <button class="nav-item" data-tab="settings"><span class="nav-icon">&#9881;</span> Settings</button>
+    <button class="nav-item active" data-tab="dashboard"><span class="nav-icon">&#127968;</span> <span data-i18n="nav_dashboard">Dashboard</span></button>
+    <button class="nav-item" data-tab="properties"><span class="nav-icon">&#127970;</span> <span data-i18n="nav_properties">Properties</span></button>
+    <button class="nav-item" data-tab="portfolio"><span class="nav-icon">&#128188;</span> <span data-i18n="nav_portfolio">Portfolio</span></button>
+    <button class="nav-item" data-tab="yields"><span class="nav-icon">&#128176;</span> <span data-i18n="nav_yields">Yields</span></button>
+    <button class="nav-item" data-tab="kyc"><span class="nav-icon">&#128203;</span> <span data-i18n="nav_kyc">KYC</span></button>
+    <button class="nav-item" data-tab="settings"><span class="nav-icon">&#9881;</span> <span data-i18n="nav_settings">Settings</span></button>
   </nav>
   <div class="sidebar-footer">
     <div class="wallet-badge" onclick="connectWallet()">
@@ -259,7 +281,7 @@ tr:hover td{background:rgba(250,247,242,.5)}
     <h2 id="pageTitle">Dashboard</h2>
     <div class="header-actions">
       <span style="font-size:.78rem;color:var(--slate-500)" id="networkBadge">&#9679; Testnet</span>
-      <button class="btn btn-outline btn-sm" onclick="connectWallet()">&#128279; Connect</button>
+      <button class="btn btn-outline btn-sm" onclick="connectWallet()">&#128279; <span data-i18n="btn_connect">Connect</span></button>
     </div>
   </header>
 
@@ -269,22 +291,22 @@ tr:hover td{background:rgba(250,247,242,.5)}
     <div class="tab-content active" id="tab-dashboard">
       <div class="grid grid-4" style="margin-bottom:24px">
         <div class="card stat-card emerald">
-          <div class="stat-label">Portfolio Value</div>
+          <div class="stat-label" data-i18n="stat_portfolio_value">Portfolio Value</div>
           <div class="stat-value" id="dashPortfolioVal">$14,500</div>
           <div class="stat-sub"><span class="up">&#9650; 3.2%</span> vs last month</div>
         </div>
         <div class="card stat-card">
-          <div class="stat-label">Yield This Month</div>
+          <div class="stat-label" data-i18n="stat_yield_month">Yield This Month</div>
           <div class="stat-value" id="dashYieldMonth">$123.47</div>
           <div class="stat-sub"><span class="up">&#9650; 12%</span> vs Feb</div>
         </div>
         <div class="card stat-card">
-          <div class="stat-label">Properties Owned</div>
+          <div class="stat-label" data-i18n="stat_props_owned">Properties Owned</div>
           <div class="stat-value" id="dashPropsOwned">2</div>
           <div class="stat-sub">Across 2 countries</div>
         </div>
         <div class="card stat-card">
-          <div class="stat-label">Total Value Locked</div>
+          <div class="stat-label" data-i18n="stat_tvl">Total Value Locked</div>
           <div class="stat-value" id="dashTVL">$5.2M</div>
           <div class="stat-sub">Platform-wide</div>
         </div>
@@ -408,10 +430,10 @@ tr:hover td{background:rgba(250,247,242,.5)}
       <div class="grid grid-2">
         <div class="card">
           <div class="card-body">
-            <div class="section-title">Submit KYC / Verificacion</div>
+            <div class="section-title" data-i18n="kyc_submit_title">Submit KYC</div>
             <form id="kycForm" onsubmit="submitKYC(event)">
               <div class="form-group">
-                <label>Full Name / Nombre Completo</label>
+                <label data-i18n="kyc_full_name">Full Name</label>
                 <input class="form-input" name="fullName" placeholder="Carlos Restrepo" required>
               </div>
               <div class="form-group">
@@ -420,7 +442,7 @@ tr:hover td{background:rgba(250,247,242,.5)}
               </div>
               <div class="form-row">
                 <div class="form-group">
-                  <label>Country / Pais</label>
+                  <label data-i18n="kyc_country">Country</label>
                   <select class="form-input" name="countryCode" required>
                     <option value="">Select...</option>
                     <option value="170">Colombia</option>
@@ -434,12 +456,12 @@ tr:hover td{background:rgba(250,247,242,.5)}
                   </select>
                 </div>
                 <div class="form-group">
-                  <label>ID Type / Tipo de Documento</label>
+                  <label data-i18n="kyc_id_type">ID Type</label>
                   <select class="form-input" name="documentType" required>
                     <option value="">Select...</option>
                     <option value="passport">Passport</option>
                     <option value="cedula">Cedula de Ciudadania</option>
-                    <option value="cpf">CPF (Brasil)</option>
+                    <option value="cpf">CPF (Brazil)</option>
                     <option value="ine">INE (Mexico)</option>
                     <option value="national_id">National ID</option>
                   </select>
@@ -450,7 +472,7 @@ tr:hover td{background:rgba(250,247,242,.5)}
                 <input class="form-input" name="documentNumber" placeholder="ABC123456">
               </div>
               <div class="form-group">
-                <label>Accreditation Level / Nivel de Acreditacion</label>
+                <label data-i18n="kyc_accreditation">Accreditation Level</label>
                 <select class="form-input" name="accreditationLevel">
                   <option value="0">Retail Investor</option>
                   <option value="1">Accredited Investor</option>
@@ -529,7 +551,7 @@ tr:hover td{background:rgba(250,247,242,.5)}
             </div>
             <div class="form-group">
               <label>Language</label>
-              <select class="form-input" style="max-width:200px"><option>Spanish / English (Mixed)</option><option>English</option><option>Espanol</option><option>Portugues</option></select>
+              <select class="form-input" style="max-width:200px" onchange="setLanguage(this.value)"><option value="en">English</option><option value="zh">&#20013;&#25991; (&#32321;&#39636;)</option><option value="es">Espa&#241;ol</option></select>
             </div>
           </div>
           <div class="settings-section">
@@ -565,6 +587,126 @@ tr:hover td{background:rgba(250,247,242,.5)}
 <div class="toast" id="toast"></div>
 
 <script>
+// ---------------------------------------------------------------------------
+//  i18n System
+// ---------------------------------------------------------------------------
+const i18n = {
+  en: {
+    sidebar_subtitle: 'RWA Tokenization Platform',
+    nav_dashboard: 'Dashboard', nav_properties: 'Properties', nav_portfolio: 'Portfolio',
+    nav_yields: 'Yields', nav_kyc: 'KYC', nav_settings: 'Settings',
+    btn_connect: 'Connect',
+    stat_portfolio_value: 'Portfolio Value', stat_yield_month: 'Yield This Month',
+    stat_props_owned: 'Properties Owned', stat_tvl: 'Total Value Locked',
+    kyc_submit_title: 'Submit KYC', kyc_full_name: 'Full Name', kyc_country: 'Country',
+    kyc_id_type: 'ID Type', kyc_accreditation: 'Accreditation Level',
+    kyc_verified: 'KYC Verified', kyc_pending: 'KYC Pending',
+    doc_deed: 'Property Deed', doc_appraisal: 'Appraisal Report',
+    doc_legal: 'Legal Opinion', doc_financial: 'Financial Projections',
+    buy_tokens_title: 'Buy Tokens', token_amount: 'Amount of Tokens',
+    market_overview: 'Market Overview', recent_activity: 'Recent Activity',
+    property_marketplace: 'Property Marketplace', holdings: 'Holdings',
+    diversification: 'Diversification', total_value: 'Total Value',
+    total_pnl: 'Total P&L', total_yield_earned: 'Total Yield Earned',
+    yield_by_property: 'Yield by Property', yield_history: 'Yield History',
+    total_yield: 'Total Yield Earned', pending_distribution: 'Pending Distribution',
+    next_distribution: 'Next Distribution', compliance_badges: 'Compliance Badges',
+    verification_timeline: 'Verification Timeline', submit_kyc_step: 'Submit KYC',
+    provide_docs: 'Provide identity documents', review_process: 'Review Process',
+    review_time: '24-48 hour verification', onchain_registration: 'On-Chain Registration',
+    trex_registry: 'T-REX Identity Registry', btn_submit_kyc: 'Submit KYC',
+    lang_label: 'English',
+  },
+  zh: {
+    sidebar_subtitle: 'RWA \u4ee3\u5e63\u5316\u5e73\u53f0',
+    nav_dashboard: '\u5100\u8868\u677f', nav_properties: '\u7269\u696d', nav_portfolio: '\u6295\u8cc7\u7d44\u5408',
+    nav_yields: '\u6536\u76ca', nav_kyc: 'KYC \u9a57\u8b49', nav_settings: '\u8a2d\u5b9a',
+    btn_connect: '\u9023\u63a5',
+    stat_portfolio_value: '\u6295\u8cc7\u7d44\u5408\u50f9\u503c', stat_yield_month: '\u672c\u6708\u6536\u76ca',
+    stat_props_owned: '\u64c1\u6709\u7269\u696d', stat_tvl: '\u7e3d\u9396\u5b9a\u50f9\u503c',
+    kyc_submit_title: '\u63d0\u4ea4 KYC', kyc_full_name: '\u5168\u540d', kyc_country: '\u570b\u5bb6',
+    kyc_id_type: '\u8b49\u4ef6\u985e\u578b', kyc_accreditation: '\u8a8d\u8b49\u7b49\u7d1a',
+    kyc_verified: 'KYC \u5df2\u9a57\u8b49', kyc_pending: 'KYC \u5be9\u6838\u4e2d',
+    doc_deed: '\u7522\u6b0a\u8b49\u660e', doc_appraisal: '\u4f30\u50f9\u5831\u544a',
+    doc_legal: '\u6cd5\u5f8b\u610f\u898b', doc_financial: '\u8ca1\u52d9\u9810\u6e2c',
+    buy_tokens_title: '\u8cfc\u8cb7\u4ee3\u5e63', token_amount: '\u4ee3\u5e63\u6578\u91cf',
+    market_overview: '\u5e02\u5834\u6982\u89c0', recent_activity: '\u6700\u8fd1\u6d3b\u52d5',
+    property_marketplace: '\u7269\u696d\u5e02\u5834', holdings: '\u6301\u5009',
+    diversification: '\u5206\u6563\u5316', total_value: '\u7e3d\u50f9\u503c',
+    total_pnl: '\u7e3d\u640d\u76ca', total_yield_earned: '\u7e3d\u6536\u76ca',
+    yield_by_property: '\u6309\u7269\u696d\u6536\u76ca', yield_history: '\u6536\u76ca\u6b77\u53f2',
+    total_yield: '\u7e3d\u6536\u76ca', pending_distribution: '\u5f85\u5206\u914d',
+    next_distribution: '\u4e0b\u6b21\u5206\u914d', compliance_badges: '\u5408\u898f\u5fbd\u7ae0',
+    verification_timeline: '\u9a57\u8b49\u6642\u9593\u7dda', submit_kyc_step: '\u63d0\u4ea4 KYC',
+    provide_docs: '\u63d0\u4f9b\u8eab\u4efd\u8b49\u660e\u6587\u4ef6', review_process: '\u5be9\u6838\u6d41\u7a0b',
+    review_time: '24-48 \u5c0f\u6642\u9a57\u8b49', onchain_registration: '\u93c8\u4e0a\u8a3b\u518a',
+    trex_registry: 'T-REX \u8eab\u4efd\u8a3b\u518a', btn_submit_kyc: '\u63d0\u4ea4 KYC',
+    lang_label: '\u4e2d\u6587',
+  },
+  es: {
+    sidebar_subtitle: 'Plataforma de Tokenizaci\u00f3n RWA',
+    nav_dashboard: 'Panel', nav_properties: 'Propiedades', nav_portfolio: 'Portafolio',
+    nav_yields: 'Rendimientos', nav_kyc: 'KYC', nav_settings: 'Configuraci\u00f3n',
+    btn_connect: 'Conectar',
+    stat_portfolio_value: 'Valor del Portafolio', stat_yield_month: 'Rendimiento del Mes',
+    stat_props_owned: 'Propiedades', stat_tvl: 'Valor Total Bloqueado',
+    kyc_submit_title: 'Enviar KYC', kyc_full_name: 'Nombre Completo', kyc_country: 'Pa\u00eds',
+    kyc_id_type: 'Tipo de Documento', kyc_accreditation: 'Nivel de Acreditaci\u00f3n',
+    kyc_verified: 'KYC Verificado', kyc_pending: 'KYC En Revisi\u00f3n',
+    doc_deed: 'Escritura de Propiedad', doc_appraisal: 'Aval\u00fao',
+    doc_legal: 'Concepto Jur\u00eddico', doc_financial: 'Proyecciones Financieras',
+    buy_tokens_title: 'Comprar Tokens', token_amount: 'Cantidad de Tokens',
+    market_overview: 'Resumen del Mercado', recent_activity: 'Actividad Reciente',
+    property_marketplace: 'Mercado de Propiedades', holdings: 'Inversiones',
+    diversification: 'Diversificaci\u00f3n', total_value: 'Valor Total',
+    total_pnl: 'Ganancia/P\u00e9rdida Total', total_yield_earned: 'Rendimiento Total',
+    yield_by_property: 'Rendimiento por Propiedad', yield_history: 'Historial de Rendimientos',
+    total_yield: 'Rendimiento Total', pending_distribution: 'Distribuci\u00f3n Pendiente',
+    next_distribution: 'Pr\u00f3xima Distribuci\u00f3n', compliance_badges: 'Certificaciones de Cumplimiento',
+    verification_timeline: 'L\u00ednea de Verificaci\u00f3n', submit_kyc_step: 'Enviar KYC',
+    provide_docs: 'Proveer documentos de identidad', review_process: 'Proceso de Revisi\u00f3n',
+    review_time: 'Verificaci\u00f3n de 24-48 horas', onchain_registration: 'Registro On-Chain',
+    trex_registry: 'Registro de Identidad T-REX', btn_submit_kyc: 'Enviar KYC',
+    lang_label: 'Espa\u00f1ol',
+  }
+};
+
+let currentLang = localStorage.getItem('tv_lang') || 'en';
+
+function t(key) {
+  return i18n[currentLang]?.[key] || i18n.en[key] || key;
+}
+
+function applyI18n() {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    const val = t(key);
+    if (val) el.textContent = val;
+  });
+  document.getElementById('currentLangLabel').textContent = i18n[currentLang]?.lang_label || 'English';
+  document.querySelectorAll('.lang-option').forEach(opt => {
+    opt.classList.toggle('active', opt.dataset.lang === currentLang);
+  });
+  document.documentElement.lang = currentLang === 'zh' ? 'zh-Hant' : currentLang;
+}
+
+function setLanguage(lang) {
+  currentLang = lang;
+  localStorage.setItem('tv_lang', lang);
+  applyI18n();
+  document.getElementById('langDropdown').classList.remove('open');
+}
+
+function toggleLangDropdown() {
+  document.getElementById('langDropdown').classList.toggle('open');
+}
+
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.lang-selector')) {
+    document.getElementById('langDropdown').classList.remove('open');
+  }
+});
+
 // ---------------------------------------------------------------------------
 //  State
 // ---------------------------------------------------------------------------
@@ -703,7 +845,7 @@ function renderDashboard() {
     const label = a.type === 'purchase'
       ? `${a.investor} bought ${a.tokens} tokens of ${a.property}`
       : `Yield distributed to ${a.investor} from ${a.property}`;
-    const date = new Date(a.date).toLocaleDateString('es-MX', { day:'numeric', month:'short', year:'numeric' });
+    const date = new Date(a.date).toLocaleDateString(currentLang === 'es' ? 'es-MX' : currentLang === 'zh' ? 'zh-HK' : 'en-US', { day:'numeric', month:'short', year:'numeric' });
     feed.innerHTML += `
       <div class="activity-item">
         <div class="activity-icon ${iconClass}">${icon}</div>
@@ -757,7 +899,7 @@ function renderProperties(filter) {
             <span>${available.toLocaleString()} available</span>
             <span>${p.tokensSold.toLocaleString()} / ${p.totalTokens.toLocaleString()} sold</span>
           </div>
-          <button class="btn-invest" onclick="event.stopPropagation();openPropertyModal(${p.id})">Invertir</button>
+          <button class="btn-invest" onclick="event.stopPropagation();openPropertyModal(${p.id})">Invest</button>
         </div>
       </div>`;
   });
@@ -805,16 +947,16 @@ function openPropertyModal(id) {
     </div>
     <div class="modal-section">
       <h4>Documents</h4>
-      <div class="doc-link">&#128196; Property Deed (Escritura)</div>
-      <div class="doc-link">&#128200; Appraisal Report (Avaluo)</div>
-      <div class="doc-link">&#9878; Legal Opinion (Concepto Juridico)</div>
-      <div class="doc-link">&#128202; Financial Projections</div>
+      <div class="doc-link">&#128196; ${t('doc_deed')}</div>
+      <div class="doc-link">&#128200; ${t('doc_appraisal')}</div>
+      <div class="doc-link">&#9878; ${t('doc_legal')}</div>
+      <div class="doc-link">&#128202; ${t('doc_financial')}</div>
     </div>
     <div class="modal-section">
-      <h4>Comprar Tokens / Buy Tokens</h4>
+      <h4>${t('buy_tokens_title')}</h4>
       <div class="buy-form">
         <div class="form-group">
-          <label>Amount of Tokens / Cantidad</label>
+          <label>${t('token_amount')}</label>
           <input class="form-input" type="number" id="buyAmount" min="1" max="${available}" value="10" oninput="updateBuyPreview(${p.pricePerTokenUSD})">
         </div>
         <div class="cost-preview">
@@ -830,13 +972,13 @@ function openPropertyModal(id) {
           <span class="cp-value" id="buyTotal" style="color:var(--emerald-800)">$${(10 * p.pricePerTokenUSD * 1.005).toFixed(2)}</span>
         </div>
         <button class="btn btn-gold" style="width:100%;margin-top:12px;padding:14px;font-size:.95rem" onclick="buyTokens(${p.id})">
-          Comprar Tokens
+          Buy Tokens
         </button>
       </div>
     </div>
     <p style="font-size:.7rem;color:var(--slate-400);margin-top:12px;text-align:center">
       Token Contract: ${p.tokenContract}<br>
-      Last Updated: ${new Date(p.updatedAt).toLocaleDateString('es-MX')}
+      Last Updated: ${new Date(p.updatedAt).toLocaleDateString(currentLang === 'es' ? 'es-MX' : currentLang === 'zh' ? 'zh-HK' : 'en-US')}
     </p>`;
   document.getElementById('propertyModal').classList.add('active');
 }
@@ -901,7 +1043,7 @@ async function loadPortfolio() {
       <td>$${h.currentValue.toLocaleString()}</td>
       <td style="color:${pnlColor};font-weight:600">${pnlPrefix}$${h.pnl.toFixed(2)} (${pnlPrefix}${h.pnlPercent}%)</td>
       <td style="color:var(--green)">$${h.yieldEarned.toFixed(2)}</td>
-      <td><button class="btn btn-outline btn-xs">Vender</button></td>
+      <td><button class="btn btn-outline btn-xs">Sell</button></td>
     </tr>`;
   });
 
@@ -1006,12 +1148,12 @@ async function loadKYC() {
   if (res.status === 'verified') {
     banner.classList.add('verified');
     icon.innerHTML = '&#9989;';
-    title.textContent = 'KYC Verified / Verificado';
+    title.textContent = i18n[currentLang]?.kyc_verified || 'KYC Verified';
     sub.textContent = `Approved: ${res.investor?.fullName || ''} | ${res.investor?.email || ''}`;
   } else if (res.status === 'pending') {
     banner.classList.add('pending');
     icon.innerHTML = '&#9203;';
-    title.textContent = 'KYC Pending / En Revision';
+    title.textContent = i18n[currentLang]?.kyc_pending || 'KYC Pending';
     sub.textContent = 'Your submission is being reviewed (24-48 hours)';
   } else {
     banner.classList.add('none');
@@ -1068,6 +1210,7 @@ document.addEventListener('keydown', (e) => {
 // ---------------------------------------------------------------------------
 //  Init
 // ---------------------------------------------------------------------------
+applyI18n();
 loadAll();
 </script>
 </body>
