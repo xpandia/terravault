@@ -43,6 +43,7 @@ const JWT_SECRET = process.env.JWT_SECRET || "terravault-demo-secret-2026";
 const RPC_URL = process.env.RPC_URL || "http://127.0.0.1:8545";
 const MARKETPLACE_ADDRESS = process.env.MARKETPLACE_ADDRESS || "";
 const IPFS_API_URL = process.env.IPFS_API_URL || "http://127.0.0.1:5001";
+const DEMO_MODE = process.env.DEMO_MODE === "true" || !MARKETPLACE_ADDRESS;
 
 // ---------------------------------------------------------------------------
 //  Provider & Contract ABIs (minimal for API interaction)
@@ -504,8 +505,8 @@ app.post(
 
 app.get("/api/v1/properties", async (req, res) => {
   try {
-    if (!provider || !MARKETPLACE_ADDRESS) {
-      return res.status(503).json({ error: "Blockchain connection unavailable" });
+    if (DEMO_MODE || !provider || !MARKETPLACE_ADDRESS) {
+      return res.json({ properties: propertiesStore, total: propertiesStore.length, mode: "demo" });
     }
 
     const marketplace = new ethers.Contract(
@@ -554,8 +555,10 @@ app.get("/api/v1/properties", async (req, res) => {
 
 app.get("/api/v1/properties/:id", async (req, res) => {
   try {
-    if (!provider || !MARKETPLACE_ADDRESS) {
-      return res.status(503).json({ error: "Blockchain connection unavailable" });
+    if (DEMO_MODE || !provider || !MARKETPLACE_ADDRESS) {
+      const prop = propertiesStore.find(p => p.id === parseInt(req.params.id));
+      if (!prop) return res.status(404).json({ error: "Property not found" });
+      return res.json({ property: prop, mode: "demo" });
     }
 
     const marketplace = new ethers.Contract(
@@ -676,8 +679,24 @@ app.get("/api/v1/portfolio/:walletAddress", authenticate, async (req, res) => {
       return res.status(403).json({ error: "Can only view own portfolio" });
     }
 
-    if (!provider || !MARKETPLACE_ADDRESS) {
-      return res.status(503).json({ error: "Blockchain connection unavailable" });
+    if (DEMO_MODE || !provider || !MARKETPLACE_ADDRESS) {
+      // Fall back to demo portfolio data
+      const wallet = walletAddress.toLowerCase();
+      const holdings = portfolioStore.get(wallet) || [];
+      const enriched = holdings.map(h => {
+        const prop = propertiesStore.find(p => p.id === h.propertyId);
+        const currentValue = h.tokens * (prop?.pricePerTokenUSD || 100);
+        return {
+          propertyId: h.propertyId,
+          propertyName: prop?.name || "Unknown",
+          location: prop?.location || "Unknown",
+          balance: h.tokens.toString(),
+          holdingValueUSD: currentValue.toString(),
+          pendingDividendsETH: "0.0",
+        };
+      });
+      const totalValue = enriched.reduce((sum, h) => sum + parseFloat(h.holdingValueUSD), 0);
+      return res.json({ walletAddress: wallet, holdings: enriched, totalValueUSD: totalValue.toString(), holdingCount: enriched.length, mode: "demo" });
     }
 
     const marketplace = new ethers.Contract(
@@ -1197,6 +1216,56 @@ app.post("/api/v1/demo/buy", (req, res) => {
   res.status(201).json({ success: true, tokensRemaining: prop.totalTokens - prop.tokensSold, totalCost: tokens * prop.pricePerTokenUSD });
 });
 
+// Demo KYC auto-approve (submit + instant approval for demo)
+app.post("/api/v1/demo/kyc/approve", (req, res) => {
+  const { walletAddress, fullName, email, countryCode, accreditationLevel } = req.body;
+  if (!walletAddress || !fullName) {
+    return res.status(400).json({ error: "walletAddress and fullName required" });
+  }
+  const wallet = walletAddress.toLowerCase();
+  const investor = {
+    walletAddress: wallet,
+    fullName,
+    email: email || `${fullName.split(" ")[0].toLowerCase()}@demo.terravault.io`,
+    countryCode: parseInt(countryCode) || 170,
+    accreditationLevel: accreditationLevel || 0,
+    role: "investor",
+    kycApprovedAt: new Date().toISOString(),
+  };
+  investors.set(wallet, investor);
+  logger.info("Demo KYC auto-approved", { wallet, fullName });
+  res.status(201).json({ status: "approved", investor });
+});
+
+// Demo yield distribution (simulate distributing pending yields)
+app.post("/api/v1/demo/yields/distribute", (req, res) => {
+  const { propertyId } = req.body;
+  const records = yieldRecords.get(String(propertyId));
+  if (!records) return res.status(404).json({ error: "No yield records for this property" });
+
+  let distributed = 0;
+  records.forEach(r => {
+    if (r.status === "pending") {
+      r.status = "distributed";
+      r.distributedAt = new Date().toISOString();
+      distributed++;
+    }
+  });
+
+  const prop = propertiesStore.find(p => p.id === parseInt(propertyId));
+  if (distributed > 0 && prop) {
+    activityStore.push({
+      type: "yield",
+      investor: "All holders",
+      property: prop.name,
+      amount: records.filter(r => r.distributedAt === records[records.length - 1].distributedAt).reduce((s, r) => s + r.amountUSD, 0),
+      date: new Date().toISOString()
+    });
+  }
+
+  res.json({ success: true, periodsDistributed: distributed, propertyName: prop?.name });
+});
+
 // Demo auth (no signature required)
 app.post("/api/v1/demo/auth", (req, res) => {
   const { walletAddress } = req.body;
@@ -1225,8 +1294,14 @@ app.use((_req, res) => {
 
 app.listen(PORT, () => {
   logger.info(`Terravault API running on port ${PORT}`);
+  logger.info(`Mode: ${DEMO_MODE ? "DEMO (no blockchain required)" : "LIVE"}`);
   logger.info(`RPC: ${RPC_URL}`);
-  logger.info(`Marketplace: ${MARKETPLACE_ADDRESS || "not configured"}`);
+  logger.info(`Marketplace: ${MARKETPLACE_ADDRESS || "not configured (demo mode active)"}`);
+  if (DEMO_MODE) {
+    logger.info(`Demo endpoints: /api/v1/demo/* and /api/v1/* (fallback to in-memory data)`);
+    logger.info(`Properties loaded: ${propertiesStore.length}`);
+    logger.info(`Investors loaded: ${investors.size}`);
+  }
 });
 
 module.exports = app;

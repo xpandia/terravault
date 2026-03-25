@@ -1,0 +1,25 @@
+{
+  "name": "terravault-contracts",
+  "version": "1.0.0",
+  "description": "Terravault ERC-3643 smart contracts for LATAM real estate tokenization",
+  "scripts": {
+    "compile": "npx hardhat compile",
+    "test": "npx hardhat test",
+    "deploy:local": "npx hardhat run scripts/deploy.js --network hardhat",
+    "deploy:bnb-testnet": "npx hardhat run scripts/deploy.js --network bnbTestnet",
+    "deploy:bnb-mainnet": "npx hardhat run scripts/deploy.js --network bnbMainnet",
+    "verify": "npx hardhat verify --network bnbTestnet"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.1.0"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "dotenv": "^16.4.7",
+    "hardhat": "^2.22.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "license": "MIT"
+}

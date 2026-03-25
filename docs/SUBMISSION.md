@@ -5,38 +5,110 @@
 **Team:** Xpandia
 **Repo:** https://github.com/xpandia/terravault
 **Format:** Pitch competition (live demo + presentation to judges)
+**Chain:** BNB Chain Testnet (ChainID 97)
 
 ---
 
-## Submission Text
+## THE PITCH (5-minute format)
 
-### One-Liner
+### Open: The $3.2 Trillion Lock-Out (60 seconds)
 
-Terravault tokenizes institutional-grade Latin American real estate into compliant, tradeable digital securities -- making a $100 investment as simple as a $100 million one.
+> "$3.2 trillion in Latin American real estate. The most reliable asset class on the continent. But if you are not already wealthy, you cannot touch it."
 
-### Project Description
+- 92% of institutional-grade LATAM properties are inaccessible to everyday investors.
+- Cross-border acquisition: 60-120 days, 8-12% in intermediary fees, opaque legal structures in foreign jurisdictions.
+- No secondary market. Capital locked for years. No liquidity, no price discovery.
+- The fastest-growing investor demographic in the world is locked out of the most proven asset class.
 
-Latin America holds $3.2 trillion in real estate value, yet 92% of institutional-grade properties are inaccessible to everyday investors. Cross-border acquisition is buried under bureaucracy, intermediaries, and opaque legal structures. Settlement takes 60-120 days. There is no liquid secondary market. Capital gets locked for years.
+**Hook for HK judges:** "Asian investors already know LATAM real estate delivers 7-12% annual yields. They just cannot access it. We fix that."
 
-Terravault fixes this with regulatory-compliant fractional ownership using the ERC-3643 (T-REX) security token standard -- the institutional standard for real-world asset tokenization with identity verification and transfer restrictions built into the protocol layer.
+---
 
-**What makes this different from "another tokenization platform":**
+### Solution: Terravault (60 seconds)
 
-1. **ERC-3643, not ERC-20.** We use the institutional security token standard with on-chain identity registry, compliance modules, and transfer restrictions. This is not a meme token -- it is a legally structured digital security.
+Terravault tokenizes premium LATAM real estate into compliant digital securities on BNB Chain.
 
-2. **Full compliance stack on-chain.** IdentityRegistry enforces KYC expiry and country/category gating. ComplianceModule enforces per-investor caps, max investor counts, blocked countries, and minimum accreditation levels. Every transfer is compliance-checked before execution.
+1. Properties are legally structured into SPVs, independently appraised.
+2. Each property becomes a **TerravaultToken** -- an ERC-3643 security token with built-in compliance.
+3. Investors complete KYC, get verified on-chain, and buy fractional tokens starting at **$100** in stablecoins.
+4. Rental income is distributed automatically and proportionally to all token holders.
+5. Tokens trade on a built-in secondary market -- **liquidity that real estate has never had**.
 
-3. **Automated dividend distribution.** Rental yield flows directly to token holders proportionally, with no manual calculation or off-chain distribution. The token contract handles dividend accumulation, debt tracking, and withdrawal natively.
+**One-liner:** "We made a $100 investment as simple as a $100 million one."
 
-4. **Primary + secondary market.** The PropertyMarketplace handles initial fractional purchases (minting) and a secondary order book (peer-to-peer trading with escrow), both with platform fee collection and stablecoin settlement.
+---
 
-5. **LATAM-first positioning.** We target Colombia, Mexico, Brazil, and Chile -- markets with massive real estate value, growing investor populations, and fragmented access.
+### Why This Is Real: Compliance-First Architecture (60 seconds)
 
-### BNB Chain Deployment Note
+This is **not** another ERC-20 wrapper. This is a regulated security token.
 
-Our smart contracts are written in Solidity ^0.8.20 targeting EVM-compatible chains. While our primary development has been on Polygon PoS, the contracts are **fully compatible with BNB Chain (BSC)** -- same EVM, same Solidity compiler, same OpenZeppelin libraries. Deployment to BNB Chain testnet or mainnet requires only changing the RPC endpoint and deploying. The Chainlink-compatible `IPriceFeed` interface works with BNB Chain's Chainlink oracle feeds (BNB/USD). We will deploy to BNB Chain testnet for the hackathon submission.
+- **ERC-3643 (T-REX standard)** -- the institutional standard used by real securities on-chain.
+- **On-chain IdentityRegistry** -- KYC verification with country codes (ISO 3166-1), investor categories (retail/accredited/institutional), and expiry timestamps. Not "trust us" -- verifiable on-chain.
+- **ComplianceModule** -- every transfer is checked against per-investor caps, max investor count, country blocklists, and minimum accreditation level. Non-compliant transfers revert at the protocol level.
+- **Forced transfer and token recovery** -- built for regulators and courts, not against them.
+- **Automated dividend distribution** -- accumulator pattern, gas-efficient, no loops, no manual calculation.
 
-### Smart Contract Architecture
+**For HK judges:** "We built the compliance stack that institutional allocators require. This is not DeFi cosplaying as TradFi -- this is TradFi infrastructure running on-chain."
+
+---
+
+### Live Demo: BNB Chain Testnet (60 seconds)
+
+**Show deployed contracts on BscScan:**
+
+| Contract | Role |
+|---|---|
+| IdentityRegistry | On-chain KYC: verify investors, enforce country/category restrictions |
+| ComplianceModule | Transfer restriction engine: caps, blocklists, accreditation gates |
+| TerravaultToken | ERC-3643 security token with dividends, freeze, recovery |
+| PropertyMarketplace | Primary market (mint), secondary order book (escrow), yield distribution |
+
+**Demo flow:**
+1. Register investor on-chain (country: Colombia, category: retail).
+2. List property: Torre Chapultepec (CDMX, $2.5M, 25,000 tokens @ $100).
+3. Purchase 100 tokens ($100) -- compliance module checks identity before minting.
+4. Deposit rental yield -> distribute through dividend mechanism -> investor withdraws.
+5. Create sell order on secondary market -> another verified investor fills it.
+
+---
+
+### The Ask (60 seconds)
+
+**Market:** $3.2T LATAM real estate, completely untokenized.
+
+**BNB Chain fit:**
+- EVM-compatible, low gas costs (critical for $100 micro-investments).
+- Largest user base in Asia-Pacific -- the bridge for Asian capital into LATAM real estate.
+- Chainlink oracle support for real-time property valuations.
+- BNB Chain DeFi ecosystem for future composability (lending against RWA tokens, LP pools).
+
+**Next steps:**
+1. BNB Chain mainnet deployment (Q2 2026).
+2. First property listing: Bogota, Colombia -- 5 properties, $8M total value.
+3. Stablecoin integration (USDT/BUSD on BSC).
+4. Partnership with LATAM real estate SPV structures and local legal counsel.
+5. Apply for ICC Incubation Package ($100K value) to accelerate go-to-market.
+
+**Close:** "Latin America has $3.2 trillion in real estate and zero tokenization infrastructure. BNB Chain has 100 million users and zero LATAM RWA exposure. Terravault is the bridge."
+
+---
+
+## OBJECTION PREP (Hong Kong Judges)
+
+| Objection | Response |
+|---|---|
+| "How is this different from RealT / Lofty / Propy?" | They focus on US properties with US-specific structures. We are LATAM-first -- the region with the largest access gap and highest yield potential for cross-border investors. Our compliance module is jurisdiction-agnostic, not US-centric. |
+| "Is this legally compliant?" | ERC-3643 is the same standard used by institutional tokenizations. Properties are structured through SPVs with local legal counsel in each jurisdiction. The on-chain compliance module enforces transfer restrictions at the protocol level -- it does not replace legal structure, it enforces it. |
+| "Why BNB Chain instead of Ethereum/Polygon?" | Gas costs matter when your target ticket is $100. BNB Chain has the lowest cost for EVM security tokens. The Asia-Pacific user base is our distribution channel for cross-border LATAM investment. Chainlink oracles are available. We are fully EVM-compatible and can deploy to any chain. |
+| "What about liquidity on a secondary market?" | The built-in order book with partial fills and escrow creates native liquidity. As more properties list, the marketplace creates network effects. We do not depend on external DEX liquidity -- we generate our own. |
+| "How do dividends work on-chain?" | Accumulator pattern: when rental yield is deposited, a global `dividendPerToken` counter increments. Each investor's pending dividends are computed from (balance * accumulator) minus recorded debt. No loops, no gas scaling with investor count. Works for 10 or 10,000 holders at the same cost. |
+| "What is the regulatory risk in LATAM?" | Colombia, Mexico, and Brazil all have sandbox frameworks or existing regulations for digital securities. We structure through SPVs which are recognized legal entities. The compliance module enforces whatever restrictions local regulators require -- it is configurable per jurisdiction. |
+| "How do you handle property management off-chain?" | SPV structure with local property managers. Rental income flows from property manager -> SPV bank account -> on-chain yield deposit -> automatic distribution. We are the tokenization and compliance layer, not the property management layer. |
+| "What is the ICC Incubation Package?" | ICC (International Chamber of Commerce) partnership with BNB Chain offers $100K in resources for RWA projects. We are applying for this as part of the hackathon track. It accelerates our go-to-market with legal, technical, and business development support. |
+
+---
+
+## Smart Contract Architecture
 
 | Contract | Purpose |
 |---|---|
@@ -47,155 +119,84 @@ Our smart contracts are written in Solidity ^0.8.20 targeting EVM-compatible cha
 
 ---
 
-## Pitch Prep Notes (Hong Kong Judges)
-
-### Key Audience Considerations
-
-Hong Kong Web3 Festival judges will likely include:
-
-- **Traditional finance / real estate professionals** -- Care about regulatory compliance, legal structure, and market size. Lead with ERC-3643 and the compliance stack.
-- **Blockchain/DeFi-native investors** -- Care about technical architecture, composability, and novel mechanisms. Lead with the on-chain compliance module and automated dividend distribution.
-- **BNB Chain ecosystem stakeholders** -- Care about BNB Chain deployment, ecosystem fit, and TVL potential. Emphasize EVM compatibility and BNB Chain deployment readiness.
-
-### Pitch Structure (5 minutes)
-
-**Minute 1: The Market (Hook)**
-- "$3.2 trillion in LATAM real estate. 92% inaccessible to normal investors."
-- Cross-border acquisition: 60-120 days, 8-12% in fees, opaque legal structures.
-- The punchline: "We made a $100 investment feel like a $100 million one."
-
-**Minute 2: How It Works (Simple)**
-- Properties are legally structured into SPVs, independently appraised.
-- Each property gets a TerravaultToken -- an ERC-3643 security token.
-- Investors complete KYC, get verified on-chain, and buy fractional tokens starting at $100.
-- Rental income is distributed automatically to token holders.
-- Tokens trade on a built-in secondary market -- liquidity that real estate never had.
-
-**Minute 3: Why This Is Real (Compliance)**
-- ERC-3643 is used by real institutions (not our invention -- it is the T-REX standard).
-- On-chain identity registry with KYC expiry -- not "trust us, we checked."
-- Compliance module enforces transfer restrictions at the protocol level.
-- Forced transfer and token recovery for regulatory/court orders.
-- This is built to satisfy regulators, not dodge them.
-
-**Minute 4: Technical Architecture (For the Builders)**
-- Four Solidity contracts, OpenZeppelin v5, auditable and modular.
-- Chainlink-compatible oracle interface for real-time property valuation.
-- Dividend distribution uses an accumulator pattern (gas-efficient, no loops).
-- Secondary market with on-chain order book, partial fills, and escrow.
-- Fully EVM-compatible -- runs on Polygon, BNB Chain, Ethereum, or any EVM chain.
-
-**Minute 5: The Ask**
-- "We are deploying on BNB Chain. The LATAM real estate market is $3.2 trillion and completely untokenized. We are the bridge."
-- Next steps: BNB Chain mainnet deployment, first property listing (Bogota, Colombia), stablecoin integration (BUSD/USDT on BSC), partnership with LATAM real estate SPV structures.
-
-### Objection Prep
-
-| Objection | Response |
-|---|---|
-| "How is this different from RealT / Lofty?" | They focus on US properties with US-specific structures. We are LATAM-first with cross-border compliance designed for emerging markets where the access gap is largest. |
-| "Is this legally compliant?" | ERC-3643 is specifically designed for securities compliance. Properties are structured through SPVs with local legal counsel. The on-chain compliance module is a technical enforcement layer, not a replacement for legal structure. |
-| "Why BNB Chain?" | EVM compatibility, low gas costs, large user base in Asia-Pacific (relevant for cross-border LATAM investment from Asian investors), and Chainlink oracle support. |
-| "What about liquidity?" | The built-in secondary market with order book and partial fills creates native liquidity. As more properties list, the marketplace creates network effects. |
-| "How do dividends work on-chain?" | Accumulator pattern: when rental yield is deposited, a global `dividendPerToken` counter increments. Each investor's pending dividends are computed from their balance times the counter, minus their recorded debt. No loops, no gas scaling with investor count. |
-
----
-
 ## Demo Video Script (3-5 minutes)
 
 ### Scene 1: The Problem (0:00 - 0:40)
 
 **Visual:** Skyline shots of Bogota, Mexico City, Sao Paulo. Overlay stats.
 
-**Narration:** "$3.2 trillion in Latin American real estate. The world's most reliable asset class. But if you're not already wealthy, you can't touch it. Cross-border acquisition takes 60 to 120 days, costs 8-12% in fees, and requires navigating opaque legal structures in foreign jurisdictions. There's no secondary market -- your capital is locked for years. The fastest-growing investor demographic is locked out of the most proven asset class."
+**Narration:** "$3.2 trillion in Latin American real estate. The world's most reliable asset class. But if you are not already wealthy, you cannot touch it. Cross-border acquisition takes 60 to 120 days, costs 8-12% in fees, and requires navigating opaque legal structures in foreign jurisdictions. There is no secondary market -- your capital is locked for years."
 
 ### Scene 2: The Solution (0:40 - 1:15)
 
-**Visual:** Terravault branding. Architecture diagram animating layer by layer.
+**Visual:** Terravault branding. Architecture diagram.
 
-**Narration:** "Terravault tokenizes premium LATAM properties into compliant digital securities. Each property is legally structured into an SPV, independently appraised, and represented on-chain as an ERC-3643 security token. Investors complete KYC, get verified on the on-chain identity registry, and purchase fractional tokens starting at $100 in stablecoins. Rental income is distributed automatically. And tokens trade on a built-in secondary market."
+**Narration:** "Terravault tokenizes premium LATAM properties into compliant digital securities on BNB Chain. Each property is legally structured into an SPV, independently appraised, and represented on-chain as an ERC-3643 security token. Investors complete KYC, get verified on the on-chain identity registry, and purchase fractional tokens starting at $100."
 
-### Scene 3: Smart Contract Demo (1:15 - 2:30)
+### Scene 3: Smart Contract Demo on BNB Chain (1:15 - 2:30)
 
-**Visual:** Screen recording -- deploying and interacting with contracts.
+**Visual:** Screen recording -- BscScan + contract interactions.
 
-1. **(1:15 - 1:35)** **Deploy contracts to BNB Chain testnet.** Show the deployment of IdentityRegistry, ComplianceModule, TerravaultToken, and PropertyMarketplace. Show contract addresses on BscScan.
-
-2. **(1:35 - 1:55)** **Register an investor.** Call `registerIdentity` with country code (170 for Colombia), category (0 for retail), and KYC expiry. Show the investor is now verified on-chain.
-
-3. **(1:55 - 2:10)** **List a property and purchase tokens.** List a Bogota apartment: $500K valuation, 500,000 tokens, $1/token. Show a verified investor purchasing 100 tokens ($100). Show the compliance module checking identity, country, accreditation, and per-investor cap before allowing the mint.
-
-4. **(2:10 - 2:30)** **Distribute rental yield.** Deposit ETH as rental yield for the property. Call `distributeRentalYield` -- show it flowing through the token's dividend mechanism. Show the investor calling `withdrawDividends` and receiving their proportional share.
+1. **(1:15)** Show deployed contracts on BscScan testnet. Four verified contracts.
+2. **(1:35)** Register investor: `registerIdentity(address, 170, 0, expiry)` -- Colombia, retail.
+3. **(1:55)** List property + purchase 100 tokens. Show compliance check before mint.
+4. **(2:10)** Deposit rental yield -> distribute -> investor withdraws dividends.
 
 ### Scene 4: Secondary Market (2:30 - 3:00)
 
-**Visual:** Screen recording continued.
-
-1. Show investor A creating a sell order for 50 tokens at $1.10/token.
-2. Show investor B filling the order (partial fill of 25 tokens).
-3. Show stablecoin flowing from buyer to seller minus platform fee.
-4. Show the compliance module verifying investor B's identity before allowing the transfer.
+1. Investor A creates sell order (50 tokens @ $1.10).
+2. Investor B fills partially (25 tokens).
+3. Stablecoin flows, compliance checked, tokens transferred.
 
 ### Scene 5: Why BNB Chain + Close (3:00 - 3:30)
 
-**Visual:** BNB Chain logo. Market size graphics. Roadmap.
+"Deployed on BNB Chain. Low gas costs for micro-investments. Asia-Pacific user base for cross-border LATAM capital. $3.2 trillion waiting to be tokenized. We are the bridge."
 
-**Narration:** "Fully EVM-compatible -- deployed on BNB Chain with low gas costs and access to the largest user base in Asia-Pacific. LATAM real estate for global investors. $3.2 trillion in assets waiting to be tokenized. We are the bridge."
-
-**End card:** Terravault logo. "Own the World. One Token at a Time." GitHub URL. Team.
+**End card:** Terravault. "Own the World. One Token at a Time."
 
 ---
 
 ## Quick Start
 
 ```bash
-# Clone the repository
+# Clone
 git clone https://github.com/xpandia/terravault.git
 cd terravault
 
-# Backend API
+# Backend API (demo mode -- no blockchain required)
 cd src/backend
-cp .env.example .env
-# Edit .env: set JWT_SECRET, RPC_URL, ADMIN_PRIVATE_KEY
 npm install
-npm start
-# API available at http://localhost:3000
+DEMO_MODE=true node server.js
+# API at http://localhost:3000
+# Demo endpoints: /api/v1/demo/properties, /api/v1/demo/buy, etc.
+# Primary endpoints also work in demo mode with in-memory fallback.
 
-# Smart Contracts -- compile and deploy
-# Using Hardhat:
+# Smart Contracts (BNB Chain testnet)
+cd src/contracts
+cp .env.example .env
+# Edit .env with your deployer key
+npm install
 npx hardhat compile
 npx hardhat run scripts/deploy.js --network bnbTestnet
 
-# Using Foundry:
-forge build
-forge create --rpc-url $BNB_TESTNET_RPC --private-key $DEPLOYER_KEY src/contracts/TerravaultToken.sol:TerravaultToken
-
-# Frontend -- open the landing page
+# Frontend
 open src/frontend/index.html
 ```
 
 ### Environment Variables
 
 ```bash
-# .env
+# Backend .env
 JWT_SECRET=your-secret-key
-RPC_URL=https://data-seed-prebsc-1-s1.binance.org:8545/    # BNB Chain testnet
-ADMIN_PRIVATE_KEY=0x...                                      # Deployer wallet
-MARKETPLACE_ADDRESS=0x...                                    # Deployed marketplace
-IPFS_API_URL=http://127.0.0.1:5001                          # IPFS node
-```
+RPC_URL=https://data-seed-prebsc-1-s1.binance.org:8545/
+ADMIN_PRIVATE_KEY=0x...
+MARKETPLACE_ADDRESS=0x...
+IDENTITY_REGISTRY_ADDRESS=0x...
+DEMO_MODE=true   # Set to "true" for demo without blockchain
 
-### BNB Chain Testnet Deployment
-
-```bash
-# Get testnet BNB from faucet
-# https://testnet.bnbchain.org/faucet-smart
-
-# Deploy IdentityRegistry
-# Deploy ComplianceModule (with IdentityRegistry address)
-# Deploy TerravaultToken (with IdentityRegistry + ComplianceModule addresses)
-# Deploy PropertyMarketplace (with stablecoin, oracle, fee config)
-# Call ComplianceModule.setTokenContract(TerravaultToken address)
+# Contracts .env
+DEPLOYER_PRIVATE_KEY=0x...
+BSCSCAN_API_KEY=...
 ```
 
 ---
@@ -204,14 +205,22 @@ IPFS_API_URL=http://127.0.0.1:5001                          # IPFS node
 
 - [x] ERC-3643 smart contracts (TerravaultToken, IdentityRegistry, ComplianceModule, PropertyMarketplace)
 - [x] On-chain compliance stack (KYC, country gating, investor caps, accreditation)
-- [x] Automated dividend distribution
+- [x] Automated dividend distribution (accumulator pattern)
 - [x] Primary + secondary marketplace with escrow
 - [x] Chainlink-compatible oracle integration
-- [x] Node.js/Express API backend
+- [x] Hardhat config for BNB Chain Testnet (ChainID 97)
+- [x] Automated deployment script (deploys all 4 contracts + seeds sample property)
+- [x] Node.js/Express API backend with demo mode
+- [x] 3 realistic LATAM properties seeded (CDMX, Medellin, Sao Paulo)
+- [x] Demo buy flow (updates in-memory state)
+- [x] Demo yield distribution flow
+- [x] Demo KYC submit + auto-approve flow
 - [x] Landing page
 - [x] Source code on GitHub
-- [x] Pitch deck and materials
-- [ ] BNB Chain testnet deployment (deploy before deadline)
+- [x] Pitch structure for 5-minute presentation
+- [x] Objection prep for HK judges
+- [x] BNB Chain deployment guide (DEPLOY_BNB.md)
+- [ ] BNB Chain testnet deployment (deploy before Mar 31)
+- [ ] Contract verification on BscScan
 - [ ] Demo video (record per script above)
 - [ ] DoraHacks BUIDL page published
-- [ ] Contract verification on BscScan
